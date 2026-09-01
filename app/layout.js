@@ -1,4 +1,5 @@
 import "./globals.css";
+import { publicAsset } from '@/lib/publicAsset';
 import { Poppins } from "next/font/google";
 import Script from "next/script"; // ✅ import Script
 
@@ -18,7 +19,7 @@ export const metadata = {
   title: "Dreamasiaworld.com",
   description: "Dream Asia World",
   icons: {
-    icon: "/Assets/logo-img.png",
+    icon: publicAsset("/Assets/logo-img.png"),
   },
 };
 

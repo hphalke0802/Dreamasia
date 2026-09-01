@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { publicAsset } from '@/lib/publicAsset';
 import { useRouter } from 'next/navigation';
 
 const BookNow = ({ setMenuOpen }) => {
@@ -14,7 +15,7 @@ const BookNow = ({ setMenuOpen }) => {
         }}
         className='group text-center bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-lg p-2 hover:scale-103 transform transition duration-300 cursor-pointer'
       >
-        <img src='/Assets/Super_Senior.jpg' className='w-full h-30 object-contain rounded-lg group-hover:opacity-90 transition' />
+        <img src={publicAsset('/Assets/Super_Senior.jpg')} className='w-full h-30 object-contain rounded-lg group-hover:opacity-90 transition' />
         <h1 className='mt-1 font-bold text-green-800 group-hover:underline'>Book Now</h1>
         <p className='text-gray-600 mt-2'>
           Dream Asia Dated Tickets & Hotel Packages
@@ -23,7 +24,7 @@ const BookNow = ({ setMenuOpen }) => {
 
       {/* Read only section */}
       <section className='max-w-xs text-center bg-white border border-blue-200 rounded-md p-2'>
-        <img src='/Assets/discover2.jpg' className='w-full h-30 rounded-md' />
+        <img src={publicAsset('/Assets/discover2.jpg')} className='w-full h-30 rounded-md' />
         <p className='text-gray-600 font-semibold mt-2'>
           Visit Dream Asia for an unforgettable adventure and endless fun!
         </p>

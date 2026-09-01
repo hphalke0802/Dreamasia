@@ -1,351 +1,248 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+import React, { useEffect, useState } from "react";
+import { publicAsset } from "@/lib/publicAsset";
+import { usePathname, useRouter } from "next/navigation";
 import { IoMenu } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
-import { MdHome } from "react-icons/md";
-import Parks from '../Components/Parks/page';
-import PlaceToStay from '../Components/PlaceToStay/page';
-import BookNow from '../Components/BookNow/page';
-import { useRouter } from 'next/navigation';
 
-const ButtonWithClickEffect = ({ children, color, onClick }) => {
-  const [clicked, setClicked] = useState(false);
+const Navbar = () => {
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleClick = () => {
-    setClicked(true);
-    if (onClick) onClick();
-    setTimeout(() => setClicked(false), 400);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Curve should appear ONLY on home page
+  const isHomePage = pathname === "/";
+
+  const navItems = [
+    {
+      name: "About Us",
+      path: "/Footer/Components/AboutUs",
+      color: "#6B1E74",
+    },
+    {
+      name: "Water Park",
+      path: "/WaterPark",
+      color: "#F97316",
+    },
+    {
+      name: "Theme Park",
+      path: "/AmusementPark",
+      color: "#E50046",
+    },
+    {
+      name: "Resort",
+      path: "/Hotels",
+      color: "#06B6D4",
+    },
+    {
+      name: "Book Ticket",
+      path: "https://membership.dreamasiaworld.com/drmw/5555555555",
+      color: "#3498DB",
+      external: true,
+    },
+    {
+      name: "Contact Us",
+      path: "/Footer/Components/ContactUs",
+      color: "#16B88D",
+    },
+    {
+      name: "Offers",
+      path: "/Offers",
+      color: "#3ad3d8",
+    },
+  ];
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const handleNavigation = (item) => {
+    setMenuOpen(false);
+
+    if (item.external) {
+      window.location.href = item.path;
+      return;
+    }
+
+    router.push(item.path);
   };
 
   return (
-    <button
-      onClick={handleClick}
-      className='relative overflow-hidden px-4 py-1 rounded-md text-white cursor-pointer'
-      style={{ backgroundColor: color }}
-    >
-      <AnimatePresence>
-        {clicked && (
-          <motion.div
-            className='absolute bottom-0 left-0 w-full z-0'
-            initial={{ height: 0 }}
-            animate={{ height: '100%' }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
-            style={{ backgroundColor: 'rgba(139, 92, 246, 1)' }}
-          />
-        )}
-      </AnimatePresence>
-      <span className='relative z-10'>{children}</span>
-    </button>
-  );
-};
+    <header className="relative z-[90] w-full bg-white">
 
+      {/* Main Navbar */}
+      <div className="relative z-30 bg-white">
+        <div className="mx-auto flex min-h-[95px] max-w-[1250px] items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:min-h-[140px] lg:px-8">
 
-const Navbar = () => {
-  const [hoveredSection, setHoveredSection] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const router = useRouter();
-  const handleMouseEnter = (section) => setHoveredSection(section);
-  const handleMouseLeave = () => setHoveredSection(null);
-
-  {/* Mobile view no-scrolling effect when every time `menuOpen` changes */ }
-  useEffect(() => {
-    const isMobile = window.innerWidth < 1280;   // for mobile and tablet width upto 1280px
-    document.body.classList.toggle('overflow-hidden', menuOpen && isMobile); //Prevent body from scrolling when menu is open
-  }, [menuOpen]); //re-runs every time `menuOpen` changes
-
-
-  return (
-    <div className='fixed md:static top-0 left-0 w-full px-6 py-2 bg-white shadow-md z-50'>
-
-      {/* Logo and Menu Button for Mobile */}
-      <div className='flex items-center max-w-2xl mx-auto justify-between xl:justify-center'>
-        <button onClick={() => setMenuOpen(prev => !prev)} className='text-3xl md:hidden'>
-          <IoMenu className='bg-[#641C6E] text-white p-1 rounded-full' />
-          <h1 className='text-xs font-semibold'>Menu</h1>
-        </button>
-        <div onClick={() => router.push('/')}>
-          <img src='/Assets/contact-logo.png' alt='Dreamasia Logo' className='h-14 xl:h-22 w-auto mx-auto xl:mx-0' />
-        </div>
-
-        <div
-          onClick={() => {
-            setMenuOpen(false);
-            router.push('/');
-          }}
-          className='bg-[#641C6E] text-white rounded-full p-2 md:hidden'
-        >
-          <MdHome className='text-xl' />
-        </div>
-      </div>
-
-
-      {/* Desktop item */}
-      <div className='absolute top-0 right-4 hidden md:flex items-center gap-6'>
-        {/* Home Button */}
-        <div
-          onClick={() => router.push("/")}
-          className="cursor-pointer bg-[#641C6E] rounded-full p-2 mt-4 mx-5 flex items-center shadow-md"
-        >
-          <MdHome className="text-white text-xl" />
-        </div>
-
-        {/* Social Media */}
-        <div className='text-center'>
-          <div className='flex justify-center gap-2 mt-4'>
-            <a href="https://www.facebook.com/dreamasiaworld/?_rdr" target="_blank" rel="noopener noreferrer">
-              <img src='/Assets/facebook.jpeg' alt='Facebook' className='w-10 h-10 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-            </a>
-            <a href="https://www.instagram.com/dreamasia/" target="_blank" rel="noopener noreferrer">
-              <img src='/Assets/instagram.jpeg' alt='Instagram' className='w-10 h-10 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-            </a>
-            <a href="https://www.linkedin.com/company/dreamasia/" target="_blank" rel="noopener noreferrer">
-              <img src='/Assets/linkedin.jpeg' alt='LinkedIn' className='w-10 h-10 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-            </a>
-            <a href="https://www.youtube.com/@dreamasiaworld" target="_blank" rel="noopener noreferrer">
-              <img src='/Assets/youtube-image.jpg' alt='Youtube' className='w-10 h-10 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-            </a>
-          </div>
-        </div>
-      </div>
-
-
-      {/* Desktop Navigation */}
-      <div className='hidden md:flex flex-wrap gap-6 justify-center items-center mt-4 relative'>
-        {/* Parks Dropdown */}
-        <div onMouseEnter={() => handleMouseEnter('parks')} onMouseLeave={handleMouseLeave} className='relative'>
-          <ButtonWithClickEffect color="#3B82F6">Our 2 Parks</ButtonWithClickEffect>
-          <AnimatePresence>
-            {hoveredSection === 'parks' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className='absolute top-full left-16 transform -translate-x-1/7 mt-2 bg-white shadow-xl rounded-xl z-40 w-[50rem] p-4'
-              >
-                <Parks setMenuOpen={setMenuOpen} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Places to Stay Dropdown */}
-        <div onMouseEnter={() => handleMouseEnter('places')} onMouseLeave={handleMouseLeave} className='relative'>
-          <ButtonWithClickEffect color='#1D4ED8'>Places to Stay</ButtonWithClickEffect>
-          <AnimatePresence>
-            {hoveredSection === 'places' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className='absolute top-full left-52 transform -translate-x-1/2 mt-2 bg-white shadow-xl rounded-xl z-40 w-[50rem] p-4'
-              >
-                <PlaceToStay setMenuOpen={setMenuOpen} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Book Now Dropdown */}
-        <div onMouseEnter={() => handleMouseEnter('booknow')} onMouseLeave={handleMouseLeave} className='relative'>
-          <ButtonWithClickEffect color='#22C55E'>Book Now</ButtonWithClickEffect>
-          <AnimatePresence>
-            {hoveredSection === 'booknow' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className='absolute top-full left-10 transform -translate-x-1/2 mt-2 bg-white shadow-xl rounded-xl z-40 w-[50rem] p-4'
-              >
-                <BookNow setMenuOpen={setMenuOpen} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Static Route to ContactUs */}
-        <ButtonWithClickEffect
-          color='#3f6270'
-          onClick={() => router.push('/Footer/Components/ContactUs')}
-        >
-          Contact Us
-        </ButtonWithClickEffect>
-
-        {/* Static Route to AboutUS */}
-        <ButtonWithClickEffect
-          color='#1b92c9'
-          onClick={() => router.push('/Footer/Components/AboutUs')}
-        >
-          About Us
-        </ButtonWithClickEffect>
-
-        {/* Static Route to Offers */}
-        <ButtonWithClickEffect
-          color='#10B981'
-          onClick={() => router.push('/Offers')}
-        >
-          Offers
-        </ButtonWithClickEffect>
-      </div>
-
-      {/* Mobile Navigation */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ x: '-100%', opacity: 0 }}
-            animate={{ x: '0%', opacity: 1 }}
-            exit={{ x: '-100%', opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className='fixed top-0 left-0 bottom-0 w-full h-full bg-white shadow-xl z-50 p-6 flex flex-col gap-4'
+          {/* Logo */}
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className="flex shrink-0 cursor-pointer items-center border-0 bg-transparent p-0"
+            aria-label="Dream Asia home"
           >
-            {/* Social Media Icons */}
-            <div className='absolute bottom-4 right-6 text-center'>
-              <div className='flex justify-center gap-2 mt-4'>
-                <a href="https://www.facebook.com/dreamasiaworld/?_rdr" target="_blank" rel="noopener noreferrer">
-                  <img src='/Assets/facebook.jpeg' alt='Facebook' className='w-9 h-9 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-                </a>
-                <a href="https://www.instagram.com/dreamasia/" target="_blank" rel="noopener noreferrer">
-                  <img src='/Assets/instagram.jpeg' alt='Instagram' className='w-9 h-9 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-                </a>
-                <a href="https://www.linkedin.com/company/dreamasia/" target="_blank" rel="noopener noreferrer">
-                  <img src='/Assets/linkedin.jpeg' alt='LinkedIn' className='w-9 h-9 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-                </a>
-                <a href="https://www.youtube.com/@dreamasiaworld" target="_blank" rel="noopener noreferrer">
-                  <img src='/Assets/youtube-image.jpg' alt='Youtube' className='w-9 h-9 object-cover rounded-full shadow-md hover:scale-110 transition-transform duration-300' />
-                </a>
-              </div>
-            </div>
+            <img
+              src={publicAsset("/Assets/contact-logo.png")}
+              alt="Dream Asia"
+              className="h-auto w-[155px] object-contain sm:w-[175px] lg:w-[195px]"
+            />
+          </button>
 
-            {/* logo image */}
-            <div className='flex justify-center'>
-              <img src='/Assets/contact-logo.png'
-                className='w-48' />
-            </div>
+          {/* Desktop Navbar */}
+          <nav className="hidden items-center justify-end gap-5 lg:flex">
+            {navItems.map((item) => (
+              <button
+                key={item.name}
+                type="button"
+                onClick={() => handleNavigation(item)}
+                className="cursor-pointer whitespace-nowrap rounded-md border-0 px-3.5 py-2.5 text-[16px] font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-[2px] hover:brightness-105 hover:shadow-md"
+                style={{
+                  backgroundColor: item.color,
+                }}
+              >
+                {item.name}
+              </button>
+            ))}
+          </nav>
 
-            {/* Close Button inside sidebar (optional) */}
+          {/* Mobile Menu Button */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((previousValue) => !previousValue)}
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#6B1E74] text-white shadow-md lg:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            {menuOpen ? (
+              <RxCross2 className="text-2xl" />
+            ) : (
+              <IoMenu className="text-2xl" />
+            )}
+          </button>
+
+        </div>
+      </div>
+
+      {/* =====================================================
+          BOTTOM CURVE - HOME PAGE ONLY
+      ====================================================== */}
+      {isHomePage && (
+        <div
+          className="pointer-events-none absolute left-0 top-[calc(100%-2px)] z-10 hidden h-[45px] w-full overflow-hidden lg:block"
+          aria-hidden="true"
+        >
+          <svg
+            viewBox="0 0 1440 70"
+            preserveAspectRatio="none"
+            className="block h-full w-full"
+          >
+            <path
+              fill="#ffffff"
+              d="
+                M0,0
+                L1440,0
+                L1440,22
+
+                C1410,22 1395,58 1350,58
+                C1305,58 1290,22 1260,22
+
+                C1230,22 1215,58 1170,58
+                C1125,58 1110,22 1080,22
+
+                C1050,22 1035,58 990,58
+                C945,58 930,22 900,22
+
+                C870,22 855,58 810,58
+                C765,58 750,22 720,22
+
+                C690,22 675,58 630,58
+                C585,58 570,22 540,22
+
+                C510,22 495,58 450,58
+                C405,58 390,22 360,22
+
+                C330,22 315,58 270,58
+                C225,58 210,22 180,22
+
+                C150,22 135,58 90,58
+                C45,58 30,22 0,22
+
+                Z
+              "
+            />
+          </svg>
+        </div>
+      )}
+
+      {/* =====================================================
+          MOBILE MENU
+      ====================================================== */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[100] bg-white lg:hidden">
+
+          {/* Mobile Menu Header */}
+          <div className="flex min-h-[82px] items-center justify-between border-b border-gray-200 px-4 py-3 shadow-sm">
+
             <button
-              className='absolute top-5 self-end text-2xl bg-[#641C6E] text-white p-1 rounded-full'
-              onClick={() => setMenuOpen(false)}
+              type="button"
+              onClick={() => {
+                setMenuOpen(false);
+                router.push("/");
+              }}
+              className="border-0 bg-transparent p-0"
+              aria-label="Dream Asia home"
             >
-              <RxCross2 />
+              <img
+                src={publicAsset("/Assets/contact-logo.png")}
+                alt="Dream Asia"
+                className="h-auto w-[155px] object-contain"
+              />
             </button>
 
-
-            {/* Parks */}
-            <div className="flex flex-col">
-              <ButtonWithClickEffect
-                color='#3B82F6'
-                onClick={() =>
-                  setHoveredSection(prev => (prev === 'parks' ? null : 'parks'))
-                }
-              >
-                Our 2 Parks
-              </ButtonWithClickEffect>
-              <AnimatePresence>
-                {hoveredSection === 'parks' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white p-4 rounded-xl shadow-xl max-h-60 overflow-y-auto lg:overflow-hidden"
-                  >
-                    <Parks setMenuOpen={setMenuOpen} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Places to Stay */}
-            <div className='w-full flex flex-col'>
-              <ButtonWithClickEffect
-                color='#1D4ED8'
-                onClick={() =>
-                  setHoveredSection(prev => (prev === 'places' ? null : 'places'))
-                }
-              >
-                Places to Stay
-              </ButtonWithClickEffect>
-              <AnimatePresence>
-                {hoveredSection === 'places' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className='bg-white p-3 rounded-xl shadow-xl max-h-60 overflow-y-auto lg:overflow-hidden'
-                  >
-                    <PlaceToStay setMenuOpen={setMenuOpen} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Book Now */}
-            <div className='w-full flex flex-col'>
-              <ButtonWithClickEffect
-                color='#22C55E'
-                onClick={() =>
-                  setHoveredSection(prev => (prev === 'booknow' ? null : 'booknow'))
-                }
-              >
-                Book Now
-              </ButtonWithClickEffect>
-              <AnimatePresence>
-                {hoveredSection === 'booknow' && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white p-3 rounded-xl shadow-xl max-h-60 overflow-y-auto lg:overflow-hidden"
-                  >
-                    <BookNow setMenuOpen={setMenuOpen} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Contact Us */}
-            <ButtonWithClickEffect
-              color='#3f6270'
-              onClick={() => {
-                setMenuOpen(false);
-                router.push('/Footer/Components/ContactUs');
-              }}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#6B1E74] text-white shadow-md"
+              aria-label="Close menu"
             >
-              Contact Us
-            </ButtonWithClickEffect>
+              <RxCross2 className="text-2xl" />
+            </button>
 
-            {/* About Us */}
-            <ButtonWithClickEffect
-              color='#1b92c9'
-              onClick={() => {
-                setMenuOpen(false);
-                router.push('/Footer/Components/AboutUs');
-              }}
-            >
-              About Us
-            </ButtonWithClickEffect>
+          </div>
 
-            {/* Offers */}
-            <ButtonWithClickEffect
-              color='#10B981'
-              onClick={() => {
-                setMenuOpen(false);
-                router.push('/Offers');
-              }}
-            >
-              Offers
-            </ButtonWithClickEffect>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          {/* Mobile Navigation */}
+          <div className="h-[calc(100vh-82px)] overflow-y-auto px-5 py-7">
+
+            <nav className="mx-auto flex max-w-md flex-col gap-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.name}
+                  type="button"
+                  onClick={() => handleNavigation(item)}
+                  className="w-full cursor-pointer rounded-md border-0 px-4 py-3 text-center text-base font-semibold text-white shadow-md transition-transform duration-200 active:scale-[0.98]"
+                  style={{
+                    backgroundColor: item.color,
+                  }}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </nav>
+
+          </div>
+        </div>
+      )}
+
+    </header>
   );
 };
 

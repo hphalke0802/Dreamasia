@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect } from 'react'
+import { publicAsset } from '@/lib/publicAsset';
 import { Link, Element } from 'react-scroll';
 import { GiMagicShield } from "react-icons/gi";
 import { TbParkingCircleFilled } from "react-icons/tb";
@@ -11,6 +12,7 @@ import Navbar from '../Navbar/MainContent/page'
 import Footer from '../Footer/MainContent/page'
 import { motion } from 'framer-motion';
 import Maintenance from '../Miantenance/page';
+import HorizontalInfoSlider from "../horizontalInfoSlider";
 
 const Hotels = () => {
 
@@ -24,11 +26,12 @@ const Hotels = () => {
   }, []);
 
   return (
-    <div className='bg-[#F7F7F7] mt-18 md:mt-0'>
+    <div className='bg-[#F7F7F7]'>
+      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 
-      <img src='/Assets/hotel.webp'
+      <img src={publicAsset('/Assets/hotel.webp')}
         alt='Hotel-Image'
         loading='lazy'
         decoding='async'
@@ -45,7 +48,7 @@ const Hotels = () => {
           className='absolute top-[-300px] md:top-[-170px] inset-0 flex justify-center items-center z-0 pointer-events-none'
         >
           <img
-            src='/Assets/hotel-icon.png'
+            src={publicAsset('/Assets/hotel-icon.png')}
             className='w-44 md:w-64 lg:w-60'
             alt='Character'
           />
@@ -83,7 +86,7 @@ const Hotels = () => {
           </p>
         </div>
         <div className='bg-white p-4 max-w-5xl mx-auto shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4'>
-          <img src='/Assets/place-to-stay-Hotel.jpg' alt='Place to Stay' className='w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1' />
+          <img src={publicAsset('/Assets/place-to-stay-Hotel.jpg')} alt='Place to Stay' className='w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1' />
           <div>
             <h3 className='text-xl font-bold mb-2'>Discover the newly reimagined Dream Asia Hotel!</h3>
             <p className='text-gray-700'>
@@ -98,27 +101,27 @@ const Hotels = () => {
             <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>Each Dream Asia Hotel immerses you in an iconic theme with its own magical tale to tell. Wonderful worlds await for all ages, budgets and dreams.</p>
             <section className="max-w-5xl mx-auto flex overflow-x-auto gap-4 p-4 mt-5 flex-nowrap">
               <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src="/Assets/lodge.jpg" alt="Commando Activity" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
+                <img src={publicAsset("/Assets/lodge.jpg")} alt="Commando Activity" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
                 <h1 className="mt-2 text-lg font-semibold">Dream Asia Sequoia Lodge</h1>
                 <p className="text-sm text-gray-700">Relax in a grand lodge designed with a touch of Bambi magic</p>
               </div>
               <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src="/Assets/themed-hotels1.jpg" alt="Zip Line" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
+                <img src={publicAsset("/Assets/themed-hotels1.jpg")} alt="Zip Line" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
                 <h1 className="mt-2 text-lg font-semibold">Dream Asia Hotel</h1>
                 <p className="text-sm text-gray-700">Celebrate the magic of Dream Asia stories...and write your own!</p>
               </div>
               <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src="/Assets/ngp-hotel.jpg" alt="Bungee Jumping" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
+                <img src={publicAsset("/Assets/ngp-hotel.jpg")} alt="Bungee Jumping" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
                 <h1 className="mt-2 text-lg font-semibold">Dream Asia Hotel Nagpur</h1>
                 <p className="text-sm text-gray-700">Live the Laxurious life in a contemporary setting.</p>
               </div>
               <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src="/Assets/wooden-lodge.jpeg" alt="Giant Swing" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
+                <img src={publicAsset("/Assets/wooden-lodge.jpeg")} alt="Giant Swing" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
                 <h1 className="mt-2 text-lg font-semibold">Dream Asia Newport Bay Club</h1>
                 <p className="text-sm text-gray-700">Wake-up in a world of seaside splendour with a nautical nod to Dream Asia adventures.</p>
               </div>
               <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src="/Assets/hotel-stay.jpg" alt="Giant Wheel" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
+                <img src={publicAsset("/Assets/hotel-stay.jpg")} alt="Giant Wheel" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
                 <h1 className="mt-2 text-lg font-semibold">Dream Asia Wooden Lodge</h1>
                 <p className="text-sm text-gray-700">Relax in a grand Wooden lodge designed with a touch of Bamboo!</p>
               </div>
@@ -137,7 +140,7 @@ const Hotels = () => {
           {/* Family Rooms and Cabins */}
           <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4">
             <img
-              src="/Assets/family-rooms.jpg"
+              src={publicAsset("/Assets/family-rooms.jpg")}
               alt="Hotel Room"
               className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
             />
@@ -152,7 +155,7 @@ const Hotels = () => {
           {/* Club Rooms and Suites */}
           <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4 lg:flex-row-reverse">
             <img
-              src="/Assets/club_rooms.jpg"
+              src={publicAsset("/Assets/club_rooms.jpg")}
               alt="Club Room"
               className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
             />
@@ -180,7 +183,7 @@ const Hotels = () => {
             {/* Card 1 */}
             <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
               <img
-                src="/Assets/restaurant.jpg"
+                src={publicAsset("/Assets/restaurant.jpg")}
                 alt="Dream Asia-themed restaurants"
                 className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
               />
@@ -193,7 +196,7 @@ const Hotels = () => {
             {/* Card 2 */}
             <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
               <img
-                src="/Assets/customers-interactions.jpg"
+                src={publicAsset("/Assets/customers-interactions.jpg")}
                 alt="Character Encounters"
                 className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
               />
@@ -206,7 +209,7 @@ const Hotels = () => {
             {/* Card 3 */}
             <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
               <img
-                src="/Assets/restaurant-view.jpeg"
+                src={publicAsset("/Assets/restaurant-view.jpeg")}
                 alt="Dream Asia Details"
                 className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
               />
@@ -222,7 +225,7 @@ const Hotels = () => {
           {/* Dream-Asia Facilities */}
           <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4">
             <img
-              src="/Assets/facilities.jpg"
+              src={publicAsset("/Assets/facilities.jpg")}
               alt="Facility"
               className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
             />
@@ -237,7 +240,7 @@ const Hotels = () => {
           {/* Club Rooms and Suites */}
           <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4 lg:flex-row-reverse">
             <img
-              src="/Assets/facilities2.jpg"
+              src={publicAsset("/Assets/facilities2.jpg")}
               alt="Facility"
               className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
             />

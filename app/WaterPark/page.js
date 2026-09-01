@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect } from 'react'
+import { publicAsset } from '@/lib/publicAsset';
 import { Link, Element } from 'react-scroll';
 import { CgEditHighlight } from "react-icons/cg";
 import { SiInformatica } from "react-icons/si";
@@ -7,6 +8,7 @@ import Navbar from '../Navbar/MainContent/page'
 import Footer from '../Footer/MainContent/page'
 import { motion } from 'framer-motion';
 import Maintenance from '../Miantenance/page';
+import HorizontalInfoSlider from "../horizontalInfoSlider";
 
 const WaterPark = () => {
 
@@ -31,11 +33,12 @@ const WaterPark = () => {
   }, []);
 
   return (
-    <div className='bg-[#F7F7F7] mt-18 md:mt-0'>
+    <div className='bg-[#F7F7F7]'>
+      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 
-      <img src='/Assets/big-banner-2.png'
+      <img src={publicAsset('/Assets/big-banner-2.png')}
         className='w-full h-50 md:h-80 object-cover' />
 
       {/* Navigation Section */}
@@ -48,7 +51,7 @@ const WaterPark = () => {
           className='absolute top-[-280px] md:top-[-170px] inset-0 flex justify-center items-center z-0 pointer-events-none'
         >
           <img
-            src='/Assets/character2.png'
+            src={publicAsset('/Assets/character2.png')}
             className='w-40 md:w-64 lg:w-70'
             alt='Character'
           />
@@ -88,7 +91,7 @@ const WaterPark = () => {
 
         {/* Line separator */}
         <div className='my-6 flex justify-center mb-12'>
-          <img src='/Assets/hr_line.png' alt='Divider' className='w-full' />
+          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
         </div>
 
         <div className='text-center space-y-10'>
@@ -97,7 +100,7 @@ const WaterPark = () => {
           </h1>
           <section className='space-y-6'>
             <img
-              src='/Assets/waterpark_img.jpg'
+              src={publicAsset('/Assets/waterpark_img.jpg')}
               className='w-full h-full object-cover transform transition-transform duration-300 hover:-translate-y-1'
             />
             <p className='text-lg font-bold'>With Sleeping Beauty Castle at the heart of this fairy-tale setting, the attractions, parades and restaurants will immerse you in the Dream Asia magic you know and love.</p>
@@ -105,7 +108,7 @@ const WaterPark = () => {
         </div>
 
         <div className='my-6 flex justify-center mb-12'>
-          <img src='/Assets/hr_line.png' alt='Divider' className='w-full' />
+          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
         </div>
 
         <Element name='highlights'>
@@ -115,7 +118,7 @@ const WaterPark = () => {
               {highlights.map((item, index) => (
                 <div key={index} className='bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl'>
                   <img
-                    src={item.image}
+                    src={publicAsset(item.image)}
                     alt={item.title}
                     className='w-full h-48 object-cover rounded-md mb-4 transform transition-transform duration-300 hover:-translate-y-1'
                   />
@@ -128,7 +131,7 @@ const WaterPark = () => {
               {highlights2.map((item, index) => (
                 <div key={index} className='bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl'>
                   <img
-                    src={item.image}
+                    src={publicAsset(item.image)}
                     alt={item.title}
                     className='w-full h-52 object-cover rounded-md mb-4 transform transition-transform duration-300 hover:-translate-y-1'
                   />
@@ -141,7 +144,7 @@ const WaterPark = () => {
         </Element>
 
         <div className='my-6 flex justify-center mb-12'>
-          <img src='/Assets/hr_line.png' alt='Divider' className='w-full' />
+          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
         </div>
 
         <div className='text-center'>
@@ -149,21 +152,21 @@ const WaterPark = () => {
           <p className='text-lg font-semibold mb-6'>Step into Dreamasia and experience the thrill of 15+ action-packed game activities
           </p>
           <section className="max-w-6xl mx-auto flex overflow-x-auto gap-4 p-4">
-            <img src="/Assets/boat.jpg" alt="boat theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src="/Assets/slides.png" alt="slides" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src="/Assets/Fun-Filled2.jpg" alt="Fun Field2" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src="/Assets/Fun-Filled3.jpg" alt="Fun Field3" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src="/Assets/water-park-1.png" alt="water park theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
+            <img src={publicAsset("/Assets/boat.jpg")} alt="boat theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
+            <img src={publicAsset("/Assets/slides.png")} alt="slides" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
+            <img src={publicAsset("/Assets/Fun-Filled2.jpg")} alt="Fun Field2" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
+            <img src={publicAsset("/Assets/Fun-Filled3.jpg")} alt="Fun Field3" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
+            <img src={publicAsset("/Assets/water-park-1.png")} alt="water park theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
           </section>
           <section className='flex flex-col items-center mt-10'>
             <h1 className='text-2xl font-extrabold mb-10'>Find your way around...</h1>
-            <img src='/Assets/dreamasia-image.jpg'
+            <img src={publicAsset('/Assets/dreamasia-image.jpg')}
               className='w-full h-auto rounded-lg shadow-lg transform transition-transform duration-300 hover:-translate-y-1' />
           </section>
         </div>
 
         <div className='my-6 flex justify-center mb-12'>
-          <img src='/Assets/hr_line.png' alt='Divider' className='w-full' />
+          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
         </div>
 
         <Element name='information'>
@@ -175,19 +178,19 @@ const WaterPark = () => {
             <div className="flex flex-col md:flex-row gap-6 justify-between">
 
               <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src="/Assets/clock-1.png" alt="Opening Hours" className="w-20 h-20 mx-auto mb-4" />
+                <img src={publicAsset("/Assets/clock-1.png")} alt="Opening Hours" className="w-20 h-20 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold mb-2">Opening Hours</h2>
                 <p>Check the park opening hours before you come, as they can vary depending on the season!</p>
               </section>
 
               <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src="/Assets/Access.png" alt="Accessibility Services" className="w-20 h-20 mx-auto mb-4" />
+                <img src={publicAsset("/Assets/Access.png")} alt="Accessibility Services" className="w-20 h-20 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold mb-2">Accessibility Services</h2>
                 <p>Learn about our Priority Card, accessibility on our attractions and dedicated transport options.</p>
               </section>
 
               <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src="/Assets/guest-service.jpeg" alt="Guest Services" className="w-20 h-20 mx-auto mb-4 bg-blue-400" />
+                <img src={publicAsset("/Assets/guest-service.jpeg")} alt="Guest Services" className="w-20 h-20 mx-auto mb-4 bg-blue-400" />
                 <h2 className="text-xl font-semibold mb-2">Guest Services</h2>
                 <p>Safety comes first at our park. From strict height requirements on rides to routine safety inspections of all equipment, every measure is taken to ensure a secure and thrilling experience for every guest.</p>
               </section>

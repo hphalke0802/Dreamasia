@@ -1,9 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { publicAsset } from '@/lib/publicAsset';
 import { useRouter } from 'next/navigation';
 import { IoChevronBackOutline } from 'react-icons/io5';
 import { motion, AnimatePresence } from 'framer-motion';
 import Maintenance from '../Miantenance/page';
+import HorizontalInfoSlider from "../horizontalInfoSlider";
 
 const images = [
     '/Assets/wedding-slider1.jpg',
@@ -43,6 +45,7 @@ const Weddings = () => {
 
     return (
         <>
+            <HorizontalInfoSlider />
             <Maintenance />
             <div className="min-h-screen bg-gradient-to-b from-white to-purple-50">
                 {/* Navigation Bar */}
@@ -56,7 +59,7 @@ const Weddings = () => {
                     </button>
 
                     <img
-                        src="/Assets/logo-img.png"
+                        src={publicAsset("/Assets/logo-img.png")}
                         alt="Dream Asia Logo"
                         className="h-10 w-10 object-cover rounded-full shadow-lg"
                     />
@@ -73,14 +76,14 @@ const Weddings = () => {
                 >
                     {/* Header Image */}
                     <img
-                        src="/Assets/destinationwedding.jpg"
+                        src={publicAsset("/Assets/destinationwedding.jpg")}
                         alt="Destination Wedding"
                         className="w-80 md:w-[600px] rounded-3xl shadow-2xl border-4 border-white"
                     />
 
                     {/* Wedding Logo */}
                     <img
-                        src="/Assets/wedding-logo.jpg"
+                        src={publicAsset("/Assets/wedding-logo.jpg")}
                         alt="Wedding Logo"
                         className="w-28 h-20 object-contain drop-shadow-md rounded-xl"
                     />

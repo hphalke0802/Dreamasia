@@ -1,10 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { publicAsset } from '@/lib/publicAsset';
 import Navbar from "../Navbar/MainContent/page";
 import Footer from "../Footer/MainContent/page";
 import { IoLocation } from "react-icons/io5";
 import { MdLocalPhone, MdEmail } from "react-icons/md";
 import Maintenance from "../Miantenance/page";
+import HorizontalInfoSlider from "../horizontalInfoSlider";
 import BASE_URL from "../GlobalUrl";
 
 
@@ -172,13 +174,14 @@ const LostItemsReport = () => {
 
     return (
         <div className="bg-gray-50">
+            <HorizontalInfoSlider />
             <Navbar />
             <Maintenance />
 
             {/* Banner Section */}
             <div className="relative w-full bg-gradient-to-b from-purple-100 to-purple-400">
                 <img
-                    src="/Assets/dreamasia-image.jpg"
+                    src={publicAsset("/Assets/dreamasia-image.jpg")}
                     alt="Lost Items Banner"
                     className="w-full h-40 md:h-80 object-cover object-bottom mt-18 md:mt-0 opacity-50"
                 />

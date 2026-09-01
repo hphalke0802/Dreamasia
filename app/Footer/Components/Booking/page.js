@@ -1,29 +1,32 @@
 "use client"
 import React, { useEffect } from 'react'
+import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '@/app/Navbar/MainContent/page';
 import Footer from '@/app/Footer/MainContent/page';
 import Maintenance from '@/app/Miantenance/page';
+import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
 
 const Booking = () => {
 
   // Prevent right-click
-    useEffect(() => {
-      const handleContextMenu = (e) => e.preventDefault();
-      document.addEventListener('contextmenu', handleContextMenu);
-      return () => {
-        document.removeEventListener('contextmenu', handleContextMenu);
-      };
-    }, []);
+  useEffect(() => {
+    const handleContextMenu = (e) => e.preventDefault();
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
 
   return (
     <>
+      <HorizontalInfoSlider />
       <Navbar />
-      <Maintenance/>
+      <Maintenance />
 
       {/* Banner Section */}
       <div className="relative w-full bg-gradient-to-b from-purple-100 to-purple-400">
         <img
-          src="/Assets/discover2.jpg"
+          src={publicAsset("/Assets/discover2.jpg")}
           alt="Booking Banner"
           className="w-full mt-18 md:mt-0 md:h-80 object-cover opacity-50"
         />
