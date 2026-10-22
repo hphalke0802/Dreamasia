@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { publicAsset } from "@/lib/publicAsset";
 import { usePathname, useRouter } from "next/navigation";
 import { IoMenu } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+
+/** House purple, as used for the home page's "Your Squad" heading and the logo. */
+const BRAND = "#6B1E74";
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef(null);
+  const reduceMotion = useReducedMotion();
 
   // Curve should appear ONLY on home page
   const isHomePage = pathname === "/";
@@ -32,9 +39,19 @@ const Navbar = () => {
       color: "#E50046",
     },
     {
-      name: "Resort",
+      name: "Stays",
       path: "/Hotels",
       color: "#06B6D4",
+    },
+    {
+      name: "Weddings",
+      path: "/Weddings",
+      color: "#661C6F",
+    },
+    {
+      name: "Corporates",
+      path: "/Corporates",
+      color: "#6B1E74",
     },
     {
       name: "Book Ticket",
@@ -54,6 +71,13 @@ const Navbar = () => {
     },
   ];
 
+  // "Book Ticket" is pulled out as the single primary action; everything else
+  // renders as a text destination.
+  const ctaItem = navItems.find((item) => item.external);
+  const linkItems = navItems.filter((item) => !item.external);
+
+  const isActive = (item) => !item.external && pathname === item.path;
+
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = "hidden";
@@ -64,6 +88,61 @@ const Navbar = () => {
     return () => {
       document.body.style.overflow = "";
     };
+  }, [menuOpen]);
+
+  /**
+   * Publish the header's real height as --nav-h.
+   *
+   * Anything that sticks below the floating nav (the in-page QuickNav, section
+   * scroll anchors) needs to clear it. Hardcoding the offset drifts the moment
+   * the logo or padding changes — and did: the measured header is ~117px tall
+   * at desktop, not the 96px the min-height implied, so the two bars overlapped.
+   * Measuring it keeps them in step.
+   */
+  useEffect(() => {
+    const node = headerRef.current;
+    if (!node) return;
+
+    const publish = () => {
+      document.documentElement.style.setProperty(
+        "--nav-h",
+        `${Math.round(node.getBoundingClientRect().height)}px`
+      );
+    };
+
+    publish();
+
+    const observer = new ResizeObserver(publish);
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Track whether the page has left the top, so the island can tighten its
+  // border and shadow. Passive listener, and it only writes on a change.
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled((previous) => {
+        const next = window.scrollY > 12;
+        return next === previous ? previous : next;
+      });
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Close the drawer on Escape — an escape route from a full-screen overlay.
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const onKey = (event) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
   const handleNavigation = (item) => {
@@ -78,66 +157,148 @@ const Navbar = () => {
   };
 
   return (
-    <header className="relative z-[90] w-full bg-white">
+    <header ref={headerRef} className="sticky top-0 z-[90] w-full px-2.5 pt-2.5 sm:px-4 sm:pt-4">
 
-      {/* Main Navbar */}
-      <div className="relative z-30 bg-white">
-        <div className="mx-auto flex min-h-[95px] max-w-[1250px] items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:min-h-[140px] lg:px-8">
+      {/* Floating island.
+          Detached from the viewport edge, so it reads as floating above the
+          page. The border and shadow tighten once scrolled, which is what
+          signals the lift. */}
+      <motion.div
+        className="relative z-30 mx-auto max-w-[1250px] overflow-hidden rounded-2xl border bg-white/92 backdrop-blur-md sm:rounded-[20px]"
+        style={{
+          borderColor: scrolled ? `${BRAND}3D` : `${BRAND}24`,
+          borderWidth: 1.5,
+          boxShadow: scrolled
+            ? `0 18px 40px -16px ${BRAND}4D, 0 2px 8px -2px rgba(0,0,0,.12)`
+            : `0 10px 28px -14px ${BRAND}33`,
+        }}
+        animate={reduceMotion ? undefined : { scale: scrolled ? 0.995 : 1 }}
+        transition={{ type: "spring", stiffness: 320, damping: 30 }}
+      >
+        {/* A single brand hairline. A multi-colour sweep across the top read as
+            decoration for its own sake; one restrained line does the same job
+            of tying the island to the brand. */}
+        <span
+          className="absolute inset-x-0 top-0 h-[2px]"
+          style={{ backgroundColor: BRAND }}
+          aria-hidden="true"
+        />
+
+        <div className="mx-auto flex min-h-[62px] items-center justify-between gap-4 px-3.5 py-2 sm:px-5 lg:min-h-[76px] lg:gap-6 lg:px-6">
 
           {/* Logo */}
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="flex shrink-0 cursor-pointer items-center border-0 bg-transparent p-0"
+            className="flex shrink-0 cursor-pointer items-center rounded-lg border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2"
+            style={{ ["--tw-ring-color"]: `${BRAND}55` }}
             aria-label="Dream Asia home"
           >
             <img
               src={publicAsset("/Assets/contact-logo.png")}
               alt="Dream Asia"
-              className="h-auto w-[155px] object-contain sm:w-[175px] lg:w-[195px]"
+              className="h-auto w-[118px] object-contain transition-[width] duration-300 sm:w-[140px] lg:w-[165px]"
             />
           </button>
 
-          {/* Desktop Navbar */}
-          <nav className="hidden items-center justify-end gap-5 lg:flex">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
+          {/* Desktop Navbar
+              Nine coloured pills no longer fit between the logo and the right
+              edge, so destinations render as text with the section colour used
+              for the active/hover indicator. "Book Ticket" stays a solid pill —
+              one clear primary action rather than nine competing ones. */}
+          <nav className="hidden items-center justify-end gap-1 lg:flex xl:gap-2" aria-label="Main">
+            {linkItems.map((item) => {
+              const active = isActive(item);
+
+              return (
+                <button
+                  key={item.name}
+                  type="button"
+                  onClick={() => handleNavigation(item)}
+                  aria-current={active ? "page" : undefined}
+                  className="group relative cursor-pointer whitespace-nowrap rounded-md border-0 bg-transparent px-2.5 py-2.5 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:px-3 xl:text-[16px]"
+                  style={{
+                    color: active ? item.color : "#374151",
+                    ["--tw-ring-color"]: `${item.color}55`,
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.color = item.color;
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.color = active ? item.color : "#374151";
+                  }}
+                >
+                  {item.name}
+
+                  {/* Active underline, shared across items so it slides. */}
+                  {active ? (
+                    <motion.span
+                      layoutId="navbar-active-underline"
+                      className="absolute inset-x-2 -bottom-0.5 h-[3px] rounded-full"
+                      style={{ backgroundColor: item.color }}
+                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <span
+                      className="absolute inset-x-2 -bottom-0.5 h-[3px] origin-left scale-x-0 rounded-full transition-transform duration-200 group-hover:scale-x-100"
+                      style={{ backgroundColor: `${item.color}66` }}
+                      aria-hidden="true"
+                    />
+                  )}
+                </button>
+              );
+            })}
+
+            {ctaItem ? (
+              <motion.button
                 type="button"
-                onClick={() => handleNavigation(item)}
-                className="cursor-pointer whitespace-nowrap rounded-md border-0 px-3.5 py-2.5 text-[16px] font-medium text-white shadow-sm transition-all duration-200 hover:-translate-y-[2px] hover:brightness-105 hover:shadow-md"
+                onClick={() => handleNavigation(ctaItem)}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 380, damping: 24 }}
+                className="ml-2 cursor-pointer whitespace-nowrap rounded-full border-0 px-5 py-2.5 text-[15px] font-bold text-white shadow-md transition-shadow duration-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:text-[16px]"
                 style={{
-                  backgroundColor: item.color,
+                  backgroundColor: ctaItem.color,
+                  ["--tw-ring-color"]: `${ctaItem.color}66`,
                 }}
               >
-                {item.name}
-              </button>
-            ))}
+                {ctaItem.name}
+              </motion.button>
+            ) : null}
           </nav>
 
           {/* Mobile Menu Button */}
-          <button
+          <motion.button
             type="button"
             onClick={() => setMenuOpen((previousValue) => !previousValue)}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#6B1E74] text-white shadow-md lg:hidden"
+            whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 420, damping: 22 }}
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 text-white shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 lg:hidden"
+            style={{ backgroundColor: BRAND, ["--tw-ring-color"]: `${BRAND}55` }}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? (
               <RxCross2 className="text-2xl" />
             ) : (
               <IoMenu className="text-2xl" />
             )}
-          </button>
+          </motion.button>
 
         </div>
-      </div>
+      </motion.div>
 
       {/* =====================================================
           BOTTOM CURVE - HOME PAGE ONLY
+
+          The scallop was anchored to a full-width white bar. Now that the nav
+          is a detached island it only reads correctly at rest, so it fades out
+          once the page scrolls and the island is genuinely floating.
       ====================================================== */}
-      {isHomePage && (
+      {isHomePage && !scrolled && (
         <div
-          className="pointer-events-none absolute left-0 top-[calc(100%-2px)] z-10 hidden h-[45px] w-full overflow-hidden lg:block"
+          className="pointer-events-none absolute left-0 top-[calc(100%-6px)] z-10 hidden h-[45px] w-full overflow-hidden lg:block"
           aria-hidden="true"
         >
           <svg
@@ -186,8 +347,15 @@ const Navbar = () => {
       {/* =====================================================
           MOBILE MENU
       ====================================================== */}
+      <AnimatePresence>
       {menuOpen && (
-        <div className="fixed inset-0 z-[100] bg-white lg:hidden">
+        <motion.div
+          className="fixed inset-0 z-[100] bg-white lg:hidden"
+          initial={reduceMotion ? false : { opacity: 0, y: -12 }}
+          animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+          exit={reduceMotion ? false : { opacity: 0, y: -12 }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        >
 
           {/* Mobile Menu Header */}
           <div className="flex min-h-[82px] items-center justify-between border-b border-gray-200 px-4 py-3 shadow-sm">
@@ -219,28 +387,71 @@ const Navbar = () => {
 
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="h-[calc(100vh-82px)] overflow-y-auto px-5 py-7">
+          {/* Mobile Navigation
+              dvh rather than vh: on mobile browsers 100vh includes the
+              collapsing toolbar, which cut the last item off. */}
+          <div className="h-[calc(100dvh-82px)] overflow-y-auto px-5 pb-10 pt-6">
 
-            <nav className="mx-auto flex max-w-md flex-col gap-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
+            <nav className="mx-auto flex max-w-md flex-col gap-3" aria-label="Main">
+              {linkItems.map((item, index) => {
+                const active = isActive(item);
+
+                return (
+                  <motion.button
+                    key={item.name}
+                    type="button"
+                    onClick={() => handleNavigation(item)}
+                    aria-current={active ? "page" : undefined}
+                    initial={reduceMotion ? false : { opacity: 0, x: -18 }}
+                    animate={reduceMotion ? false : { opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.045, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                    className="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-3 rounded-xl border-2 bg-white px-4 py-3 text-left text-base font-semibold transition-colors duration-200"
+                    style={{
+                      color: item.color,
+                      borderColor: active ? item.color : "#E5E7EB",
+                      backgroundColor: active ? `${item.color}12` : "#fff",
+                    }}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </span>
+
+                    {active ? (
+                      <span className="text-xs font-bold uppercase tracking-wider opacity-70">
+                        Current
+                      </span>
+                    ) : null}
+                  </motion.button>
+                );
+              })}
+
+              {/* Primary action, visually separated from the destinations. */}
+              {ctaItem ? (
+                <motion.button
                   type="button"
-                  onClick={() => handleNavigation(item)}
-                  className="w-full cursor-pointer rounded-md border-0 px-4 py-3 text-center text-base font-semibold text-white shadow-md transition-transform duration-200 active:scale-[0.98]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
+                  onClick={() => handleNavigation(ctaItem)}
+                  initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                  animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+                  transition={{ delay: linkItems.length * 0.045, duration: 0.3 }}
+                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                  className="mt-3 flex min-h-[56px] w-full cursor-pointer items-center justify-center rounded-full border-0 px-4 py-3 text-base font-bold text-white shadow-lg"
+                  style={{ backgroundColor: ctaItem.color }}
                 >
-                  {item.name}
-                </button>
-              ))}
+                  {ctaItem.name}
+                </motion.button>
+              ) : null}
             </nav>
 
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
     </header>
   );

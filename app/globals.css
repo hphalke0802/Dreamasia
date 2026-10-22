@@ -1,5 +1,54 @@
 @import "tailwindcss";
 
+/**
+ * Design tokens for the Stays / Weddings / Corporates pages.
+ *
+ * The palette is the site's existing one — the brand purple, the per-section
+ * colours from the navbar — but held back: one accent per page, used on small
+ * elements only, over warm neutrals rather than coloured gradients.
+ *
+ * A serif display face carries the headings. It costs nothing to load (system
+ * stack) and it is already part of the site's vocabulary — the original
+ * Weddings hero used font-serif.
+ */
+@theme {
+  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
+    "Book Antiqua", Georgia, serif;
+
+  /* Warm neutrals. Paper rather than flat grey. */
+  --color-ink: #17120f;
+  --color-ink-soft: #4a423d;
+  --color-ink-muted: #7d736c;
+  --color-paper: #faf8f6;
+  --color-paper-deep: #f2eeea;
+  --color-hairline: #e4ddd6;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+/* Respect the system preference rather than animating regardless. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/**
+ * Editorial heading: serif, tight tracking, generous leading.
+ * Applied via .u-display so the three pages share one voice.
+ */
+.u-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+
+/** Small letterspaced label used for eyebrows and spec captions. */
+.u-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }

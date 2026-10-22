@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# node 25 web-storage shim used by the dev script
+.dev-localstorage*

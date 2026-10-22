@@ -173,6 +173,36 @@ const AboutUs = () => {
             resort destination attracting visitors from across India and beyond.
           </p>
 
+          {/* Paragraph 3 — parent company */}
+          <p className="mx-auto mt-7 max-w-[1180px] text-[15px] font-medium leading-7 text-[#405066] sm:text-[17px] lg:text-[18px] lg:leading-8">
+            Dream Asia is a venture of{" "}
+            <span className="font-bold text-[#6B1E74]">
+              Sacchidanand Rainbow Kingdom Pvt. Ltd.
+            </span>
+            , the company behind the park, the resort and everything we operate on the
+            estate. Dream Asia is the name you will see on the gates; Sacchidanand
+            Rainbow Kingdom is the company that runs it.
+          </p>
+
+          {/* Billing-name notice.
+              Guests reach the payment step, see a company name they do not
+              recognise and assume something has gone wrong. Saying so plainly here
+              is cheaper than losing the booking. */}
+          <div className="mx-auto mt-10 max-w-[900px] rounded-2xl border border-[#E3D4E6] bg-[#FAF5FB] px-6 py-6 text-left sm:px-8 sm:py-7">
+            <h3 className="text-[16px] font-extrabold text-[#07152C] sm:text-[18px]">
+              A note when you book
+            </h3>
+            <p className="mt-3 text-[15px] font-medium leading-7 text-[#405066] sm:text-[16px]">
+              When you book tickets or a stay, your payment and confirmation will show{" "}
+              <span className="font-bold text-[#6B1E74]">
+                Sacchidanand Rainbow Kingdom Pvt. Ltd.
+              </span>{" "}
+              rather than Dream Asia. That is our registered company name, so seeing it
+              on your card statement, invoice or booking confirmation means your payment
+              has reached the right place. Nothing has gone wrong.
+            </p>
+          </div>
+
         </div>
 
       </section>

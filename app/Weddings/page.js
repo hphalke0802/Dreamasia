@@ -1,147 +1,303 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { publicAsset } from '@/lib/publicAsset';
-import { useRouter } from 'next/navigation';
-import { IoChevronBackOutline } from 'react-icons/io5';
-import { motion, AnimatePresence } from 'framer-motion';
-import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from "../horizontalInfoSlider";
 
-const images = [
-    '/Assets/wedding-slider1.jpg',
-    '/Assets/wedding-slider2.jpg',
-    '/Assets/wedding-slider3.jpg',
-    '/Assets/wedding-slider-4.jpg',
-    '/Assets/wedding-slider-5.jpg',
-    '/Assets/wedding-slider-6.jpg',
+/**
+ * Weddings — destination weddings at Dream Asia.
+ *
+ * Redesigned in place at /Weddings so existing links keep working. Uses the
+ * shared Navbar rather than the old one-off back bar, so navigation sits in the
+ * same place as every other page.
+ *
+ * Enquiries route to the existing Contact Us page — no new form or flow.
+ */
+
+import React, { useEffect } from 'react';
+import { publicAsset } from '@/lib/publicAsset';
+import Navbar from '../Navbar/MainContent/page';
+import Footer from '../Footer/MainContent/page';
+import Maintenance from '../Miantenance/page';
+import HorizontalInfoSlider from '../horizontalInfoSlider';
+import {
+  PageHero,
+  QuickNav,
+  Section,
+  SectionHeading,
+  SplitRow,
+  ListEntry,
+  PhotoGrid,
+  CtaButton,
+  CtaBand,
+  Reveal,
+  Accordion,
+} from '../_ui/PageKit';
+
+/** The deep purple the Weddings page has always used. */
+const ACCENT = '#661C6F';
+
+/** Existing contact route — enquiries continue to go through it. */
+const ENQUIRY_URL = '/Footer/Components/ContactUs';
+
+const GALLERY = [
+  '/Assets/wedding-slider1.jpg',
+  '/Assets/wedding-slider2.jpg',
+  '/Assets/wedding-slider3.jpg',
+  '/Assets/wedding-slider-4.jpg',
+  '/Assets/wedding-slider-5.jpg',
+  '/Assets/wedding-slider-6.jpg',
 ];
 
-const fadeVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.8 } },
-    exit: { opacity: 0, transition: { duration: 0.8 } },
-};
+const NAV_ITEMS = [
+  { to: 'venues', label: 'Venues' },
+  { to: 'gallery', label: 'Gallery' },
+  { to: 'services', label: 'What We Do' },
+  { to: 'questions', label: 'Questions' },
+];
+
+const VENUES = [
+  {
+    image: '/Assets/wedding-slider1.jpg',
+    eyebrow: 'Up to 300 seated',
+    title: 'The Garden Lawn',
+    body: 'An open lawn for daytime ceremonies and evening receptions, framed by the estate planting. Comfortable for three hundred seated, more for a standing reception.',
+  },
+  {
+    image: '/Assets/wedding-slider-4.jpg',
+    eyebrow: 'Up to 400 seated',
+    title: 'The Banquet Hall',
+    body: 'A fully air-conditioned indoor hall for when the weather should not get a vote. Takes the sangeet, the reception, or both on consecutive nights.',
+    reverse: true,
+  },
+  {
+    image: '/Assets/wedding-slider-6.jpg',
+    eyebrow: 'Up to 120 guests',
+    title: 'Poolside Deck',
+    body: 'The intimate option — a smaller deck for the mehendi, cocktail hour or a close-family ceremony with the water as a backdrop.',
+  },
+];
+
+const SERVICES = [
+  { title: 'Planning', body: 'One planner from the first call to the final send-off, so you are never chasing five vendors at once.' },
+  { title: 'Venue & décor', body: 'Lawn, poolside and banquet settings, styled to your palette rather than a fixed template.' },
+  { title: 'Catering', body: 'Multi-cuisine menus with vegetarian, Jain and regional options, tasted and signed off beforehand.' },
+  { title: 'Accommodation', body: 'On-site rooms and villas for your party, at group rates, through the same coordinator.' },
+  { title: 'Sound & lighting', body: 'Stage, sound and lighting handled in house, including the sangeet and the after-party.' },
+  { title: 'Bridal suite', body: 'A private suite for getting ready, with salon and spa appointments around your timeline.' },
+  { title: 'Guest experience', body: 'Park passes, transfers and activities for the people who travelled to be there.' },
+  { title: 'Photography', body: 'Access to the grounds at golden hour and coordination with your photography team.' },
+];
+
+const INCLUDED = [
+  'A dedicated planner assigned to your date',
+  'Site visit and walkthrough before you confirm',
+  'Menu tasting for the couple and two family members',
+  'On-site accommodation blocks at group rates',
+  'Park passes available for out-of-town guests',
+  'A dedicated bridal suite on the day',
+];
+
+const FAQS = [
+  {
+    q: 'How far in advance should we book?',
+    a: 'Six to nine months is comfortable for peak season dates, and three months is usually workable outside it. If your date is fixed, talk to us early — venue availability moves fastest.',
+  },
+  {
+    q: 'Can we use more than one venue across our functions?',
+    a: 'Yes, and most couples do. A typical run is mehendi on the poolside deck, sangeet in the banquet hall and the ceremony on the garden lawn — all on the same estate, so nobody travels between them.',
+  },
+  {
+    q: 'Where do our guests stay?',
+    a: 'On site, across our three properties — Resort of Asia, Wavy Stay and Palace Courtyard. We hold accommodation blocks at group rates, coordinated through the same planner handling your wedding.',
+  },
+  {
+    q: 'Can we bring our own decorator or photographer?',
+    a: 'Absolutely. We work alongside your vendors and give them access to the grounds for setup and golden-hour shoots. We can also handle décor in house if you would rather not manage it.',
+  },
+  {
+    q: 'What about catering and dietary requirements?',
+    a: 'Multi-cuisine menus with vegetarian, Jain and regional options, all tasted and signed off before the day. Tell us about allergies and we will build around them.',
+  },
+  {
+    q: 'What happens if it rains?',
+    a: 'The banquet hall is air-conditioned and sized to take a lawn function at short notice. Your planner will agree a weather call time with you in advance, so the decision is never rushed.',
+  },
+];
 
 const Weddings = () => {
-    const router = useRouter();
-    const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const handleContextMenu = (e) => e.preventDefault();
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => document.removeEventListener('contextmenu', handleContextMenu);
+  }, []);
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setIndex((prev) => (prev + 1) % images.length);
-        }, 3000);
+  return (
+    <div className="bg-paper">
+      <HorizontalInfoSlider />
+      <Navbar />
+      <Maintenance />
 
-        return () => clearInterval(timer);
-    }, []);
+      <PageHero
+        image="/Assets/webp/destinationwedding.webp"
+        imageAlt="A wedding set up on the Dream Asia lawns"
+        eyebrow="Destination Weddings"
+        title="Every function on one estate"
+        subtitle="Mehendi on the deck, sangeet in the hall, the ceremony on the lawn — and everyone sleeping a two-minute walk away."
+        accent={ACCENT}
+      >
+        <CtaButton href={ENQUIRY_URL} accent={ACCENT}>
+          Plan Your Wedding
+        </CtaButton>
+        <CtaButton href="#gallery" variant="ghost">
+          See the Venues
+        </CtaButton>
+      </PageHero>
 
-    // Prevent right-click
-    useEffect(() => {
-        const handleContextMenu = (e) => e.preventDefault();
-        document.addEventListener('contextmenu', handleContextMenu);
-        return () => {
-            document.removeEventListener('contextmenu', handleContextMenu);
-        };
-    }, []);
+      <QuickNav items={NAV_ITEMS} accent={ACCENT} />
 
-    return (
-        <>
-            <HorizontalInfoSlider />
-            <Maintenance />
-            <div className="min-h-screen bg-gradient-to-b from-white to-purple-50">
-                {/* Navigation Bar */}
-                <nav className="flex items-center justify-between bg-[#661C6F] px-4 py-3 shadow-md">
-                    <button
-                        onClick={() => router.back()}
-                        className="text-white text-2xl"
-                        aria-label="Go back"
-                    >
-                        <IoChevronBackOutline />
-                    </button>
+      {/* Opening statement */}
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7">
+            <SectionHeading
+              eyebrow="Why here"
+              title="No convoys between venues. No guests lost in a new city."
+              lead="Three settings on a single estate, on-site rooms for the whole party, and one planner who already knows the venue, the vendors and the timings."
+              accent={ACCENT}
+            />
+          </div>
 
-                    <img
-                        src={publicAsset("/Assets/logo-img.png")}
-                        alt="Dream Asia Logo"
-                        className="h-10 w-10 object-cover rounded-full shadow-lg"
-                    />
+          <div className="lg:col-span-5 lg:pt-20">
+            <Reveal>
+              <img
+                src={publicAsset('/Assets/wedding-logo.jpg')}
+                alt="Dream Asia Weddings"
+                width={320}
+                height={220}
+                loading="lazy"
+                decoding="async"
+                className="h-24 w-auto object-contain"
+              />
+              <div className="mt-6 space-y-5 border-t border-hairline pt-6">
+                {INCLUDED.slice(0, 3).map((line) => (
+                  <p key={line} className="text-[15px] leading-[1.7] text-ink-soft">
+                    {line}
+                  </p>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </Section>
 
-                    <div className="w-6" />
-                </nav>
+      {/* Venues */}
+      <Section id="venues" tone="alt">
+        <SectionHeading
+          eyebrow="Venues"
+          title="Three settings to choose between"
+          lead="Pick one, or use all three across your functions. They are all on the same property."
+          accent={ACCENT}
+        />
 
-                {/* Main Content */}
-                <motion.main
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className="flex flex-col items-center justify-center py-10 px-4 text-center space-y-10"
-                >
-                    {/* Header Image */}
-                    <img
-                        src={publicAsset("/Assets/destinationwedding.jpg")}
-                        alt="Destination Wedding"
-                        className="w-80 md:w-[600px] rounded-3xl shadow-2xl border-4 border-white"
-                    />
+        <div className="space-y-20 sm:space-y-28">
+          {VENUES.map((venue) => (
+            <SplitRow
+              key={venue.title}
+              image={venue.image}
+              imageAlt={venue.title}
+              eyebrow={venue.eyebrow}
+              title={venue.title}
+              reverse={venue.reverse}
+              accent={ACCENT}
+            >
+              <p>{venue.body}</p>
+            </SplitRow>
+          ))}
+        </div>
+      </Section>
 
-                    {/* Wedding Logo */}
-                    <img
-                        src={publicAsset("/Assets/wedding-logo.jpg")}
-                        alt="Wedding Logo"
-                        className="w-28 h-20 object-contain drop-shadow-md rounded-xl"
-                    />
+      {/* Gallery */}
+      <Section id="gallery">
+        <SectionHeading
+          eyebrow="Gallery"
+          title="Weddings we have hosted"
+          lead="Select any image to open it full size."
+          accent={ACCENT}
+        />
+        <PhotoGrid images={GALLERY} accent={ACCENT} captionPrefix="Wedding photo" />
+      </Section>
 
-                    {/* Title */}
-                    <h1 className="text-3xl md:text-5xl font-extrabold text-[#661C6F] font-serif tracking-wide">
-                        Destination Weddings
-                    </h1>
+      {/* Services */}
+      <Section id="services" tone="alt">
+        <SectionHeading
+          eyebrow="What we do"
+          title="Handled, so you do not have to"
+          accent={ACCENT}
+        />
 
-                    {/* Description */}
-                    <p className="max-w-2xl text-gray-700 text-lg leading-relaxed px-4">
-                        Celebrate love in paradise. Dream Asia Weddings curates unforgettable
-                        destination weddings in the most breathtaking locations.
-                    </p>
+        <div className="grid grid-cols-1 gap-x-12 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+          {SERVICES.map((item, i) => (
+            <Reveal key={item.title} delay={Math.min(i, 7) * 0.04}>
+              <ListEntry index={i + 1} title={item.title} body={item.body} accent={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
 
-                    {/* Divider */}
-                    <hr className="w-24 border-[#661C6F] border-t-2 rounded-full" />
+      {/* Included */}
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <SectionHeading eyebrow="Included" title="Part of every wedding package" accent={ACCENT} />
+          </div>
 
-                    {/* Image Slider */}
-                    <div className="relative w-full max-w-3xl h-72 overflow-hidden rounded-xl shadow-lg">
-                        <AnimatePresence mode="wait">
-                            <motion.img
-                                key={images[index]}
-                                src={images[index]}
-                                alt={`Slide ${index + 1}`}
-                                variants={fadeVariants}
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                className="absolute w-full h-full object-cover rounded-xl"
-                            />
-                        </AnimatePresence>
-                    </div>
+          <div className="lg:col-span-7">
+            <Reveal>
+              <ul className="border-t border-hairline">
+                {INCLUDED.map((line) => (
+                  <li
+                    key={line}
+                    className="border-b border-hairline py-4 text-[15px] leading-[1.7] text-ink-soft"
+                  >
+                    {line}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+        </div>
+      </Section>
 
-                    {/* Info Section */}
-                    <section className="bg-white bg-opacity-80 rounded-xl shadow-lg p-6 md:p-10 max-w-3xl text-left text-gray-800 space-y-4">
-                        <h2 className="text-xl font-bold text-[#661C6F] border-b pb-2 border-[#e2ccec]">
-                            What We Offer
-                        </h2>
-                        <ul className="list-disc list-inside space-y-2 text-base">
-                            <li>
-                                <strong>Destination Wedding Planning:</strong> A dedicated team
-                                that turns your dream into reality.
-                            </li>
-                            <li>
-                                <strong>Comprehensive Services:</strong> From venue selection to
-                                itinerary planning — we cover it all.
-                            </li>
-                            <li>
-                                <strong>Stress-Free Experience:</strong> Let us handle the chaos
-                                while you enjoy your perfect day.
-                            </li>
-                        </ul>
-                    </section>
-                </motion.main>
-            </div>
-        </>
-    );
+      {/* FAQs */}
+      <Section id="questions" tone="alt">
+        <SectionHeading
+          eyebrow="Questions"
+          title="Before you ask"
+          lead="The things couples want to know first."
+          accent={ACCENT}
+        />
+
+        <div className="max-w-3xl">
+          <Reveal>
+            <Accordion items={FAQS} accent={ACCENT} />
+          </Reveal>
+        </div>
+      </Section>
+
+      <CtaBand
+        image="/Assets/wedding-slider-5.jpg"
+        title="Tell us about your day"
+        body="Send us your dates and guest count. We will come back with venue options, a draft plan and what it costs."
+        accent={ACCENT}
+      >
+        <CtaButton href={ENQUIRY_URL} variant="onDark">
+          Start an Enquiry
+        </CtaButton>
+        <CtaButton href="/Hotels" variant="ghost">
+          Guest Accommodation
+        </CtaButton>
+      </CtaBand>
+
+      <Footer />
+    </div>
+  );
 };
 
 export default Weddings;

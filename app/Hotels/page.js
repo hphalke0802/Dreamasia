@@ -1,306 +1,304 @@
-"use client"
-import React, { useEffect } from 'react'
+'use client';
+
+/**
+ * Stays — Dream Asia resort accommodation.
+ *
+ * Lives at /Hotels because the navbar ("Stays") and the PlaceToStay dropdown
+ * both already point here; keeping the route avoids breaking those links.
+ *
+ * Booking stays outbound to the existing membership flow — this page only
+ * links to it, exactly as the navbar does.
+ */
+
+import React, { useEffect } from 'react';
 import { publicAsset } from '@/lib/publicAsset';
-import { Link, Element } from 'react-scroll';
-import { GiMagicShield } from "react-icons/gi";
-import { TbParkingCircleFilled } from "react-icons/tb";
-import { LuTicketsPlane } from "react-icons/lu";
-import { RiHotelFill } from "react-icons/ri";
-import { SiInformatica } from "react-icons/si";
-import { MdLocalHotel } from "react-icons/md";
-import Navbar from '../Navbar/MainContent/page'
-import Footer from '../Footer/MainContent/page'
-import { motion } from 'framer-motion';
+import Navbar from '../Navbar/MainContent/page';
+import Footer from '../Footer/MainContent/page';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from "../horizontalInfoSlider";
+import HorizontalInfoSlider from '../horizontalInfoSlider';
+import {
+  PageHero,
+  QuickNav,
+  Section,
+  SectionHeading,
+  SplitRow,
+  ListEntry,
+  PhotoGrid,
+  CtaButton,
+  CtaBand,
+  Reveal,
+  Accordion,
+} from '../_ui/PageKit';
 
-const Hotels = () => {
+/** Resort cyan — the colour the navbar already assigns to this section. */
+const ACCENT = '#06B6D4';
 
-  // Prevent right-click
+/** The existing booking destination. Unchanged. */
+const BOOKING_URL = 'https://membership.dreamasiaworld.com/drmw/5555555555';
+
+const GALLERY = Array.from(
+  { length: 22 },
+  (_, i) => `/Assets/stay/stay-${String(i + 1).padStart(2, '0')}.jpeg`
+);
+
+const NAV_ITEMS = [
+  { to: 'properties', label: 'Properties' },
+  { to: 'gallery', label: 'Gallery' },
+  { to: 'amenities', label: 'Amenities' },
+  { to: 'information', label: 'Good to Know' },
+];
+
+/** The three properties. */
+const PROPERTIES = [
+  {
+    name: 'Resort of Asia',
+    detail: 'Bali villas',
+    image: '/Assets/stay/stay-04.jpeg',
+    body: 'Standalone Bali-style villas set back among the planting, each with its own verandah. The quietest way to stay on the property, and the one couples ask for by name.',
+    specs: ['Private villas', 'Individual verandah', 'Garden setting'],
+  },
+  {
+    name: 'Wavy Stay',
+    detail: '21 rooms',
+    image: '/Assets/stay/stay-09.jpeg',
+    body: 'Twenty-one rooms arranged around the water, in twin and double configurations. The practical choice for families and for groups who want to be housed together.',
+    specs: ['21 rooms', 'Twin & double', 'Poolside aspect'],
+  },
+  {
+    name: 'Palace Courtyard',
+    detail: '16 rooms',
+    image: '/Assets/stay/stay-15.jpeg',
+    body: 'Sixteen rooms opening onto an enclosed courtyard, with the most generous floor plans on the estate and a separate sitting area in each.',
+    specs: ['16 rooms', 'Courtyard facing', 'Separate sitting area'],
+  },
+];
+
+const AMENITIES = [
+  { title: 'Pool', body: 'Resort pool with a dedicated shallow section for younger guests.' },
+  { title: 'Dining', body: 'Multi-cuisine restaurant and a café for early breakfasts before the gates open.' },
+  { title: 'Wi-Fi', body: 'Complimentary high-speed internet in the rooms and across the public areas.' },
+  { title: 'Parking', body: 'Park at your own block at no cost, a short walk from the park entrance.' },
+  { title: 'Families', body: 'Cots, high chairs and child-safe fittings on request, at no charge.' },
+  { title: 'Room service', body: 'In-room dining through the day, for when nobody wants to move again.' },
+  { title: 'Spa', body: 'Massage and wellness treatments to put your feet back together.' },
+  { title: 'Front desk', body: 'Staffed around the clock for bookings, transport and anything else.' },
+];
+
+const FAQS = [
+  {
+    q: 'What are the check-in and check-out times?',
+    a: 'Check-in opens at 2:00 PM and check-out is by 11:00 AM. Early check-in and late check-out can be arranged subject to availability — ask the front desk on arrival.',
+  },
+  {
+    q: 'Do resort guests get early park access?',
+    a: 'Yes. On selected days resort guests can enter ahead of general admission, which means the headline rides before the queues build. Dates are confirmed at booking.',
+  },
+  {
+    q: 'Is there a shuttle to the park?',
+    a: 'A complimentary shuttle runs between the resort and the park gates through the day. The walk is only a couple of minutes if you would rather stretch your legs.',
+  },
+  {
+    q: 'Do children stay free?',
+    a: 'Children under 5 stay free when sharing a room with parents. Cots and high chairs are available on request at no extra charge.',
+  },
+  {
+    q: 'What is the cancellation policy?',
+    a: 'Free cancellation up to 48 hours before arrival. Inside 48 hours the first night may be charged — the exact terms are shown before you confirm payment.',
+  },
+  {
+    q: 'What do I need at check-in?',
+    a: 'A valid photo ID for every adult guest, plus the booking reference. Group bookings should carry the confirmation from their coordinator.',
+  },
+];
+
+const Stays = () => {
+  // Matches the rest of the site, which disables the context menu on media pages.
   useEffect(() => {
     const handleContextMenu = (e) => e.preventDefault();
     document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
+    return () => document.removeEventListener('contextmenu', handleContextMenu);
   }, []);
 
   return (
-    <div className='bg-[#F7F7F7]'>
+    <div className="bg-paper">
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 
-      <img src={publicAsset('/Assets/hotel.webp')}
-        alt='Hotel-Image'
-        loading='lazy'
-        decoding='async'
-        className='w-full md:h-80 object-cover' />
+      <PageHero
+        image="/Assets/webp/stay-hero.webp"
+        imageAlt="Dream Asia resort grounds"
+        eyebrow="Stays"
+        title="Three ways to stay the night"
+        subtitle="Bali villas, poolside rooms and courtyard suites — all inside the Dream Asia estate, minutes from the park gates."
+        accent={ACCENT}
+      >
+        <CtaButton href={BOOKING_URL} accent={ACCENT} external>
+          Check Availability
+        </CtaButton>
+        <CtaButton href="#properties" variant="ghost">
+          View Properties
+        </CtaButton>
+      </PageHero>
 
+      <QuickNav items={NAV_ITEMS} accent={ACCENT} />
 
-      {/* Navigation Section */}
-      <div className='relative px-4 mt-20'>
-        {/* Background Image */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className='absolute top-[-300px] md:top-[-170px] inset-0 flex justify-center items-center z-0 pointer-events-none'
-        >
-          <img
-            src={publicAsset('/Assets/hotel-icon.png')}
-            className='w-44 md:w-64 lg:w-60'
-            alt='Character'
-          />
-        </motion.div>
+      {/* Opening statement */}
+      <Section>
+        <SectionHeading
+          eyebrow="The estate"
+          title="You are not commuting to the fun. You are already in it."
+          lead="Our three properties sit at the entrance to the park, so the walk to the first ride is measured in minutes. Shorter mornings, longer evenings, and a pool to come back to."
+          accent={ACCENT}
+        />
 
-        {/* Link to navigate */}
-        <div className="relative z-10 flex items-center justify-center md:justify-between flex-wrap gap-6 bg-grident py-8 px-4 md:px-20 rounded-2xl mx-auto max-w-4xl transition-all duration-300">
-          {/* Park Highlight Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-10 rounded-2xl shadow-xl group transition duration-300">
-            <RiHotelFill className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="hotels" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300 focus:outline-none">
-                Themed Hotels
-              </button>
-            </Link>
-          </div>
-
-          {/* informantion Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-4 rounded-2xl shadow-xl group transition duration-300">
-            <SiInformatica className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="information" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300">
-                Practical information
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className='w-full p-5 mt-10 space-y-12'>
-        <div className='max-w-4xl mx-auto'>
-          <h1 className='text-3xl font-extrabold text-center mb-4'>Make the magic last around the clock!</h1>
-          <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>
-            When you stay at a Dream Asia Hotel, you'll enjoy a fully immersive experience and unique benefits. It's the perfect choice for all ages.
-          </p>
-        </div>
-        <div className='bg-white p-4 max-w-5xl mx-auto shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4'>
-          <img src={publicAsset('/Assets/place-to-stay-Hotel.jpg')} alt='Place to Stay' className='w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1' />
-          <div>
-            <h3 className='text-xl font-bold mb-2'>Discover the newly reimagined Dream Asia Hotel!</h3>
-            <p className='text-gray-700'>
-              Live the life of royalty at Dream Asia Hotel, the ultimate 5-star royal residence at the entrance to Dream Asia Park. Be our Guest and you’ll be just a few steps from our magical attractions, shows, parades and Dream Asia Character Encounters. It doesn’t get any closer than this!
+        <div className="space-y-20 sm:space-y-28">
+          <SplitRow
+            image="/Assets/stay/stay-06.jpeg"
+            imageAlt="Guest room interior"
+            eyebrow="Location"
+            title="Minutes from the gates"
+            accent={ACCENT}
+          >
+            <p>
+              No parking hunt, no traffic, no wasted morning. Resort guests also get early access on
+              selected days, which means the headline rides before the queues build.
             </p>
-          </div>
+          </SplitRow>
+
+          <SplitRow
+            image="/Assets/stay/stay-12.jpeg"
+            imageAlt="Resort grounds and landscaping"
+            eyebrow="Groups"
+            title="Built for every shape of party"
+            reverse
+            accent={ACCENT}
+          >
+            <p>
+              A family of five, a couple, or a party of thirty. Rooms connect, villas cluster, and our
+              team will lay out an arrangement that keeps everyone together.
+            </p>
+            <p>Tell us the headcount and the dates and we will come back with what works.</p>
+          </SplitRow>
         </div>
+      </Section>
 
-        <Element name='hotels'>
-          <div>
-            <h1 className='text-3xl font-extrabold text-center mb-4'>Our themed hotels</h1>
-            <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>Each Dream Asia Hotel immerses you in an iconic theme with its own magical tale to tell. Wonderful worlds await for all ages, budgets and dreams.</p>
-            <section className="max-w-5xl mx-auto flex overflow-x-auto gap-4 p-4 mt-5 flex-nowrap">
-              <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src={publicAsset("/Assets/lodge.jpg")} alt="Commando Activity" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
-                <h1 className="mt-2 text-lg font-semibold">Dream Asia Sequoia Lodge</h1>
-                <p className="text-sm text-gray-700">Relax in a grand lodge designed with a touch of Bambi magic</p>
-              </div>
-              <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src={publicAsset("/Assets/themed-hotels1.jpg")} alt="Zip Line" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
-                <h1 className="mt-2 text-lg font-semibold">Dream Asia Hotel</h1>
-                <p className="text-sm text-gray-700">Celebrate the magic of Dream Asia stories...and write your own!</p>
-              </div>
-              <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src={publicAsset("/Assets/ngp-hotel.jpg")} alt="Bungee Jumping" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
-                <h1 className="mt-2 text-lg font-semibold">Dream Asia Hotel Nagpur</h1>
-                <p className="text-sm text-gray-700">Live the Laxurious life in a contemporary setting.</p>
-              </div>
-              <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src={publicAsset("/Assets/wooden-lodge.jpeg")} alt="Giant Swing" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
-                <h1 className="mt-2 text-lg font-semibold">Dream Asia Newport Bay Club</h1>
-                <p className="text-sm text-gray-700">Wake-up in a world of seaside splendour with a nautical nod to Dream Asia adventures.</p>
-              </div>
-              <div className="bg-white flex-shrink-0 min-w-[280px] max-w-xs shadow-xl p-4 rounded-md">
-                <img src={publicAsset("/Assets/hotel-stay.jpg")} alt="Giant Wheel" className="h-80 object-cover rounded-lg w-80 transition-transform duration-300 hover:-translate-y-1" />
-                <h1 className="mt-2 text-lg font-semibold">Dream Asia Wooden Lodge</h1>
-                <p className="text-sm text-gray-700">Relax in a grand Wooden lodge designed with a touch of Bamboo!</p>
-              </div>
-            </section>
-          </div>
-        </Element>
+      {/* The three properties */}
+      <Section id="properties" tone="alt">
+        <SectionHeading
+          eyebrow="Properties"
+          title="Resort of Asia, Wavy Stay and Palace Courtyard"
+          lead="Three distinct properties on one estate. All share the pool, the restaurant and the park access."
+          accent={ACCENT}
+        />
 
-        <div className='max-w-5xl mx-auto'>
-          <h1 className="text-3xl font-extrabold text-center mb-4">
-            Find the ideal accommodation for you!
-          </h1>
-          <p className="text-gray-700 text-center text-lg font-semibold tracking-wider mb-6">
-            Whether you're looking for a room, bungalow or Dream Asia suite, there's something for all tastes and budgets!
-          </p>
+        <div className="space-y-14 sm:space-y-20">
+          {PROPERTIES.map((property, i) => (
+            <Reveal key={property.name} delay={i * 0.06}>
+              <article className="flex flex-col gap-7 lg:flex-row lg:gap-12">
+                <div className="lg:w-6/12">
+                  <div className="overflow-hidden">
+                    <img
+                      src={publicAsset(property.image)}
+                      alt={property.name}
+                      width={1000}
+                      height={700}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full object-cover transition-transform duration-[900ms] ease-out hover:scale-[1.03]"
+                      style={{ aspectRatio: '10 / 7' }}
+                    />
+                  </div>
+                </div>
 
-          {/* Family Rooms and Cabins */}
-          <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4">
-            <img
-              src={publicAsset("/Assets/family-rooms.jpg")}
-              alt="Hotel Room"
-              className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
-            />
-            <div className="flex flex-col gap-10">
-              <h3 className="text-xl font-bold mb-2">Family Rooms and Cabins</h3>
-              <p className="text-gray-700 mb-2">
-                Choose from our family rooms, single rooms, with or without lakeside view or garden terrace, or even a cosy cabin in the forest... whichever you choose, you're sure to enjoy a unique Dream Asia experience!
-              </p>
-            </div>
-          </div>
+                <div className="flex flex-col justify-center lg:w-6/12">
+                  <span className="u-eyebrow" style={{ color: ACCENT }}>
+                    {property.detail}
+                  </span>
 
-          {/* Club Rooms and Suites */}
-          <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4 lg:flex-row-reverse">
-            <img
-              src={publicAsset("/Assets/club_rooms.jpg")}
-              alt="Club Room"
-              className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
-            />
-            <div className="flex flex-col gap-10">
-              <h3 className="text-xl font-bold mb-2">Club Rooms and Suites</h3>
-              <p className="text-gray-700 mb-2">
-                Join the club and benefit from premium rooms and exclusive services.
-              </p>
-              <p className="text-gray-700">
-                Choose a Club Room or Suite and enjoy Dream Asia VIP treatment with private check-in, a dedicated lounge, valet services and more!
-              </p>
-            </div>
-          </div>
+                  <h3 className="u-display mt-3 text-[28px] leading-[1.12] text-ink sm:text-[34px]">
+                    {property.name}
+                  </h3>
+
+                  <p className="mt-4 text-[15px] leading-[1.8] text-ink-soft">{property.body}</p>
+
+                  <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-3 border-t border-hairline pt-5">
+                    {property.specs.map((spec) => (
+                      <dd key={spec} className="u-eyebrow text-ink-muted">
+                        {spec}
+                      </dd>
+                    ))}
+                  </dl>
+
+                  <div className="mt-7">
+                    <CtaButton href={BOOKING_URL} accent={ACCENT} variant="quiet" external>
+                      Enquire — {property.name}
+                    </CtaButton>
+                  </div>
+                </div>
+              </article>
+            </Reveal>
+          ))}
         </div>
+      </Section>
 
-        <div className="max-w-5xl mx-auto px-4">
-          <h1 className="text-3xl font-extrabold text-center mb-4">
-            Find the ideal accommodation for you!
-          </h1>
-          <p className="text-gray-700 text-center text-lg font-semibold tracking-wider mb-6">
-            Whether you're craving a cozy corner, an open-air table with scenic views, or a private dining experience at Dream Asia, we have the perfect spot for every taste and occasion!
-          </p>
+      {/* Gallery — the 22 resort photographs */}
+      <Section id="gallery">
+        <SectionHeading
+          eyebrow="Gallery"
+          title="Look around before you arrive"
+          lead="Photographs of the rooms, villas and grounds. Select any image to open it full size."
+          accent={ACCENT}
+        />
+        <PhotoGrid images={GALLERY} accent={ACCENT} captionPrefix="Resort photo" />
+      </Section>
 
-          <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1 */}
-            <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
-              <img
-                src={publicAsset("/Assets/restaurant.jpg")}
-                alt="Dream Asia-themed restaurants"
-                className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
-              />
-              <h2 className="text-xl font-bold mb-2">Dream Asia-themed Restaurants</h2>
-              <p className="text-gray-700">
-                Enjoy Dream Asia dining in your hotel with uniquely themed restaurants!
-              </p>
-            </div>
+      {/* Amenities */}
+      <Section id="amenities" tone="alt">
+        <SectionHeading eyebrow="Amenities" title="Included in every stay" accent={ACCENT} />
 
-            {/* Card 2 */}
-            <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
-              <img
-                src={publicAsset("/Assets/customers-interactions.jpg")}
-                alt="Character Encounters"
-                className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
-              />
-              <h2 className="text-xl font-bold mb-2">Character Encounters in Your Hotel</h2>
-              <p className="text-gray-700">
-                Meet beloved Dream Asia characters right in your hotel for unforgettable moments. Share smiles, snap photos, and make memories that last a lifetime.
-              </p>
-            </div>
-
-            {/* Card 3 */}
-            <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl flex flex-col items-start">
-              <img
-                src={publicAsset("/Assets/restaurant-view.jpeg")}
-                alt="Dream Asia Details"
-                className="w-full h-48 object-cover rounded-md mb-4 transition-transform duration-300 hover:-translate-y-1"
-              />
-              <h2 className="text-xl font-bold mb-2">A Feast for the Eyes</h2>
-              <p className="text-gray-700">
-                Keep your eyes peeled! Our hotels are adorned with subtle Dream Asia-themed details everywhere you look.
-              </p>
-            </div>
-          </section>
+        <div className="grid grid-cols-1 gap-x-12 gap-y-7 sm:grid-cols-2 lg:grid-cols-4">
+          {AMENITIES.map((item, i) => (
+            <Reveal key={item.title} delay={Math.min(i, 7) * 0.04}>
+              <ListEntry index={i + 1} title={item.title} body={item.body} accent={ACCENT} />
+            </Reveal>
+          ))}
         </div>
+      </Section>
 
-        <div className='max-w-5xl mx-auto'>
-          {/* Dream-Asia Facilities */}
-          <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4">
-            <img
-              src={publicAsset("/Assets/facilities.jpg")}
-              alt="Facility"
-              className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
-            />
-            <div className="flex flex-col gap-10">
-              <h3 className="text-xl font-bold mb-2">Take time out in your hotel with exceptional facilities</h3>
-              <p className="text-gray-700 mb-2">
-                Each hotel is equipped with leisure facilities so you can prolong the magic. From pools, fitness centres, spas to kids corners, the fun never stops!
-              </p>
-            </div>
-          </div>
+      {/* Good to know */}
+      <Section id="information">
+        <SectionHeading
+          eyebrow="Good to know"
+          title="Practical information"
+          lead="The questions we are asked most, answered before you have to ask."
+          accent={ACCENT}
+        />
 
-          {/* Club Rooms and Suites */}
-          <div className="bg-white p-4 shadow-md rounded-md hover:shadow-xl mb-6 flex flex-col md:flex-row gap-4 lg:flex-row-reverse">
-            <img
-              src={publicAsset("/Assets/facilities2.jpg")}
-              alt="Facility"
-              className="w-full md:w-1/2 rounded-md object-cover transition-transform duration-300 hover:-translate-y-1"
-            />
-            <div className="flex flex-col gap-10">
-              <h3 className="text-xl font-bold mb-2">Get ready for your trip with our official Website!</h3>
-              <p className="text-gray-700 mb-2">
-                Find practical information about your stay, check in between 1 and 7 days prior to arrival, and access your digital MagicPass so you can head straight to the Dream Asia Parks when you arrive!
-              </p>
-            </div>
-          </div>
+        <div className="max-w-3xl">
+          <Reveal>
+            <Accordion items={FAQS} accent={ACCENT} />
+          </Reveal>
         </div>
+      </Section>
 
-        <Element name='information'>
-          <h1 className='text-3xl font-extrabold text-center mb-4'>Unlock unique Dream Asia advantages</h1>
-          <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>
-            Book a stay in a Dream Asia Hotel and benefit from special advantages that keep you close to the magic night and day!
-          </p>
+      <CtaBand
+        image="/Assets/stay/stay-18.jpeg"
+        title="Stay inside the Dream Asia estate"
+        body="Check live availability and rates for your dates, or talk to our team about a group booking."
+        accent={ACCENT}
+      >
+        <CtaButton href={BOOKING_URL} variant="onDark" external>
+          Book Your Stay
+        </CtaButton>
+        <CtaButton href="/Footer/Components/ContactUs" variant="ghost">
+          Talk to Our Team
+        </CtaButton>
+      </CtaBand>
 
-          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 px-4 mt-4 gap-4">
-            {/* Extra Magic Time */}
-            <section className="p-4 bg-white rounded-md shadow-md hover:shadow-xl text-center flex flex-col items-center">
-              <GiMagicShield className="text-6xl text-blue-600 mb-2" />
-              <h1 className="text-xl font-bold mt-3">Extra Magic Time</h1>
-              <p className="text-gray-700 mt-2">
-                Enter the Parks before they open and greet Dream Asia Characters at your hotel.
-              </p>
-            </section>
-
-            {/* Access to Both Parks */}
-            <section className="p-4 bg-white rounded-md shadow-md hover:shadow-xl text-center flex flex-col items-center">
-              <LuTicketsPlane className="text-6xl text-green-600 mb-2" />
-              <h1 className="text-xl font-bold mt-3">Access to Both Parks</h1>
-              <p className="text-gray-700 mt-2">
-                Enjoy the Parks from morning until night for every day of your stay.
-              </p>
-            </section>
-
-            {/* Close to the Parks */}
-            <section className="p-4 bg-white rounded-md shadow-md hover:shadow-xl text-center flex flex-col items-center">
-              <MdLocalHotel className="text-6xl text-purple-600 mb-2" />
-              <h1 className="text-xl font-bold mt-3">Close to the Parks</h1>
-              <p className="text-gray-700 mt-2">
-                Stay near the fun with easy access to all attractions throughout the day.
-              </p>
-            </section>
-
-            {/* Free Parking */}
-            <section className="p-4 bg-white rounded-md shadow-md hover:shadow-xl text-center flex flex-col items-center">
-              <TbParkingCircleFilled className="text-6xl text-red-600 mb-2" />
-              <h1 className="text-xl font-bold mt-3">Free Parking</h1>
-              <p className="text-gray-700 mt-2">
-                Take advantage of free parking right by your accommodation and the Park entrances.
-              </p>
-            </section>
-          </div>
-        </Element>
-      </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Hotels
+export default Stays;

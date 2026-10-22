@@ -2,8 +2,7 @@
 import React, { useEffect } from 'react'
 import { publicAsset } from '@/lib/publicAsset';
 import { Link, Element } from 'react-scroll';
-import { CgEditHighlight } from "react-icons/cg";
-import { SiInformatica } from "react-icons/si";
+import { CgEditHighlight, CgInfo } from "react-icons/cg";
 import Navbar from '../Navbar/MainContent/page'
 import Footer from '../Footer/MainContent/page'
 import { motion } from 'framer-motion';
@@ -71,7 +70,7 @@ const WaterPark = () => {
 
           {/* informantion Button with Icon */}
           <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-4 rounded-2xl shadow-xl group transition duration-300">
-            <SiInformatica className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
+            <CgInfo className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
             <Link to="information" smooth={true} duration={300}>
               <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300">
                 Practical information
