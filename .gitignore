@@ -42,3 +42,7 @@ next-env.d.ts
 
 # node 25 web-storage shim used by the dev script
 .dev-localstorage*
+
+# source material dropped in the repo root (brochures, decks) — not site assets.
+# Scoped to the root so a downloadable PDF under public/ still gets committed.
+/*.pdf

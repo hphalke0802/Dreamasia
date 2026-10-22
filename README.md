@@ -1,17 +1,30 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Requirements
+
+**Node 22.4 or newer — please upgrade if you are on an older version.** Developed
+and tested on Node 25.1.0.
+
+The `dev` script passes `--localstorage-file`, which older versions of Node do not
+recognise and will refuse to start on. The flag is there because Node 22.4+ defines
+a global `localStorage`, and without a backing file it is a stub whose `getItem` is
+not a function. The Next 15.3.3 dev overlay guards on `typeof localStorage`, that
+guard passes, and every page then fails to render with:
+
+```
+TypeError: localStorage.getItem is not a function
+```
+
+Pointing the flag at a file gives Node a working Web Storage implementation and the
+dev overlay behaves. It affects `npm run dev` only — `npm run build` does not ship
+the overlay and needs no flag.
+
 ## Getting Started
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
