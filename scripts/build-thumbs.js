@@ -49,6 +49,9 @@ const SOURCES = [
   'Assets/facilities2.jpg',
   'Assets/customers-interactions.jpg',
   'Assets/restaurant.jpg',
+
+  // Adventure Park
+  'outdoor-games.png',
 ];
 
 /** Larger images used as hero / split-row art, re-encoded in place as WebP. */

@@ -9,6 +9,8 @@ import Maintenance from './Miantenance/page';
 import BookingCircle from './BookingCircle/page';
 import { FiClock, FiMapPin, FiMap } from "react-icons/fi";
 import HorizontalInfoSlider from "./horizontalInfoSlider";
+import { VisitorHours } from './_ui/Hours';
+import { EXPERIENCES } from './_data/park';
 
 const page = () => {
   const router = useRouter();
@@ -229,7 +231,7 @@ const page = () => {
               {/* Explore image button */}
               <button
                 type="button"
-                onClick={() => router.push("/AmusementPark")}
+                onClick={() => { document.getElementById("experiences")?.scrollIntoView({ behavior: "smooth" }); }}
                 className="mt-7 cursor-pointer border-0 bg-transparent p-0 transition duration-300 hover:scale-105"
                 aria-label="Explore the park"
               >
@@ -258,6 +260,57 @@ const page = () => {
           </div>
         </section>
       </div>
+
+      {/* =====================================================
+          OUR EXPERIENCES + VISITOR HOURS
+
+          The brief asks the homepage to "clearly showcase all five major
+          offerings" and to display the overall park hours alongside the
+          attraction-specific timings. The category cards above cover only
+          three, so this section carries the full set, and the "Explore the
+          Park" button now lands here instead of duplicating the Amusement
+          Park card's destination.
+      ====================================================== */}
+      <section id="experiences" className="scroll-mt-[136px] bg-[#FAF8F6] px-5 py-16 sm:px-8 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-7 bg-[#6B1E74]" aria-hidden="true" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#6B1E74]">
+                Our Experiences
+              </span>
+            </div>
+            <h2 className="mt-4 text-[30px] font-extrabold leading-tight text-[#17120f] sm:text-[38px]">
+              Five destinations, one estate
+            </h2>
+            <p className="mt-3 text-[15px] leading-[1.75] text-[#4a423d] sm:text-base">
+              Dream Asia is a complete leisure destination, not only a water park.
+            </p>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+            {EXPERIENCES.map((item) => (
+              <button
+                key={item.name}
+                type="button"
+                onClick={() => router.push(item.path)}
+                className="group flex min-h-[64px] cursor-pointer items-center justify-between gap-3 border-b-2 border-[#e4ddd6] bg-transparent px-1 py-4 text-left transition-colors duration-300 hover:border-[#6B1E74] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6B1E74]"
+              >
+                <span className="text-[16px] font-bold text-[#17120f]">{item.name}</span>
+                <span
+                  className="text-[#6B1E74] transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
+                  &rarr;
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <VisitorHours accent="#6B1E74" className="mt-14" />
+        </div>
+      </section>
 
       {/* Child Swming under pool gig */}
       <div><video src={publicAsset("/childvideo (1).mp4")} autoPlay muted loop playsInline preload="metadata" disablePictureInPicture /></div>

@@ -29,6 +29,8 @@ import {
   Reveal,
   Accordion,
 } from '../_ui/PageKit';
+import JsonLd from '../_ui/JsonLd';
+import { faqSchema } from '../_data/seo';
 
 /** The deep purple the Weddings page has always used. */
 const ACCENT = '#661C6F';
@@ -130,6 +132,10 @@ const Weddings = () => {
 
   return (
     <div className="bg-paper">
+      {/* FAQPage structured data — the audit called missing FAQ schema
+          the single biggest AEO gap, since AI engines extract from Q&A. */}
+      <JsonLd data={faqSchema(FAQS)} />
+
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />

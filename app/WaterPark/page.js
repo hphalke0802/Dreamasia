@@ -8,6 +8,8 @@ import Footer from '../Footer/MainContent/page'
 import { motion } from 'framer-motion';
 import Maintenance from '../Miantenance/page';
 import HorizontalInfoSlider from "../horizontalInfoSlider";
+import { AttractionHours } from '../_ui/Hours';
+import { ATTRACTION_HOURS, PARK_HOURS } from '../_data/park';
 
 const WaterPark = () => {
 
@@ -36,6 +38,12 @@ const WaterPark = () => {
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
+
+      {/* Attraction timings, shown against the overall park hours — the brief
+          asks these be clearly distinguished from one another. */}
+      <div className="mx-auto max-w-5xl px-5 pt-8">
+        <AttractionHours attraction={ATTRACTION_HOURS.waterPark} accent="#F97316" />
+      </div>
 
       <img src={publicAsset('/Assets/big-banner-2.png')}
         className='w-full h-50 md:h-80 object-cover' />
@@ -179,7 +187,12 @@ const WaterPark = () => {
               <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
                 <img src={publicAsset("/Assets/clock-1.png")} alt="Opening Hours" className="w-20 h-20 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold mb-2">Opening Hours</h2>
-                <p>Check the park opening hours before you come, as they can vary depending on the season!</p>
+                <p className="font-semibold">
+                  Water Park: {ATTRACTION_HOURS.waterPark.opens} &ndash; {ATTRACTION_HOURS.waterPark.closes}
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                  Park open {PARK_HOURS.opens} &ndash; {PARK_HOURS.closes}
+                </p>
               </section>
 
               <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">

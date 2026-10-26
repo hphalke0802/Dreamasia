@@ -29,6 +29,8 @@ import {
   Reveal,
   Accordion,
 } from '../_ui/PageKit';
+import JsonLd from '../_ui/JsonLd';
+import { faqSchema } from '../_data/seo';
 
 /** Brand purple, as used for the home page's "Your Squad" heading. */
 const ACCENT = '#6B1E74';
@@ -152,6 +154,10 @@ const Corporates = () => {
 
   return (
     <div className="bg-paper">
+      {/* FAQPage structured data — the audit called missing FAQ schema
+          the single biggest AEO gap, since AI engines extract from Q&A. */}
+      <JsonLd data={faqSchema(FAQS)} />
+
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />

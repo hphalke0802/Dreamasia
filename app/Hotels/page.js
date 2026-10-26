@@ -29,6 +29,8 @@ import {
   Reveal,
   Accordion,
 } from '../_ui/PageKit';
+import JsonLd from '../_ui/JsonLd';
+import { faqSchema } from '../_data/seo';
 
 /** Resort cyan — the colour the navbar already assigns to this section. */
 const ACCENT = '#06B6D4';
@@ -73,15 +75,24 @@ const PROPERTIES = [
   },
 ];
 
+/**
+ * Only facilities the property actually provides.
+ *
+ * Spa, room service and Wi-Fi were listed here and are NOT available — per the
+ * client website brief, "the website must not advertise spa facilities, room
+ * service or Wi-Fi, as these are not available at our property." Removed, and
+ * replaced with the genuine draws the brief names: themed accommodation,
+ * natural surroundings, the family stay experience and park access.
+ */
 const AMENITIES = [
+  { title: 'Themed accommodation', body: 'Bali villas, poolside rooms and courtyard suites, each with its own character.' },
+  { title: 'Natural surroundings', body: 'Landscaped grounds and open greenery across the estate.' },
+  { title: 'Park access', body: 'The park gates are a short walk from every block.' },
+  { title: 'Dining', body: 'Multi-cuisine restaurant on site, with early breakfast before the gates open.' },
   { title: 'Pool', body: 'Resort pool with a dedicated shallow section for younger guests.' },
-  { title: 'Dining', body: 'Multi-cuisine restaurant and a café for early breakfasts before the gates open.' },
-  { title: 'Wi-Fi', body: 'Complimentary high-speed internet in the rooms and across the public areas.' },
-  { title: 'Parking', body: 'Park at your own block at no cost, a short walk from the park entrance.' },
-  { title: 'Families', body: 'Cots, high chairs and child-safe fittings on request, at no charge.' },
-  { title: 'Room service', body: 'In-room dining through the day, for when nobody wants to move again.' },
-  { title: 'Spa', body: 'Massage and wellness treatments to put your feet back together.' },
-  { title: 'Front desk', body: 'Staffed around the clock for bookings, transport and anything else.' },
+  { title: 'Parking', body: 'Park at your own block at no cost, a short walk from the entrance.' },
+  { title: 'Family stay', body: 'Cots and child-safe fittings on request, and rooms that connect for larger parties.' },
+  { title: 'Front desk', body: 'On hand for bookings, transport and anything else you need.' },
 ];
 
 const FAQS = [
@@ -121,6 +132,10 @@ const Stays = () => {
 
   return (
     <div className="bg-paper">
+      {/* FAQPage structured data — the audit called missing FAQ schema
+          the single biggest AEO gap, since AI engines extract from Q&A. */}
+      <JsonLd data={faqSchema(FAQS)} />
+
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />

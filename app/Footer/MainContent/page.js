@@ -78,7 +78,7 @@ const Footer = () => {
               className="cursor-pointer border-0 bg-transparent p-0"
             >
               <img
-                src={publicAsset("/Assets/contact-logo.png")}
+                src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
                 alt="Dream Asia"
                 className="h-auto w-[175px] object-contain sm:w-[190px]"
               />

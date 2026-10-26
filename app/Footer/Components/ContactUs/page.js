@@ -482,7 +482,7 @@ const ContactUs = () => {
 
         <div className="flex flex-col items-center justify-center mt-10">
           <h1 className="text-3xl font-InspireTWDC font-extrabold text-center mb-2">How to Reach</h1>
-          <img src={publicAsset('/Assets/contact-logo.png')}
+          <img src={publicAsset('/Assets/webp/dreamasia-logo.webp')}
             className='w-40 h-26 mb-4' />
           <p className="text-gray-700 text-lg text-center font-semibold tracking-wider">
             Visit Maharashtra's biggest water and amusement park!

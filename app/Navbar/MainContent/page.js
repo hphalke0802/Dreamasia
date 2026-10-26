@@ -34,12 +34,20 @@ const Navbar = () => {
       color: "#F97316",
     },
     {
-      name: "Theme Park",
+      name: "Adventure Park",
+      path: "/AdventurePark",
+      color: "#16B88D",
+    },
+    {
+      // Labelled "Amusement Park" to match the brief and the page itself;
+      // "Theme Park" was ambiguous against the other two attractions.
+      name: "Amusement Park",
       path: "/AmusementPark",
       color: "#E50046",
     },
     {
-      name: "Stays",
+      // The brief names the accommodation section "Resort of Asia".
+      name: "Resort of Asia",
       path: "/Hotels",
       color: "#06B6D4",
     },
@@ -195,7 +203,7 @@ const Navbar = () => {
             aria-label="Dream Asia home"
           >
             <img
-              src={publicAsset("/Assets/contact-logo.png")}
+              src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
               alt="Dream Asia"
               className="h-auto w-[118px] object-contain transition-[width] duration-300 sm:w-[140px] lg:w-[165px]"
             />
@@ -370,7 +378,7 @@ const Navbar = () => {
               aria-label="Dream Asia home"
             >
               <img
-                src={publicAsset("/Assets/contact-logo.png")}
+                src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
                 alt="Dream Asia"
                 className="h-auto w-[155px] object-contain"
               />
