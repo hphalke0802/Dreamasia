@@ -76,6 +76,14 @@ export function organizationSchema() {
     description:
       'Dream Asia World is a leisure destination in Nagpur, Maharashtra, combining a water park, adventure park and amusement park with resort accommodation and destination wedding venues.',
     address,
+    // Exact coordinates matter more than the street line for local search
+    // placement, and these are verified from the business's own map embed.
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: NAP.geo.latitude,
+      longitude: NAP.geo.longitude,
+    },
+    hasMap: NAP.mapUrl,
     telephone: NAP.phone,
     email: NAP.email,
     openingHoursSpecification: [

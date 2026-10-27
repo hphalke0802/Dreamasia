@@ -49,12 +49,33 @@ export const NAP = {
   phone: '+91 99234 34333',
   phoneHref: '+919923434333',
   email: 'support@dreamasiaworld.com',
-  /** NEEDS CONFIRMATION — street line and postal code are not on the site yet. */
+
+  /**
+   * NEEDS CONFIRMATION — street line and postal code.
+   *
+   * Taken as far as public sources allow. The map pin below comes from the
+   * Google Maps embed already on the Contact page, which is the business's own
+   * listing, and reverse-geocodes to Tarabodi, Margsur, in Katol taluka of
+   * Nagpur district. No street line or PIN is published anywhere we can reach,
+   * and reading them off the Google Business Profile needs dashboard access we
+   * do not have. Left blank deliberately: a wrong address in structured data
+   * propagates to Google and the directories, which is worse than an absent one.
+   */
   streetAddress: '',
+  postalCode: '',
+
+  /** Katol taluka, Nagpur district — the brand markets itself as Nagpur. */
   locality: 'Nagpur',
   region: 'Maharashtra',
-  postalCode: '',
   country: 'IN',
+
+  /**
+   * Verified map pin, read from the Contact page's existing Google Maps embed
+   * (place 0x3bd4f7620de2f297:0x3baef880e5c893e1). Exact, and the thing local
+   * search actually uses to place the business.
+   */
+  geo: { latitude: 21.2436178, longitude: 78.7094154 },
+  mapUrl: 'https://maps.google.com/?cid=4300647926680032225',
 };
 
 /** Canonical origin, used for absolute URLs in metadata and structured data. */
