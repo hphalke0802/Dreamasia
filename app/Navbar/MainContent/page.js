@@ -17,6 +17,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef(null);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef(null);
   const reduceMotion = useReducedMotion();
 
   // Curve should appear ONLY on home page
@@ -84,7 +86,33 @@ const Navbar = () => {
   const ctaItem = navItems.find((item) => item.external);
   const linkItems = navItems.filter((item) => !item.external);
 
+  /**
+   * Desktop split.
+   *
+   * Ten destinations plus a CTA do not fit between the logo and the right edge
+   * of the island — they ran 246px past it, pushing Book Ticket off screen
+   * entirely. So the bar carries the five business categories the brief asks
+   * the site to lead with, and everything else moves into a More menu rather
+   * than being crammed or dropped.
+   *
+   * The mobile drawer is unaffected and still lists every destination.
+   */
+  const PRIMARY_PATHS = [
+    "/WaterPark",
+    "/AdventurePark",
+    "/AmusementPark",
+    "/Hotels",
+    "/Weddings",
+  ];
+
+  const primaryItems = PRIMARY_PATHS.map((path) =>
+    linkItems.find((item) => item.path === path)
+  ).filter(Boolean);
+
+  const moreItems = linkItems.filter((item) => !PRIMARY_PATHS.includes(item.path));
+
   const isActive = (item) => !item.external && pathname === item.path;
+  const moreIsActive = moreItems.some(isActive);
 
   useEffect(() => {
     if (menuOpen) {
@@ -141,6 +169,27 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the More menu on an outside click or Escape.
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const onPointerDown = (event) => {
+      if (moreRef.current && !moreRef.current.contains(event.target)) {
+        setMoreOpen(false);
+      }
+    };
+    const onKey = (event) => {
+      if (event.key === "Escape") setMoreOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [moreOpen]);
+
   // Close the drawer on Escape — an escape route from a full-screen overlay.
   useEffect(() => {
     if (!menuOpen) return;
@@ -172,7 +221,7 @@ const Navbar = () => {
           page. The border and shadow tighten once scrolled, which is what
           signals the lift. */}
       <motion.div
-        className="relative z-30 mx-auto max-w-[1250px] overflow-hidden rounded-2xl border bg-white/92 backdrop-blur-md sm:rounded-[20px]"
+        className="relative z-30 mx-auto max-w-[1250px] rounded-2xl border bg-white/92 backdrop-blur-md sm:rounded-[20px]"
         style={{
           borderColor: scrolled ? `${BRAND}3D` : `${BRAND}24`,
           borderWidth: 1.5,
@@ -186,8 +235,11 @@ const Navbar = () => {
         {/* A single brand hairline. A multi-colour sweep across the top read as
             decoration for its own sake; one restrained line does the same job
             of tying the island to the brand. */}
+        {/* Inset and rounded to match the island's corners. The island can no
+            longer clip (the More dropdown has to escape it), so the hairline
+            has to respect the radius itself. */}
         <span
-          className="absolute inset-x-0 top-0 h-[2px]"
+          className="absolute inset-x-4 top-0 h-[2px] rounded-full"
           style={{ backgroundColor: BRAND }}
           aria-hidden="true"
         />
@@ -215,7 +267,7 @@ const Navbar = () => {
               for the active/hover indicator. "Book Ticket" stays a solid pill —
               one clear primary action rather than nine competing ones. */}
           <nav className="hidden items-center justify-end gap-1 lg:flex xl:gap-2" aria-label="Main">
-            {linkItems.map((item) => {
+            {primaryItems.map((item) => {
               const active = isActive(item);
 
               return (
@@ -257,6 +309,82 @@ const Navbar = () => {
                 </button>
               );
             })}
+
+            {/* Overflow menu for the remaining destinations. */}
+            {moreItems.length ? (
+              <div className="relative" ref={moreRef}>
+                <button
+                  type="button"
+                  onClick={() => setMoreOpen((open) => !open)}
+                  aria-expanded={moreOpen}
+                  aria-haspopup="true"
+                  className="group relative inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border-0 bg-transparent px-2.5 py-2.5 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:px-3 xl:text-[16px]"
+                  style={{
+                    color: moreIsActive || moreOpen ? BRAND : "#374151",
+                    ["--tw-ring-color"]: `${BRAND}55`,
+                  }}
+                >
+                  More
+                  <span
+                    className="text-[10px] transition-transform duration-200"
+                    style={{ transform: moreOpen ? "rotate(180deg)" : "none" }}
+                    aria-hidden="true"
+                  >
+                    &#9660;
+                  </span>
+
+                  {moreIsActive ? (
+                    <span
+                      className="absolute inset-x-2 -bottom-0.5 h-[3px] rounded-full"
+                      style={{ backgroundColor: BRAND }}
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </button>
+
+                <AnimatePresence>
+                  {moreOpen ? (
+                    <motion.ul
+                      initial={reduceMotion ? false : { opacity: 0, y: -6 }}
+                      animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+                      exit={reduceMotion ? false : { opacity: 0, y: -6 }}
+                      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute right-0 top-[calc(100%+10px)] z-50 min-w-[210px] overflow-hidden rounded-xl border bg-white py-1.5 shadow-xl"
+                      style={{ borderColor: `${BRAND}24` }}
+                    >
+                      {moreItems.map((item) => {
+                        const active = isActive(item);
+
+                        return (
+                          <li key={item.name}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMoreOpen(false);
+                                handleNavigation(item);
+                              }}
+                              aria-current={active ? "page" : undefined}
+                              className="flex w-full cursor-pointer items-center gap-3 border-0 bg-transparent px-4 py-3 text-left text-[15px] font-semibold transition-colors duration-200 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+                              style={{
+                                color: active ? item.color : "#374151",
+                                ["--tw-ring-color"]: `${item.color}66`,
+                              }}
+                            >
+                              <span
+                                className="h-2 w-2 shrink-0 rounded-full"
+                                style={{ backgroundColor: item.color }}
+                                aria-hidden="true"
+                              />
+                              {item.name}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </motion.ul>
+                  ) : null}
+                </AnimatePresence>
+              </div>
+            ) : null}
 
             {ctaItem ? (
               <motion.button
