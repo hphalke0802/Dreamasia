@@ -10,6 +10,7 @@ import Footer from '@/app/Footer/MainContent/page';
 import { useRouter } from 'next/navigation';
 import Maintenance from '@/app/Miantenance/page';
 import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
+import { NAP, PARK_HOURS } from '../../../_data/park';
 
 const ContactUs = () => {
   const router = useRouter();
@@ -496,6 +497,61 @@ const ContactUs = () => {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
+
+            {/* Address, contact details and Get Directions.
+                The brief requires the How to Reach section to carry the correct
+                address, the embedded map and a working directions link. The
+                address is printed exactly as the Google Business Profile lists
+                it, so the site and the profile match for NAP consistency. */}
+            <div className="w-full rounded-xl border border-[#E3D4E6] bg-[#FAF5FB] px-5 py-5 sm:px-7 sm:py-6">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#6B1E74]">
+                    Address
+                  </h3>
+                  <address className="mt-2 not-italic text-[15px] font-medium leading-7 text-[#405066] sm:text-[16px]">
+                    {NAP.brandName}
+                    <br />
+                    {NAP.addressLine}
+                    <br />
+                    {NAP.district} District, India
+                  </address>
+
+                  <div className="mt-4 flex flex-col gap-1.5 text-[15px] font-medium text-[#405066]">
+                    <a
+                      href={`tel:${NAP.phoneHref}`}
+                      className="transition-colors duration-200 hover:text-[#6B1E74]"
+                    >
+                      {NAP.phone}
+                    </a>
+                    <a
+                      href={`mailto:${NAP.email}`}
+                      className="transition-colors duration-200 hover:text-[#6B1E74]"
+                    >
+                      {NAP.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
+                  <h3 className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-[#6B1E74]">
+                    Park open
+                  </h3>
+                  <p className="mt-2 text-[15px] font-medium leading-7 text-[#405066] sm:text-[16px]">
+                    {PARK_HOURS.opens} &ndash; {PARK_HOURS.closes}
+                  </p>
+
+                  <a
+                    href={NAP.directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#6B1E74] px-6 text-[14px] font-bold text-white shadow-md transition-shadow duration-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6B1E74]/40 focus-visible:ring-offset-2"
+                  >
+                    Get Directions
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
 
 

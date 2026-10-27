@@ -51,23 +51,28 @@ export const NAP = {
   email: 'support@dreamasiaworld.com',
 
   /**
-   * NEEDS CONFIRMATION — street line and postal code.
+   * Address exactly as the Google Business Profile lists it.
    *
-   * Taken as far as public sources allow. The map pin below comes from the
-   * Google Maps embed already on the Contact page, which is the business's own
-   * listing, and reverse-geocodes to Tarabodi, Margsur, in Katol taluka of
-   * Nagpur district. No street line or PIN is published anywhere we can reach,
-   * and reading them off the Google Business Profile needs dashboard access we
-   * do not have. Left blank deliberately: a wrong address in structured data
-   * propagates to Google and the directories, which is worse than an absent one.
+   * "6PV6+F48" is a Google Plus Code, not a street line — Google issues these
+   * where no formal street address exists, which fits a rural site. It is kept
+   * verbatim because NAP consistency means the site, the profile and the
+   * directories must read identically; rewriting it into something tidier
+   * would break the match that local search checks for.
+   *
+   * PIN 441302 is Katol, which agrees with the map pin below.
    */
-  streetAddress: '',
-  postalCode: '',
-
-  /** Katol taluka, Nagpur district — the brand markets itself as Nagpur. */
-  locality: 'Nagpur',
+  plusCode: '6PV6+F48',
+  streetAddress: '6PV6+F48',
+  locality: 'Tarabodi',
   region: 'Maharashtra',
+  postalCode: '441302',
   country: 'IN',
+
+  /** Single formatted line, so every surface prints the address identically. */
+  addressLine: '6PV6+F48, Tarabodi, Maharashtra 441302',
+
+  /** District, for copy. The brand markets itself as Nagpur. */
+  district: 'Nagpur',
 
   /**
    * Verified map pin, read from the Contact page's existing Google Maps embed
@@ -76,6 +81,14 @@ export const NAP = {
    */
   geo: { latitude: 21.2436178, longitude: 78.7094154 },
   mapUrl: 'https://maps.google.com/?cid=4300647926680032225',
+
+  /**
+   * Get Directions — opens turn-by-turn navigation to the pin.
+   * Coordinates only: they are verified from the listing, whereas a
+   * destination_place_id would have to be guessed at.
+   */
+  directionsUrl:
+    'https://www.google.com/maps/dir/?api=1&destination=21.2436178%2C78.7094154',
 };
 
 /** Canonical origin, used for absolute URLs in metadata and structured data. */

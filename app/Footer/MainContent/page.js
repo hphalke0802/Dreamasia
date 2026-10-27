@@ -2,6 +2,7 @@
 
 import React from "react";
 import { publicAsset } from '@/lib/publicAsset';
+import { NAP } from '../../_data/park';
 import { useRouter } from "next/navigation";
 import {
   FaChevronRight,
@@ -134,7 +135,9 @@ const Footer = () => {
             </h2>
 
             <p className="mt-7 text-[14px] font-medium text-[#475569] sm:text-[15px]">
-              Dream Asia World, Nagpur, Maharashtra, India
+              {/* Printed exactly as the Google Business Profile lists it,
+                  so the site and the profile match for NAP consistency. */}
+              {NAP.brandName}, {NAP.addressLine}
             </p>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 text-[14px] font-medium text-[#475569] sm:text-[15px]">
