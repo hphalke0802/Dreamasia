@@ -98,6 +98,7 @@ export function organizationSchema() {
       'https://www.facebook.com/dreamasiaworld/',
       'https://www.instagram.com/dreamasia/',
       'https://www.linkedin.com/company/dreamasia/',
+      'https://www.youtube.com/@dreamasiaworld',
     ],
     containsPlace: ATTRACTION_HOURS_LIST.map((attraction) => ({
       '@type': 'TouristAttraction',

@@ -1,218 +1,318 @@
-"use client"
-import React, { useEffect } from 'react'
-import { publicAsset } from '@/lib/publicAsset';
-import { Link, Element } from 'react-scroll';
-import { CgEditHighlight, CgInfo } from "react-icons/cg";
-import Navbar from '../Navbar/MainContent/page'
-import Footer from '../Footer/MainContent/page'
-import { motion } from 'framer-motion';
+'use client';
+
+/**
+ * Water Park.
+ *
+ * Rebuilt on the shared PageKit so it matches the other attraction pages.
+ * Every photograph and clip comes from the park's own shoot (the "Water Park"
+ * media folder, one folder per zone), processed by scripts/build-media.js.
+ */
+
+import React, { useEffect } from 'react';
+import Navbar from '../Navbar/MainContent/page';
+import Footer from '../Footer/MainContent/page';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from "../horizontalInfoSlider";
+import HorizontalInfoSlider from '../horizontalInfoSlider';
+import {
+  PageHero,
+  Marquee,
+  QuickNav,
+  Section,
+  SectionHeading,
+  SplitRow,
+  ListEntry,
+  ReelCard,
+  Carousel,
+  PhotoGrid,
+  CtaButton,
+  CtaBand,
+  Reveal,
+  Accordion,
+  ReviewsBand,
+} from '../_ui/PageKit';
+import JsonLd from '../_ui/JsonLd';
+import { faqSchema } from '../_data/seo';
 import { AttractionHours } from '../_ui/Hours';
-import { ATTRACTION_HOURS, PARK_HOURS } from '../_data/park';
+import { ATTRACTION_HOURS, BOOKING_URL } from '../_data/park';
+
+/** Water Park aqua — matches the navbar and the homepage card. */
+const ACCENT = '#08AFC0';
+
+const HOURS = ATTRACTION_HOURS.waterPark;
+
+const m = (slug) => `/Assets/media/${slug}.webp`;
+
+const NAV_ITEMS = [
+  { to: 'zones', label: 'Zones' },
+  { to: 'reels', label: 'Watch' },
+  { to: 'gallery', label: 'Gallery' },
+  { to: 'guidelines', label: 'Guidelines' },
+  { to: 'visit', label: 'Plan Your Visit' },
+];
+
+const ZONES = [
+  {
+    zone: 'Zone 1',
+    name: 'Wave of Dreams',
+    image: m('wave-of-dreams-1'),
+    clip: 'wave-of-dreams',
+    body: 'The wave pool at the centre of the water park — a gentle shallow end for little ones and rolling waves further out.',
+  },
+  {
+    zone: 'Zone 2',
+    name: 'Aqua Beats',
+    image: m('aqua-beats-1'),
+    clip: 'aqua-beats',
+    body: 'Rain dance under the sprinklers, with music turned up. The zone most groups end up meeting at.',
+  },
+  {
+    zone: 'Zone 3',
+    name: 'Aqua Drift',
+    image: m('aqua-drift-1'),
+    clip: 'aqua-drift',
+    body: 'A lazy river through the palms. Grab a tube and float the loop at your own pace.',
+  },
+  {
+    zone: 'Zone 4',
+    name: 'Aqua Treasure Bay',
+    image: m('aqua-treasure-bay-1'),
+    clip: 'aqua-treasure-bay',
+    body: 'A pirate-ship splash pool built for kids, with slides off the deck, splash rings and water jets.',
+  },
+  {
+    zone: 'Zone 5',
+    name: 'Aqua Thrill Zone',
+    image: m('aqua-thrill-zone-1'),
+    clip: 'aqua-thrill-zone',
+    body: 'The slide tower — six thrill slides, from twisting tubes to steep drops, for the thrill-seekers in the group.',
+  },
+];
+
+const GALLERY = [
+  m('aerial-pirate'),
+  m('aqua-thrill-zone-2'),
+  m('aqua-thrill-zone-3'),
+  m('wave-of-dreams-2'),
+  m('aqua-drift-2'),
+  m('aqua-treasure-bay-2'),
+  m('aqua-beats-2'),
+  m('aqua-thrill-zone-4'),
+  m('aqua-treasure-bay-3'),
+  m('wave-of-dreams-3'),
+  m('aqua-drift-3'),
+  m('aqua-thrill-zone-5'),
+  m('aqua-treasure-bay-4'),
+  m('aerial-wavepool'),
+  m('aerial-slide-tower'),
+  m('aerial-lazy-river'),
+];
+
+/** Zone clips for the reel carousel. */
+const REELS = [
+  { title: 'Aqua Thrill Zone', clip: 'aqua-thrill-zone' },
+  { title: 'Wave of Dreams', clip: 'wave-of-dreams' },
+  { title: 'Aqua Drift', clip: 'aqua-drift' },
+  { title: 'Aqua Treasure Bay', clip: 'aqua-treasure-bay' },
+  { title: 'Aqua Beats', clip: 'aqua-beats' },
+];
+
+const GUIDELINES = [
+  { title: 'Swimwear', body: 'Wear proper swimwear in the pools and on the slides. Lifeguards may stop anyone not suitably dressed.' },
+  { title: 'Height limits', body: 'Each slide has its own height requirement, marked at the entrance and applied by the attendant.' },
+  { title: 'Lifeguards', body: 'Trained lifeguards are posted at the pools and at every slide exit throughout the session.' },
+  { title: 'Little ones', body: 'Children must be accompanied by an adult in the water. Aqua Treasure Bay is built for them.' },
+];
+
+const FAQS = [
+  {
+    q: 'What are the Water Park timings?',
+    a: `The Water Park runs from ${HOURS.opens} to ${HOURS.closes}. The Adventure Park and Amusement Park open after it, so a full day can take in all three.`,
+  },
+  {
+    q: 'Is the water park suitable for young children?',
+    a: 'Yes. The shallow end of the wave pool and the Aqua Treasure Bay splash zone are designed for younger visitors. Children must be accompanied by an adult in the water.',
+  },
+  {
+    q: 'Are there height restrictions on the slides?',
+    a: 'Each slide carries its own height limit, posted at the entrance and applied by the attendant. Please ask at the gate if you are planning around a particular child.',
+  },
+  {
+    q: 'What should I bring?',
+    a: 'Swimwear, a towel and a change of clothes. Valuables are best left at home or with your group before you head into the water.',
+  },
+  {
+    q: 'Can I book tickets online?',
+    a: 'Yes — book online before you arrive and walk straight in. Group bookings for schools and companies are arranged through the group desk.',
+  },
+];
 
 const WaterPark = () => {
-
-  const highlights =
-    [{ image: '/Assets/ticket1.jpg', title: 'Zone 1', desc: 'Wave of Dreams' },
-    { image: '/Assets/ticket2.jpg', title: 'ZONE 2', desc: 'Aqua Beats' },
-    { image: '/Assets/ticket3.jpg', title: 'Zone 3', desc: 'Aqua Drift' },
-    ]
-
-  const highlights2 = [
-    { image: '/Assets/big-banner-2.png', title: 'ZONE 4', desc: 'Aqua Treasure Bay' },
-    { image: '/Assets/ticket5.jpg', title: 'Zone 5', desc: 'Aqua Thrill Zone' }
-  ]
-
-  // Prevent right-click
   useEffect(() => {
     const handleContextMenu = (e) => e.preventDefault();
     document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
+    return () => document.removeEventListener('contextmenu', handleContextMenu);
   }, []);
 
   return (
-    <div className='bg-[#F7F7F7]'>
+    <div className="bg-paper">
+      <JsonLd data={faqSchema(FAQS)} />
+
       <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 
-      {/* Attraction timings, shown against the overall park hours — the brief
-          asks these be clearly distinguished from one another. */}
-      <div className="mx-auto max-w-5xl px-5 pt-8">
-        <AttractionHours attraction={ATTRACTION_HOURS.waterPark} accent="#F97316" />
-      </div>
+      <PageHero
+        image={m('water-hero')}
+        video="/Assets/media/hero/water.mp4"
+        imageAlt="The pirate ship and splash rings at Aqua Treasure Bay, Dream Asia water park"
+        eyebrow="Water Park"
+        title="Make a splash in five zones"
+        highlight="splash"
+        subtitle={`Wave pool, rain dance, lazy river, a pirate-ship splash pool and the slide tower. Open ${HOURS.opens} to ${HOURS.closes}.`}
+        mascot="/Assets/media/site/taro-slide.webp"
+      >
+        <CtaButton href={BOOKING_URL} external>
+          Book Tickets
+        </CtaButton>
+        <CtaButton href="#zones" variant="ghost">
+          Explore the Zones
+        </CtaButton>
+      </PageHero>
 
-      <img src={publicAsset('/Assets/big-banner-2.png')}
-        className='w-full h-50 md:h-80 object-cover' />
+      <QuickNav items={NAV_ITEMS} accent={ACCENT} />
 
-      {/* Navigation Section */}
-      <div className='relative px-4 mt-24 md:mt-48'>
-        {/* Background Image */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className='absolute top-[-280px] md:top-[-170px] inset-0 flex justify-center items-center z-0 pointer-events-none'
-        >
-          <img
-            src={publicAsset('/Assets/character2.png')}
-            className='w-40 md:w-64 lg:w-70'
-            alt='Character'
-          />
-        </motion.div>
+      <Section className="!pt-10">
+        <AttractionHours attraction={HOURS} accent={ACCENT} />
+      </Section>
 
-        {/* Link to navigate */}
-        <div className="relative z-10 flex items-center justify-center md:justify-between flex-wrap gap-6 bg-grident py-8 px-4 md:px-20 rounded-2xl mx-auto max-w-4xl transition-all duration-300">
-          {/* Park Highlight Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-10 rounded-2xl shadow-xl group transition duration-300">
-            <CgEditHighlight className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="highlights" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300 focus:outline-none">
-                Park highlights
-              </button>
-            </Link>
-          </div>
+      {/* Zones */}
+      <Section id="zones" className="!pt-0">
+        <SectionHeading
+          eyebrow="The zones"
+          title="Explore Maharashtra's biggest water park"
+          highlight="water park"
+          lead="Five zones, from a gentle float to a steep drop — something for every age in the family. Hover over a photo to see each zone in action."
+          accent={ACCENT}
+          align="center"
+        />
 
-          {/* informantion Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-4 rounded-2xl shadow-xl group transition duration-300">
-            <CgInfo className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="information" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300">
-                Practical information
-              </button>
-            </Link>
-          </div>
+        <div className="space-y-16 sm:space-y-24">
+          {ZONES.map((zone, i) => (
+            <SplitRow
+              key={zone.name}
+              image={zone.image}
+              imageAlt={`${zone.name}, ${zone.zone} of the Dream Asia water park`}
+              eyebrow={zone.zone}
+              title={zone.name}
+              accent={ACCENT}
+              clip={zone.clip}
+              reverse={i % 2 === 1}
+            >
+              <p>{zone.body}</p>
+            </SplitRow>
+          ))}
         </div>
-      </div>
+      </Section>
 
-      <div className='w-full p-5 mt-10 space-y-12'>
-        <div className='max-w-4xl mx-auto'>
-          <h1 className='text-3xl font-InspireTWDC font-extrabold text-center mb-4'>Welcome to our destination of dreams</h1>
-          <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>
-            Fantasy is reality in Dream Asia, where classic Dream Asia and Star Wars legends are brought to life like nowhere else.
-          </p>
+      <Marquee items={['Wave of Dreams', 'Aqua Beats', 'Aqua Drift', 'Aqua Treasure Bay', 'Aqua Thrill Zone']} />
+
+      {/* Reels */}
+      <Section id="reels" tone="grape">
+        <SectionHeading
+          eyebrow="Watch"
+          title="Feel the splash"
+          highlight="splash"
+          lead="Real footage from every zone. Each clip plays as it scrolls into view."
+          accent={ACCENT}
+          align="center"
+        />
+
+        <Carousel label="Water Park zone videos" onDark itemClassName="w-[70%] sm:w-[40%] lg:w-[23.5%]">
+          {REELS.map((reel, i) => (
+            <ReelCard key={reel.clip} index={i + 1} title={reel.title} clip={reel.clip} />
+          ))}
+        </Carousel>
+      </Section>
+
+      {/* Gallery */}
+      <Section id="gallery">
+        <SectionHeading
+          eyebrow="Gallery"
+          title="A day in the water"
+          lead="Select any image to open it full size."
+          accent={ACCENT}
+        />
+        <PhotoGrid images={GALLERY} accent={ACCENT} captionPrefix="Water park photo" />
+      </Section>
+
+      {/* Guidelines */}
+      <Section id="guidelines" tone="alt">
+        <SectionHeading
+          eyebrow="Guidelines"
+          title="Safe, splashy fun"
+          highlight="Safe"
+          lead="A few simple rules keep the water park fun for everyone."
+          accent={ACCENT}
+        />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {GUIDELINES.map((item, i) => (
+            <Reveal key={item.title} delay={i * 0.05}>
+              <ListEntry index={i + 1} title={item.title} body={item.body} accent={ACCENT} />
+            </Reveal>
+          ))}
         </div>
+      </Section>
 
-        {/* Line separator */}
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <div className='text-center space-y-10'>
-          <h1 className='text-2xl font-extrabold'>
-            Enter a world of magic that inspires the imagination
-          </h1>
-          <section className='space-y-6'>
-            <img
-              src={publicAsset('/Assets/waterpark_img.jpg')}
-              className='w-full h-full object-cover transform transition-transform duration-300 hover:-translate-y-1'
+      {/* Plan your visit */}
+      <Section id="visit">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <SectionHeading
+              eyebrow="Plan your visit"
+              title="Before you dive in"
+              highlight="dive in"
+              lead="The questions our lifeguards get asked most."
+              accent={ACCENT}
             />
-            <p className='text-lg font-bold'>With Sleeping Beauty Castle at the heart of this fairy-tale setting, the attractions, parades and restaurants will immerse you in the Dream Asia magic you know and love.</p>
-          </section>
-        </div>
-
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <Element name='highlights'>
-          <div className='max-w-6xl mx-auto'>
-            <h1 className='text-2xl font-extrabold text-center mb-8'>Explore at Maharashtra's Biggest Water Park</h1>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              {highlights.map((item, index) => (
-                <div key={index} className='bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl'>
-                  <img
-                    src={publicAsset(item.image)}
-                    alt={item.title}
-                    className='w-full h-48 object-cover rounded-md mb-4 transform transition-transform duration-300 hover:-translate-y-1'
-                  />
-                  <h3 className='text-xl font-bold'>{item.title}</h3>
-                  <p className='text-gray-700 mt-2'>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-            <div className='grid gird-cols-1 md:grid-cols-2 gap-8 mt-8'>
-              {highlights2.map((item, index) => (
-                <div key={index} className='bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl'>
-                  <img
-                    src={publicAsset(item.image)}
-                    alt={item.title}
-                    className='w-full h-52 object-cover rounded-md mb-4 transform transition-transform duration-300 hover:-translate-y-1'
-                  />
-                  <h3 className='text-xl font-bold'>{item.title}</h3>
-                  <p className='text-gray-700 mt-2'>{item.desc}</p>
-                </div>
-              ))}
-            </div>
           </div>
-        </Element>
-
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <div className='text-center'>
-          <h1 className='text-2xl font-extrabold mb-8'>Fun-Filled Water Park</h1>
-          <p className='text-lg font-semibold mb-6'>Step into Dreamasia and experience the thrill of 15+ action-packed game activities
-          </p>
-          <section className="max-w-6xl mx-auto flex overflow-x-auto gap-4 p-4">
-            <img src={publicAsset("/Assets/boat.jpg")} alt="boat theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/slides.png")} alt="slides" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/Fun-Filled2.jpg")} alt="Fun Field2" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/Fun-Filled3.jpg")} alt="Fun Field3" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/water-park-1.png")} alt="water park theme" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-          </section>
-          <section className='flex flex-col items-center mt-10'>
-            <h1 className='text-2xl font-extrabold mb-10'>Find your way around...</h1>
-            <img src={publicAsset('/Assets/dreamasia-image.jpg')}
-              className='w-full h-auto rounded-lg shadow-lg transform transition-transform duration-300 hover:-translate-y-1' />
-          </section>
-        </div>
-
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <Element name='information'>
-          <div className="max-w-6xl mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold text-center mb-8">
-              Everything you need to know for your visit
-            </h1>
-
-            <div className="flex flex-col md:flex-row gap-6 justify-between">
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/clock-1.png")} alt="Opening Hours" className="w-20 h-20 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold mb-2">Opening Hours</h2>
-                <p className="font-semibold">
-                  Water Park: {ATTRACTION_HOURS.waterPark.opens} &ndash; {ATTRACTION_HOURS.waterPark.closes}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                  Park open {PARK_HOURS.opens} &ndash; {PARK_HOURS.closes}
-                </p>
-              </section>
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/Access.png")} alt="Accessibility Services" className="w-20 h-20 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold mb-2">Accessibility Services</h2>
-                <p>Learn about our Priority Card, accessibility on our attractions and dedicated transport options.</p>
-              </section>
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/guest-service.jpeg")} alt="Guest Services" className="w-20 h-20 mx-auto mb-4 bg-blue-400" />
-                <h2 className="text-xl font-semibold mb-2">Guest Services</h2>
-                <p>Safety comes first at our park. From strict height requirements on rides to routine safety inspections of all equipment, every measure is taken to ensure a secure and thrilling experience for every guest.</p>
-              </section>
-            </div>
+          <div className="lg:col-span-7">
+            <Reveal>
+              <Accordion items={FAQS} accent={ACCENT} />
+            </Reveal>
           </div>
-        </Element>
-      </div>
+        </div>
+      </Section>
+
+      {/* Reviews, guest moments and socials */}
+      <ReviewsBand moments={MOMENTS} accent={ACCENT} />
+
+      <CtaBand
+        image={m('aqua-thrill-zone-2')}
+        title="Ready to make a splash?"
+        highlight="splash"
+        body={`The Water Park runs ${HOURS.opens} to ${HOURS.closes}. Book park tickets online, or talk to the group desk about a school or corporate day.`}
+      >
+        <CtaButton href={BOOKING_URL} external>
+          Book Tickets
+        </CtaButton>
+        <CtaButton href="/Corporates" variant="ghost">
+          Group Bookings
+        </CtaButton>
+      </CtaBand>
+
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default WaterPark
+/** Real guests, from the park's own shoots. */
+const MOMENTS = [
+  { clip: 'aqua-drift', caption: 'Tubing down Aqua Drift' },
+  { photo: '/Assets/media/wave-of-dreams-2.webp', caption: 'Hands up in the wave pool' },
+  { photo: '/Assets/media/aqua-treasure-bay-3.webp', caption: 'Down the slide' },
+  { photo: '/Assets/media/aqua-thrill-zone-3.webp', caption: 'Splashdown' },
+  { photo: '/Assets/media/aqua-beats-1.webp', caption: 'Rain dance at Aqua Beats' },
+];
+
+export default WaterPark;

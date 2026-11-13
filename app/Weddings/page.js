@@ -24,13 +24,17 @@ import {
   SplitRow,
   ListEntry,
   PhotoGrid,
+  Carousel,
+  thumb,
   CtaButton,
   CtaBand,
   Reveal,
   Accordion,
+  ReviewsBand,
 } from '../_ui/PageKit';
 import JsonLd from '../_ui/JsonLd';
 import { faqSchema } from '../_data/seo';
+import { WEDDINGS_YOUTUBE } from '../_data/park';
 
 /** The deep purple the Weddings page has always used. */
 const ACCENT = '#661C6F';
@@ -38,13 +42,31 @@ const ACCENT = '#661C6F';
 /** Existing contact route — enquiries continue to go through it. */
 const ENQUIRY_URL = '/Footer/Components/ContactUs';
 
+const m = (slug) => `/Assets/media/${slug}.webp`;
+
+/** Photographs from weddings hosted on the estate. */
 const GALLERY = [
-  '/Assets/wedding-slider1.jpg',
-  '/Assets/wedding-slider2.jpg',
-  '/Assets/wedding-slider3.jpg',
-  '/Assets/wedding-slider-4.jpg',
-  '/Assets/wedding-slider-5.jpg',
-  '/Assets/wedding-slider-6.jpg',
+  m('wedding-hero'),
+  m('wedding-fireworks'),
+  m('wedding-baraat'),
+  m('wedding-haldi'),
+  m('wedding-couple'),
+  m('wedding-mandap'),
+  m('wedding-sangeet'),
+  m('wedding-haldi-decor'),
+  m('wedding-night-decor'),
+  m('wedding-dance'),
+  m('wedding-couple-2'),
+  m('wedding-balloons'),
+];
+
+/** The run of functions, each with a photograph from a real wedding here. */
+const MOMENTS = [
+  { title: 'Haldi', image: m('wedding-haldi-couple'), body: 'Colour, music and marigolds by the pool.' },
+  { title: 'Baraat', image: m('wedding-baraat'), body: 'The groom arrives in style, band and all.' },
+  { title: 'Pheras', image: m('wedding-mandap'), body: 'The ceremony under a canopy, in daylight.' },
+  { title: 'Sangeet', image: m('wedding-sangeet'), body: 'A full stage, lights and sound for the night.' },
+  { title: 'Reception', image: m('wedding-stage'), body: 'The palace lit up for the last evening.' },
 ];
 
 const NAV_ITEMS = [
@@ -54,35 +76,39 @@ const NAV_ITEMS = [
   { to: 'questions', label: 'Questions' },
 ];
 
+/** The three settings, as named in the client's Wedding Brochure. */
 const VENUES = [
   {
-    image: '/Assets/wedding-slider1.jpg',
-    eyebrow: 'Up to 300 seated',
-    title: 'The Garden Lawn',
-    body: 'An open lawn for daytime ceremonies and evening receptions, framed by the estate planting. Comfortable for three hundred seated, more for a standing reception.',
+    image: m('wedding-venue-palace'),
+    eyebrow: '16 rooms & 2 dormitories',
+    title: 'Palace Courtyard',
+    highlight: 'Palace',
+    body: 'A royal setting for a grand celebration — the palace façade, a big open lawn and carved chhatris, with rooms for family right beside it. Lit up at night, it is the backdrop most couples choose for the reception.',
   },
   {
-    image: '/Assets/wedding-slider-4.jpg',
-    eyebrow: 'Up to 400 seated',
-    title: 'The Banquet Hall',
-    body: 'A fully air-conditioned indoor hall for when the weather should not get a vote. Takes the sangeet, the reception, or both on consecutive nights.',
+    image: m('bali-pool-dusk'),
+    eyebrow: '5 Bali villas',
+    title: 'Resort of Asia',
+    highlight: 'Resort',
+    body: 'Thatched Bali villas, lush lawns and a pool — a distinctive, more intimate setting for the haldi, mehendi or a poolside sangeet.',
     reverse: true,
   },
   {
-    image: '/Assets/wedding-slider-6.jpg',
-    eyebrow: 'Up to 120 guests',
-    title: 'Poolside Deck',
-    body: 'The intimate option — a smaller deck for the mehendi, cocktail hour or a close-family ceremony with the water as a backdrop.',
+    image: m('wavy-facade'),
+    eyebrow: '21 modern rooms',
+    title: 'Wavy Stay',
+    highlight: 'Wavy',
+    body: 'A distinctive VIP setting at the park entrance, with twenty-one air-conditioned rooms to keep the wedding party together.',
   },
 ];
 
 const SERVICES = [
   { title: 'Planning', body: 'One planner from the first call to the final send-off, so you are never chasing five vendors at once.' },
-  { title: 'Venue & décor', body: 'Lawn, poolside and banquet settings, styled to your palette rather than a fixed template.' },
+  { title: 'Venue & décor', body: 'Palace lawn, poolside and courtyard settings, styled to your palette rather than a fixed template.' },
   { title: 'Catering', body: 'Multi-cuisine menus with vegetarian, Jain and regional options, tasted and signed off beforehand.' },
   { title: 'Accommodation', body: 'On-site rooms and villas for your party, at group rates, through the same coordinator.' },
   { title: 'Sound & lighting', body: 'Stage, sound and lighting handled in house, including the sangeet and the after-party.' },
-  { title: 'Bridal suite', body: 'A private suite for getting ready, with salon and spa appointments around your timeline.' },
+  { title: 'Bridal suite', body: 'A private room for getting ready on the day, close to the venue.' },
   { title: 'Guest experience', body: 'Park passes, transfers and activities for the people who travelled to be there.' },
   { title: 'Photography', body: 'Access to the grounds at golden hour and coordination with your photography team.' },
 ];
@@ -103,7 +129,7 @@ const FAQS = [
   },
   {
     q: 'Can we use more than one venue across our functions?',
-    a: 'Yes, and most couples do. A typical run is mehendi on the poolside deck, sangeet in the banquet hall and the ceremony on the garden lawn — all on the same estate, so nobody travels between them.',
+    a: 'Yes, and most couples do. A typical run is the haldi by the Resort of Asia pool, the ceremony on the palace lawn and the reception at the lit-up Palace Courtyard — all on the same estate, so nobody travels far between them.',
   },
   {
     q: 'Where do our guests stay?',
@@ -119,7 +145,7 @@ const FAQS = [
   },
   {
     q: 'What happens if it rains?',
-    a: 'The banquet hall is air-conditioned and sized to take a lawn function at short notice. Your planner will agree a weather call time with you in advance, so the decision is never rushed.',
+    a: 'Your planner will agree a weather plan and a call time with you in advance — covered set-ups for lawn functions can be arranged — so the decision is never rushed.',
   },
 ];
 
@@ -141,11 +167,13 @@ const Weddings = () => {
       <Maintenance />
 
       <PageHero
-        image="/Assets/webp/destinationwedding.webp"
-        imageAlt="A wedding set up on the Dream Asia lawns"
+        image={m('wedding-hero')}
+        video="/Assets/media/hero/weddings.mp4"
+        imageAlt="The Palace Courtyard lit up for a wedding reception at Dream Asia"
         eyebrow="Destination Weddings"
-        title="Every function on one estate"
-        subtitle="Mehendi on the deck, sangeet in the hall, the ceremony on the lawn — and everyone sleeping a two-minute walk away."
+        title="The beginning of forever"
+        highlight="forever"
+        subtitle="Haldi by the pool, pheras on the lawn, the reception at the palace — and everyone staying on the same estate."
         accent={ACCENT}
       >
         <CtaButton href={ENQUIRY_URL} accent={ACCENT}>
@@ -165,6 +193,7 @@ const Weddings = () => {
             <SectionHeading
               eyebrow="Why here"
               title="No convoys between venues. No guests lost in a new city."
+              highlight="No convoys"
               lead="Three settings on a single estate, on-site rooms for the whole party, and one planner who already knows the venue, the vendors and the timings."
               accent={ACCENT}
             />
@@ -197,8 +226,9 @@ const Weddings = () => {
       <Section id="venues" tone="alt">
         <SectionHeading
           eyebrow="Venues"
-          title="Three settings to choose between"
-          lead="Pick one, or use all three across your functions. They are all on the same property."
+          title="Three settings. One dream wedding."
+          highlight="One dream wedding."
+          lead="Pick one, or use all three across your functions. They are all on the same estate."
           accent={ACCENT}
         />
 
@@ -210,6 +240,7 @@ const Weddings = () => {
               imageAlt={venue.title}
               eyebrow={venue.eyebrow}
               title={venue.title}
+              highlight={venue.highlight}
               reverse={venue.reverse}
               accent={ACCENT}
             >
@@ -219,15 +250,59 @@ const Weddings = () => {
         </div>
       </Section>
 
+      {/* Moments — one photograph per function, all from weddings held here */}
+      <Section tone="grape">
+        <SectionHeading
+          eyebrow="Saat phere to saat janam"
+          title="Every function, beautifully done"
+          highlight="beautifully done"
+          lead="Real moments from weddings celebrated at Dream Asia."
+          accent={ACCENT}
+          align="center"
+        />
+
+        <Carousel label="Wedding functions at Dream Asia" onDark itemClassName="w-[76%] sm:w-[44%] lg:w-[31%]">
+          {MOMENTS.map((moment, i) => (
+            <figure key={moment.title} className="group relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-grape">
+              <img
+                src={publicAsset(thumb(moment.image))}
+                srcSet={`${publicAsset(thumb(moment.image))} 640w, ${publicAsset(moment.image)} 1600w`}
+                sizes="(min-width: 1024px) 31vw, (min-width: 640px) 44vw, 76vw"
+                alt={`${moment.title} at a Dream Asia wedding`}
+                width={640}
+                height={800}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-grape-deep via-grape-deep/20 to-transparent" aria-hidden="true" />
+              <figcaption className="absolute inset-x-0 bottom-0 p-5">
+                <span className="u-display block text-[40px] leading-none text-sun" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="u-display mt-1 block text-[26px] leading-tight text-white">{moment.title}</span>
+                <span className="mt-1 block text-[14px] text-white/80">{moment.body}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </Carousel>
+      </Section>
+
       {/* Gallery */}
       <Section id="gallery">
         <SectionHeading
           eyebrow="Gallery"
           title="Weddings we have hosted"
+          highlight="hosted"
           lead="Select any image to open it full size."
           accent={ACCENT}
         />
         <PhotoGrid images={GALLERY} accent={ACCENT} captionPrefix="Wedding photo" />
+        <div className="mt-10 flex justify-center">
+          <CtaButton href={WEDDINGS_YOUTUBE} variant="quiet" external>
+            Watch wedding films on YouTube
+          </CtaButton>
+        </div>
       </Section>
 
       {/* Services */}
@@ -287,9 +362,13 @@ const Weddings = () => {
         </div>
       </Section>
 
+      {/* Reviews, guest moments and socials */}
+      <ReviewsBand moments={GUEST_MOMENTS} accent={ACCENT} />
+
       <CtaBand
-        image="/Assets/wedding-slider-5.jpg"
+        image={m('wedding-fireworks')}
         title="Tell us about your day"
+        highlight="your day"
         body="Send us your dates and guest count. We will come back with venue options, a draft plan and what it costs."
         accent={ACCENT}
       >
@@ -305,5 +384,15 @@ const Weddings = () => {
     </div>
   );
 };
+
+/** Real guests, from the park's own shoots. */
+const GUEST_MOMENTS = [
+  { photo: '/Assets/media/wedding-haldi-couple.webp', caption: 'A haldi to remember' },
+  { photo: '/Assets/media/wedding-dance.webp', caption: 'Dancing with family' },
+  { photo: '/Assets/media/wedding-couple-2.webp', caption: 'Just married' },
+  { photo: '/Assets/media/wedding-baraat.webp', caption: 'The baraat arrives' },
+  { photo: '/Assets/media/wedding-couple.webp', caption: 'The couple at the reception' },
+  { photo: '/Assets/media/wedding-groom.webp', caption: 'The groom' },
+];
 
 export default Weddings;

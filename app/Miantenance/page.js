@@ -3,12 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ImCancelCircle } from "react-icons/im";
-import { useRouter } from "next/navigation";
+import { BOOKING_URL } from "../_data/park";
 
 const POPUP_BASE_URL = "https://membership.dreamasiaworld.com";
 
 const Maintenance = () => {
-    const router = useRouter();
 
     const [isVisible, setIsVisible] = useState(false);
     const [popupDetails, setPopupDetails] = useState(null);
@@ -243,16 +242,14 @@ const Maintenance = () => {
                     )}
 
                     {/* Book Now Button */}
-                    <button
-                        type="button"
-                        onClick={() =>
-                            router.push(
-                                "https://membership.dreamasiaworld.com/drmw/5555555555"
-                            )
-                        }
+                    <a
+                        href={BOOKING_URL}
+                        target="_blank" rel="noopener noreferrer"
                         className="
                             mt-3
+                            block
                             w-full
+                            text-center
                             rounded-md
                             bg-[#007BFF]
                             py-2
@@ -265,7 +262,7 @@ const Maintenance = () => {
                         "
                     >
                         Book Now
-                    </button>
+                    </a>
                 </motion.div>
             </div>
         </>

@@ -105,4 +105,38 @@ export const EXPERIENCES = [
 
 /** Existing booking destinations. Unchanged — the site only links out to these. */
 export const BOOKING_URL = 'https://membership.dreamasiaworld.com/drmw/5555555555';
+/**
+ * Tixera ticket-sale site. As of 2026-11-11 its API (dreamasiaapi.tixera.com)
+ * times out and the page loads empty, so no live button links here — every
+ * "Book Tickets" uses BOOKING_URL. Switch back once Tixera is working again.
+ */
 export const TICKETS_URL = 'https://tickets.dreamasiaworld.com/sale/landing';
+
+/**
+ * Official social accounts, each checked on 2026-11-12 (profile names:
+ * "Dreamasia | Nagpur", "Dreamasia (@dreamasia)", "dreamasia",
+ * "Dreamasia Weddings", "Dreamasia" on LinkedIn).
+ */
+export const SOCIALS = [
+  { key: 'instagram', label: 'Instagram', handle: '@dreamasia', href: 'https://www.instagram.com/dreamasia/' },
+  { key: 'facebook', label: 'Facebook', handle: 'dreamasiaworld', href: 'https://www.facebook.com/dreamasiaworld/' },
+  { key: 'youtube', label: 'YouTube', handle: '@dreamasiaworld', href: 'https://www.youtube.com/@dreamasiaworld' },
+  { key: 'linkedin', label: 'LinkedIn', handle: 'Dreamasia', href: 'https://www.linkedin.com/company/dreamasia/' },
+];
+
+/** The weddings team's own channel (source of the Weddings and Stays hero films). */
+export const WEDDINGS_YOUTUBE = 'https://www.youtube.com/@DestinationWeddingDreamasia';
+
+/**
+ * Google Business Profile reviews. Place ID read from the listing itself and
+ * matched to the map pin's CID (0x3baef880e5c893e1). The rating and count are
+ * a snapshot from 2026-11-12 — update them now and then; the buttons always
+ * open the live listing.
+ */
+const PLACE_ID = 'ChIJl_LiDWL31DsR4ZPI5YD4rjs';
+export const GOOGLE_REVIEWS = {
+  rating: 4.4,
+  count: 3711,
+  readUrl: `https://search.google.com/local/reviews?placeid=${PLACE_ID}`,
+  writeUrl: `https://search.google.com/local/writereview?placeid=${PLACE_ID}`,
+};

@@ -8,6 +8,10 @@
  *
  * Booking stays outbound to the existing membership flow — this page only
  * links to it, exactly as the navbar does.
+ *
+ * Property facts (5 Bali villas, 21 Wavy Stay rooms, 16 Palace Courtyard rooms
+ * plus 2 dormitories, and the walking distances) are taken from the client's
+ * Wedding Brochure. Photographs are the client's own shoot of each property.
  */
 
 import React, { useEffect } from 'react';
@@ -24,24 +28,42 @@ import {
   SplitRow,
   ListEntry,
   PhotoGrid,
+  thumb,
+  deep,
   CtaButton,
   CtaBand,
   Reveal,
   Accordion,
+  ReviewsBand,
 } from '../_ui/PageKit';
 import JsonLd from '../_ui/JsonLd';
 import { faqSchema } from '../_data/seo';
+import { BOOKING_URL } from '../_data/park';
 
 /** Resort cyan — the colour the navbar already assigns to this section. */
 const ACCENT = '#06B6D4';
 
-/** The existing booking destination. Unchanged. */
-const BOOKING_URL = 'https://membership.dreamasiaworld.com/drmw/5555555555';
 
-const GALLERY = Array.from(
-  { length: 22 },
-  (_, i) => `/Assets/stay/stay-${String(i + 1).padStart(2, '0')}.jpeg`
-);
+const m = (slug) => `/Assets/media/${slug}.webp`;
+
+const GALLERY = [
+  m('aerial-resort-dusk'),
+  m('bali-pool-dusk'),
+  m('bali-villa'),
+  m('bali-verandah'),
+  m('bali-dusk'),
+  m('wavy-theme'),
+  m('wavy-room'),
+  m('wavy-pool'),
+  m('palace-court'),
+  m('palace-room'),
+  m('palace-view'),
+  m('bali-reception'),
+  m('bali-cafe'),
+  m('bali-path'),
+  m('palace-dorm'),
+  m('aerial-bali'),
+];
 
 const NAV_ITEMS = [
   { to: 'properties', label: 'Properties' },
@@ -50,29 +72,40 @@ const NAV_ITEMS = [
   { to: 'information', label: 'Good to Know' },
 ];
 
-/** The three properties. */
+/** The three properties, as described in the client's brochure. */
 const PROPERTIES = [
   {
     name: 'Resort of Asia',
-    detail: 'Bali villas',
-    image: '/Assets/stay/stay-04.jpeg',
-    body: 'Standalone Bali-style villas set back among the planting, each with its own verandah. The quietest way to stay on the property, and the one couples ask for by name.',
-    specs: ['Private villas', 'Individual verandah', 'Garden setting'],
+    detail: '5 Bali villas',
+    image: m('bali-villa'),
+    gallery: [m('bali-verandah'), m('bali-pool-dusk'), m('bali-dusk')],
+    body: 'Thatched Bali-style villas set among lush lawns, each with its own verandah, around a swimming pool. The quietest way to stay on the estate — and a favourite setting for weddings and events.',
+    specs: ['Private, spacious cottages', 'Swimming pool & lawns', 'Weddings & events'],
   },
   {
     name: 'Wavy Stay',
-    detail: '21 rooms',
-    image: '/Assets/stay/stay-09.jpeg',
-    body: 'Twenty-one rooms arranged around the water, in twin and double configurations. The practical choice for families and for groups who want to be housed together.',
-    specs: ['21 rooms', 'Twin & double', 'Poolside aspect'],
+    detail: '21 modern rooms',
+    image: m('wavy-theme'),
+    gallery: [m('wavy-room'), m('wavy-facade'), m('wavy-pool')],
+    body: 'Twenty-one air-conditioned rooms right by the park entrance, including themed four-poster rooms. The practical choice for families and groups who want to be housed together.',
+    specs: ['21 rooms', 'Air-conditioned', 'Families & groups'],
   },
   {
     name: 'Palace Courtyard',
-    detail: '16 rooms',
-    image: '/Assets/stay/stay-15.jpeg',
-    body: 'Sixteen rooms opening onto an enclosed courtyard, with the most generous floor plans on the estate and a separate sitting area in each.',
-    specs: ['16 rooms', 'Courtyard facing', 'Separate sitting area'],
+    detail: '16 rooms & 2 dormitories',
+    image: m('palace-court'),
+    gallery: [m('palace-room'), m('palace-dorm'), m('palace-hero')],
+    body: 'Rooms around a peaceful heritage-style courtyard, beside the big palace lawn. Two dormitories make it the natural fit for school trips and large groups.',
+    specs: ['16 rooms', '2 dormitories', 'Big lawn'],
   },
+];
+
+/** Walking distances, from the brochure's distance map. */
+const DISTANCES = [
+  { from: 'Entrance', to: 'Wavy Stay', value: '10 m' },
+  { from: 'Entrance', to: 'Palace Courtyard', value: '10 m', note: 'outside' },
+  { from: 'Central Plaza', to: 'Resort of Asia', value: '340 m', note: 'inside the park' },
+  { from: 'Entrance', to: 'Resort of Asia', value: '550 m', note: 'outside' },
 ];
 
 /**
@@ -141,11 +174,13 @@ const Stays = () => {
       <Maintenance />
 
       <PageHero
-        image="/Assets/webp/stay-hero.webp"
-        imageAlt="Dream Asia resort grounds"
+        image={m('aerial-resort-dusk')}
+        video="/Assets/media/hero/stays.mp4"
+        imageAlt="The Resort of Asia pool and villas at dusk, from the air"
         eyebrow="Stays"
         title="Three ways to stay the night"
-        subtitle="Bali villas, poolside rooms and courtyard suites — all inside the Dream Asia estate, minutes from the park gates."
+        highlight="stay the night"
+        subtitle="Bali villas, modern rooms and a palace courtyard — all on the Dream Asia estate, steps from the park."
         accent={ACCENT}
       >
         <CtaButton href={BOOKING_URL} accent={ACCENT} external>
@@ -163,35 +198,48 @@ const Stays = () => {
         <SectionHeading
           eyebrow="The estate"
           title="You are not commuting to the fun. You are already in it."
-          lead="Our three properties sit at the entrance to the park, so the walk to the first ride is measured in minutes. Shorter mornings, longer evenings, and a pool to come back to."
+          highlight="already in it"
+          lead="Wavy Stay and Palace Courtyard sit right at the park entrance; the Resort of Asia villas are a short walk away. Shorter mornings, longer evenings, and a pool to come back to."
           accent={ACCENT}
         />
 
         <div className="space-y-20 sm:space-y-28">
           <SplitRow
-            image="/Assets/stay/stay-06.jpeg"
-            imageAlt="Guest room interior"
+            image={m('bali-pool-dusk')}
+            imageAlt="The Resort of Asia pool at dusk"
             eyebrow="Location"
-            title="Minutes from the gates"
+            title="Steps from the gates"
+            highlight="Steps"
             accent={ACCENT}
           >
-            <p>
-              No parking hunt, no traffic, no wasted morning. Resort guests also get early access on
-              selected days, which means the headline rides before the queues build.
-            </p>
+            <p>No parking hunt, no traffic, no wasted morning. Wake up on the estate and be at the first ride before the day warms up.</p>
+
+            {/* Distances, from the brochure's distance map. */}
+            <dl className="!mt-6 grid grid-cols-2 gap-3">
+              {DISTANCES.map((d) => (
+                <div key={d.from + d.to} className="rounded-2xl bg-white p-4 ring-1 ring-hairline">
+                  <dt className="text-[13px] leading-snug text-ink-muted">
+                    {d.from} &rarr; {d.to}
+                    {d.note ? <span className="block text-[12px]">({d.note})</span> : null}
+                  </dt>
+                  <dd className="u-display mt-1 text-[24px] leading-none text-ink">{d.value}</dd>
+                </div>
+              ))}
+            </dl>
           </SplitRow>
 
           <SplitRow
-            image="/Assets/stay/stay-12.jpeg"
-            imageAlt="Resort grounds and landscaping"
+            image={m('palace-view')}
+            imageAlt="The palace lawn seen through the Palace Courtyard arches"
             eyebrow="Groups"
             title="Built for every shape of party"
+            highlight="every shape"
             reverse
             accent={ACCENT}
           >
             <p>
-              A family of five, a couple, or a party of thirty. Rooms connect, villas cluster, and our
-              team will lay out an arrangement that keeps everyone together.
+              A family of five, a couple, or a school group of forty. Villas, modern rooms and dormitories mean our team can
+              lay out an arrangement that keeps everyone together.
             </p>
             <p>Tell us the headcount and the dates and we will come back with what works.</p>
           </SplitRow>
@@ -203,7 +251,8 @@ const Stays = () => {
         <SectionHeading
           eyebrow="Properties"
           title="Resort of Asia, Wavy Stay and Palace Courtyard"
-          lead="Three distinct properties on one estate. All share the pool, the restaurant and the park access."
+          highlight="Palace Courtyard"
+          lead="Three distinct properties on one estate, each with its own character — and the park on the doorstep."
           accent={ACCENT}
         />
 
@@ -212,10 +261,10 @@ const Stays = () => {
             <Reveal key={property.name} delay={i * 0.06}>
               <article className="flex flex-col gap-7 lg:flex-row lg:gap-12">
                 <div className="lg:w-6/12">
-                  <div className="overflow-hidden">
+                  <div className="overflow-hidden rounded-[2rem]">
                     <img
                       src={publicAsset(property.image)}
-                      alt={property.name}
+                      alt={`${property.name} at Dream Asia`}
                       width={1000}
                       height={700}
                       loading="lazy"
@@ -224,10 +273,25 @@ const Stays = () => {
                       style={{ aspectRatio: '10 / 7' }}
                     />
                   </div>
+                  <div className="mt-3 grid grid-cols-3 gap-3">
+                    {property.gallery.map((src) => (
+                      <img
+                        key={src}
+                        src={publicAsset(thumb(src))}
+                        alt=""
+                        aria-hidden="true"
+                        width={640}
+                        height={427}
+                        loading="lazy"
+                        decoding="async"
+                        className="aspect-[3/2] w-full rounded-2xl object-cover"
+                      />
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex flex-col justify-center lg:w-6/12">
-                  <span className="u-eyebrow" style={{ color: ACCENT }}>
+                  <span className="u-eyebrow" style={{ color: deep(ACCENT) }}>
                     {property.detail}
                   </span>
 
@@ -262,6 +326,7 @@ const Stays = () => {
         <SectionHeading
           eyebrow="Gallery"
           title="Look around before you arrive"
+          highlight="before you arrive"
           lead="Photographs of the rooms, villas and grounds. Select any image to open it full size."
           accent={ACCENT}
         />
@@ -297,9 +362,13 @@ const Stays = () => {
         </div>
       </Section>
 
+      {/* Reviews and socials */}
+      <ReviewsBand accent={ACCENT} />
+
       <CtaBand
-        image="/Assets/stay/stay-18.jpeg"
+        image={m('bali-night')}
         title="Stay inside the Dream Asia estate"
+        highlight="Dream Asia estate"
         body="Check live availability and rates for your dates, or talk to our team about a group booking."
         accent={ACCENT}
       >

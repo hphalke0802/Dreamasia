@@ -28,6 +28,8 @@ import {
   CtaBand,
   Reveal,
   Accordion,
+  FeatureVideo,
+  ReviewsBand,
 } from '../_ui/PageKit';
 import JsonLd from '../_ui/JsonLd';
 import { faqSchema } from '../_data/seo';
@@ -73,22 +75,25 @@ const SEGMENTS = [
   },
 ];
 
+const m = (slug) => `/Assets/media/${slug}.webp`;
+
+/** The client's own photographs — rides, venues and spaces groups use. */
 const GALLERY = [
-  '/Assets/commando.jpg',
-  '/Assets/zip-line.jpg',
-  '/Assets/Archery-field.jpg',
-  '/Assets/bunji-jump.jpg',
-  '/Assets/adv4.jpg',
-  '/Assets/adventaure.jpg',
-  '/Assets/boat.jpg',
-  '/Assets/masti.jpg',
-  '/Assets/Fun-Filled2.jpg',
-  '/Assets/Fun-Filled3.jpg',
-  '/Assets/BulkBooking.jpg',
-  '/Assets/facilities.jpg',
-  '/Assets/facilities2.jpg',
-  '/Assets/customers-interactions.jpg',
-  '/Assets/restaurant.jpg',
+  m('aerial-adventure'),
+  m('tarzan-trek'),
+  m('rocket-ejector'),
+  m('zip-rush'),
+  m('reflex-zone'),
+  m('archers-arena'),
+  m('palace-lawn'),
+  m('palace-front'),
+  m('aerial-tents'),
+  m('foodasia-2'),
+  m('bali-cafe'),
+  m('wave-of-dreams-1'),
+  m('aqua-beats-1'),
+  m('palace-dorm'),
+  m('wavy-room'),
 ];
 
 const ACTIVITIES = [
@@ -163,8 +168,9 @@ const Corporates = () => {
       <Maintenance />
 
       <PageHero
-        image="/Assets/webp/corporate.webp"
-        imageAlt="A corporate group on an outing at Dream Asia"
+        image={m('aerial-adventure')}
+        video="/Assets/media/hero/corporates.mp4"
+        imageAlt="The Dream Asia adventure course and lawns, from the air"
         eyebrow="Corporate & Group Bookings"
         title="Bring the whole team"
         subtitle="Offsites, college fests, school trips and large group days. Activities, catering, conference space and accommodation on one estate, run by one coordinator."
@@ -263,6 +269,31 @@ const Corporates = () => {
         </div>
       </Section>
 
+      {/* School trip film */}
+      <Section tone="grape">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-5">
+            <SectionHeading
+              eyebrow="School picnics"
+              title="A day out the whole class remembers"
+              highlight="whole class"
+              lead="A real school trip to Dream Asia — rides, games and a lot of noise. Press play, sound on."
+            />
+            <div className="-mt-4 flex flex-col gap-3 sm:flex-row">
+              <CtaButton href={ENQUIRY_URL}>Plan a School Trip</CtaButton>
+            </div>
+          </div>
+          <Reveal className="lg:col-span-7">
+            <FeatureVideo
+              src="/Assets/media/school-picnic.mp4"
+              poster="/Assets/media/school-picnic.webp"
+              title="School picnic at Dream Asia"
+              label="Play the school picnic video"
+            />
+          </Reveal>
+        </div>
+      </Section>
+
       {/* Gallery */}
       <Section id="gallery" tone="alt">
         <SectionHeading
@@ -314,8 +345,11 @@ const Corporates = () => {
         </div>
       </Section>
 
+      {/* Reviews, guest moments and socials */}
+      <ReviewsBand moments={MOMENTS} accent={ACCENT} />
+
       <CtaBand
-        image="/Assets/BulkBooking.jpg"
+        image={m('palace-lawn')}
         title="Planning something for your group?"
         body="Send us your group size and preferred dates. We will come back with an itinerary, the activity mix and a price — usually within a working day."
         accent={ACCENT}
@@ -332,5 +366,14 @@ const Corporates = () => {
     </div>
   );
 };
+
+/** Real guests, from the park's own shoots. */
+const MOMENTS = [
+  { clip: 'wave-of-dreams', caption: 'Groups in the wave pool' },
+  { photo: '/Assets/media/aqua-beats-1.webp', caption: 'Team time at Aqua Beats' },
+  { photo: '/Assets/media/wild-west.webp', caption: 'Taking aim at Wild West' },
+  { photo: '/Assets/media/reflex-zone.webp', caption: 'Reflex Zone' },
+  { photo: '/Assets/media/skyward-swing.webp', caption: 'Skyward Swing for two' },
+];
 
 export default Corporates;

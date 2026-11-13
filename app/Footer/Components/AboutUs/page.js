@@ -5,6 +5,8 @@ import Navbar from '@/app/Navbar/MainContent/page';
 import Footer from '@/app/Footer/MainContent/page';
 import Maintenance from '@/app/Miantenance/page';
 import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
+import { Section, SectionHeading, FeatureVideo, Reveal, CtaButton, HeroImage } from '@/app/_ui/PageKit';
+import { BOOKING_URL } from '@/app/_data/park';
 import {
   MdGroups,
   MdStar,
@@ -51,9 +53,11 @@ const AboutUs = () => {
       <section className="relative h-[430px] w-full overflow-hidden bg-black md:h-[520px] lg:h-[625px]">
 
         {/* Background Image */}
-        <img
-          src={publicAsset('/Assets/banner.jpg')}
-          alt="Dream Asia Adventure"
+        <HeroImage
+          src="/Assets/media/aerial-park.webp"
+          alt="The Dream Asia estate, photographed from the air"
+          width={1920}
+          height={1280}
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
@@ -147,7 +151,7 @@ const AboutUs = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="mt-4 text-[31px] font-extrabold leading-tight text-[#07152C] sm:text-[40px] lg:text-[48px]">
+          <h2 className="mt-4 text-[31px] font-extrabold leading-tight text-ink sm:text-[40px] lg:text-[48px]">
             About{" "}
             <span className="text-[#6B1E74]">
               Dream Asia Adventure Park
@@ -189,7 +193,7 @@ const AboutUs = () => {
               recognise and assume something has gone wrong. Saying so plainly here
               is cheaper than losing the booking. */}
           <div className="mx-auto mt-10 max-w-[900px] rounded-2xl border border-[#E3D4E6] bg-[#FAF5FB] px-6 py-6 text-left sm:px-8 sm:py-7">
-            <h3 className="text-[16px] font-extrabold text-[#07152C] sm:text-[18px]">
+            <h3 className="text-[16px] font-extrabold text-ink sm:text-[18px]">
               A note when you book
             </h3>
             <p className="mt-3 text-[15px] font-medium leading-7 text-[#405066] sm:text-[16px]">
@@ -216,7 +220,7 @@ const AboutUs = () => {
         {/* Heading */}
         <div className="mx-auto mb-14 max-w-[1100px] text-center">
 
-          <h2 className="text-[30px] font-extrabold leading-tight text-[#07152C] sm:text-[39px] lg:text-[47px]">
+          <h2 className="text-[30px] font-extrabold leading-tight text-ink sm:text-[39px] lg:text-[47px]">
             Premier Adventure Attractions at{" "}
             <span className="text-[#D41462]">
               Dream Asia
@@ -246,8 +250,10 @@ const AboutUs = () => {
               <div className="relative h-[300px] overflow-hidden rounded-[25px] shadow-xl sm:h-[360px] lg:h-[390px]">
 
                 <img
-                  src={publicAsset('/water-park.png')}
-                  alt="Dream Asia Water Park"
+                  src={publicAsset('/Assets/media/aerial-slides.webp')}
+                  alt="The Dream Asia water park slide tower and wave pool, from the air"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
 
@@ -287,7 +293,7 @@ const AboutUs = () => {
                 </span>
               </div>
 
-              <h3 className="mt-4 text-[31px] font-extrabold text-[#07152C] sm:text-[36px]">
+              <h3 className="mt-4 text-[31px] font-extrabold text-ink sm:text-[36px]">
                 Water Park
               </h3>
 
@@ -326,7 +332,7 @@ const AboutUs = () => {
                 </span>
               </div>
 
-              <h3 className="mt-4 text-[31px] font-extrabold text-[#07152C] sm:text-[36px]">
+              <h3 className="mt-4 text-[31px] font-extrabold text-ink sm:text-[36px]">
                 Amusement Park
               </h3>
 
@@ -354,8 +360,10 @@ const AboutUs = () => {
               <div className="relative h-[300px] overflow-hidden rounded-[25px] shadow-xl sm:h-[360px] lg:h-[390px]">
 
                 <img
-                  src={publicAsset('/outdoor-games.png')}
-                  alt="Dream Asia Amusement Park"
+                  src={publicAsset('/Assets/media/amuse-hero.webp')}
+                  alt="The giant wave swinger at the Dream Asia amusement park"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
 
@@ -398,8 +406,10 @@ const AboutUs = () => {
               <div className="relative h-[300px] overflow-hidden rounded-[25px] shadow-xl sm:h-[360px] lg:h-[390px]">
 
                 <img
-                  src={publicAsset('/adventure-park.png')}
-                  alt="Dream Asia Adventure Park"
+                  src={publicAsset('/Assets/media/rocket-ejector.webp')}
+                  alt="A rider launched skyward on the Rocket Ejector at the Dream Asia adventure park"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover"
                 />
 
@@ -438,7 +448,7 @@ const AboutUs = () => {
                 </span>
               </div>
 
-              <h3 className="mt-4 text-[31px] font-extrabold text-[#07152C] sm:text-[36px]">
+              <h3 className="mt-4 text-[31px] font-extrabold text-ink sm:text-[36px]">
                 Adventure Park
               </h3>
 
@@ -467,6 +477,34 @@ const AboutUs = () => {
 
       </section>
 
+
+      {/* =====================================================
+    BRAND REEL
+===================================================== */}
+      <Section tone="grape">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="lg:col-span-6">
+            <SectionHeading
+              eyebrow="Experience Dream Asia"
+              title="Where imagination comes alive"
+              highlight="comes alive"
+              lead="Fifteen seconds of the park, from the castle gate to the slides. Press play, sound on."
+            />
+            <div className="-mt-4 flex flex-col gap-3 sm:flex-row">
+              <CtaButton href={BOOKING_URL}>Book Tickets</CtaButton>
+            </div>
+          </div>
+          <Reveal className="lg:col-span-6">
+            <FeatureVideo
+              src="/Assets/media/brand-reel.mp4"
+              poster="/Assets/media/brand-reel.webp"
+              title="Experience Dream Asia"
+              label="Play the Dream Asia brand video"
+              portrait
+            />
+          </Reveal>
+        </div>
+      </Section>
 
       {/* =====================================================
     STATISTICS
@@ -551,7 +589,7 @@ const AboutUs = () => {
         {/* Heading */}
         <div className="mx-auto mb-14 max-w-[1000px] text-center">
 
-          <h2 className="text-[31px] font-extrabold leading-tight text-[#07152C] sm:text-[40px] lg:text-[47px]">
+          <h2 className="text-[31px] font-extrabold leading-tight text-ink sm:text-[40px] lg:text-[47px]">
             Our Core{" "}
             <span className="text-[#F97300]">
               Values &amp; Commitment
@@ -575,7 +613,7 @@ const AboutUs = () => {
               <MdFamilyRestroom className="text-[39px]" />
             </div>
 
-            <h3 className="mt-7 text-[23px] font-extrabold text-[#07152C]">
+            <h3 className="mt-7 text-[23px] font-extrabold text-ink">
               Family-Friendly Fun
             </h3>
 
@@ -596,7 +634,7 @@ const AboutUs = () => {
               <MdVerifiedUser className="text-[39px]" />
             </div>
 
-            <h3 className="mt-7 text-[23px] font-extrabold text-[#07152C]">
+            <h3 className="mt-7 text-[23px] font-extrabold text-ink">
               Safety First
             </h3>
 
@@ -617,7 +655,7 @@ const AboutUs = () => {
               <MdPublic className="text-[39px]" />
             </div>
 
-            <h3 className="mt-7 text-[23px] font-extrabold leading-tight text-[#07152C]">
+            <h3 className="mt-7 text-[23px] font-extrabold leading-tight text-ink">
               Environmental
               <br />
               Stewardship
@@ -643,7 +681,7 @@ const AboutUs = () => {
         {/* Heading */}
         <div className="mx-auto mb-9 max-w-4xl text-center">
 
-          <h2 className="text-[28px] font-extrabold leading-tight text-[#07152C] sm:text-[32px] lg:text-[35px]">
+          <h2 className="text-[28px] font-extrabold leading-tight text-ink sm:text-[32px] lg:text-[35px]">
             Cancellation Policy
           </h2>
 
@@ -660,11 +698,11 @@ const AboutUs = () => {
           {/* 48 Hours */}
           <div className="flex min-h-[122px] flex-col items-center justify-center rounded-[12px] border border-[#A7EDBC] bg-[#F0FFF4] px-5 py-5 text-center">
 
-            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#00C85A] text-[15px] font-extrabold text-white">
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#00C85A] text-[16px] u-display text-white">
               48h
             </div>
 
-            <h3 className="mt-2 text-[15px] font-extrabold text-[#07152C] sm:text-[16px]">
+            <h3 className="mt-2 text-[15px] font-extrabold text-ink sm:text-[16px]">
               48+ Hours Before
             </h3>
 
@@ -678,11 +716,11 @@ const AboutUs = () => {
           {/* 24-48 Hours */}
           <div className="flex min-h-[122px] flex-col items-center justify-center rounded-[12px] border border-[#F4D250] bg-[#FFFEED] px-5 py-5 text-center">
 
-            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#F7AD00] text-[15px] font-extrabold text-white">
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#F7AD00] text-[16px] u-display text-white">
               24h
             </div>
 
-            <h3 className="mt-2 text-[15px] font-extrabold text-[#07152C] sm:text-[16px]">
+            <h3 className="mt-2 text-[15px] font-extrabold text-ink sm:text-[16px]">
               24-48 Hours Before
             </h3>
 
@@ -700,7 +738,7 @@ const AboutUs = () => {
               <MdError className="text-[21px]" />
             </div>
 
-            <h3 className="mt-2 text-[15px] font-extrabold text-[#07152C] sm:text-[16px]">
+            <h3 className="mt-2 text-[15px] font-extrabold text-ink sm:text-[16px]">
               Less than 24 Hours
             </h3>
 
@@ -758,7 +796,8 @@ const AboutUs = () => {
 
             {/* Plan Visit */}
             <a
-              href="https://tickets.dreamasiaworld.com/sale/landing"
+              href={BOOKING_URL}
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex min-w-[210px] items-center justify-center gap-2 rounded-full bg-white px-7 py-4 text-[16px] font-bold text-[#741777] shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <MdPlace className="text-[21px]" />
@@ -807,7 +846,7 @@ const AboutUs = () => {
           {/* Timing */}
           <div className="group flex min-h-[105px] items-center justify-between rounded-[16px] bg-white px-6 py-5 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl">
 
-            <h3 className="text-[17px] font-extrabold leading-6 text-[#07152C] sm:text-[19px]">
+            <h3 className="text-[17px] font-extrabold leading-6 text-ink sm:text-[19px]">
               DreamAsia
               <br />
               Timing
@@ -826,7 +865,7 @@ const AboutUs = () => {
             className="group flex min-h-[105px] items-center justify-between rounded-[16px] bg-white px-6 py-5 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
           >
 
-            <h3 className="text-[17px] font-extrabold text-[#07152C] sm:text-[19px]">
+            <h3 className="text-[17px] font-extrabold text-ink sm:text-[19px]">
               How to Reach?
             </h3>
 
@@ -843,7 +882,7 @@ const AboutUs = () => {
             className="group flex min-h-[105px] items-center justify-between rounded-[16px] bg-white px-6 py-5 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl md:col-span-2 lg:col-span-1"
           >
 
-            <h3 className="text-[17px] font-extrabold text-[#07152C] sm:text-[19px]">
+            <h3 className="text-[17px] font-extrabold text-ink sm:text-[19px]">
               DreamAsia Map
             </h3>
 

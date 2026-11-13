@@ -37,7 +37,7 @@ const Booking = () => {
 
       <div className='w-full p-5 bg-[#F7F7F7]'>
         <div className='max-w-7xl mx-auto shadow-xl rounded-xl bg-white p-6 mb-10'>
-          <h1 className='text-2xl font-InspireTWDC font-bold mb-4'>Booking <span className='text-[#5972D8]'>Terms</span> & <span className='text-[#5972D8]'>Conditions</span> for Dreamasia</h1>
+          <h1 className='text-2xl font-bold mb-4'>Booking <span className='text-[#5972D8]'>Terms</span> & <span className='text-[#5972D8]'>Conditions</span> for Dreamasia</h1>
           <p className='mb-4'>
             This document outlines the terms and conditions (T&C) governing the use of cashless transactions at Dreamesia. By entering the waterpark and using our cashless system, you agree to be bound by these T&C.
           </p>

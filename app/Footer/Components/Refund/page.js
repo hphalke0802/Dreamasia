@@ -37,7 +37,7 @@ const Refund = () => {
 
       <div className='w-full p-5 bg-[#F7F7F7]'>
         <div className='max-w-7xl mx-auto shadow-xl rounded-xl bg-white p-6 mb-10'>
-          <h1 className='text-2xl font-InspireTWDC font-bold mb-4'><span className='text-[#5972DA]'>Refund</span> and <span className='text-[#5972DA]'>Cancellation</span> Policy</h1>
+          <h1 className='text-2xl font-bold mb-4'><span className='text-[#5972DA]'>Refund</span> and <span className='text-[#5972DA]'>Cancellation</span> Policy</h1>
           <p className='mb-4'>
             Cancellations of entry tickets are permitted only up to 48 hours prior to the intended date of visit, and 25% cancellation charges shall be levied on the total price paid. No refunds are permitted if cancellations are made within 48 hours prior to the intended date of visit. Partial cancellations or modifications are not permitted.
           </p>

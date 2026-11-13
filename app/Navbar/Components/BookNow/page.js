@@ -11,7 +11,7 @@ const BookNow = ({ setMenuOpen }) => {
       <section
         onClick={() => {
           setMenuOpen(false);
-          router.push('https://tickets.dreamasiaworld.com/sale/landing');
+          window.open('https://membership.dreamasiaworld.com/drmw/5555555555', '_blank', 'noopener');
         }}
         className='group text-center bg-gradient-to-br from-green-100 to-green-200 rounded-xl shadow-lg p-2 hover:scale-103 transform transition duration-300 cursor-pointer'
       >

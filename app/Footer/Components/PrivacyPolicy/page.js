@@ -37,7 +37,7 @@ const PrivacyPolicy = () => {
 
       <div className='w-full p-5 bg-[#F7F7F7]'>
         <div className='max-w-7xl mx-auto shadow-xl rounded-xl bg-white p-6 mb-10'>
-          <h1 className='text-2xl font-InspireTWDC font-bold mb-4'><span className='text-[#5972DA]'>Privacy Policy</span> for DreamAsia</h1>
+          <h1 className='text-2xl font-bold mb-4'><span className='text-[#5972DA]'>Privacy Policy</span> for DreamAsia</h1>
           <p className='mb-4'>
             At DreamAsia, we prioritize the privacy and security of our users. This Privacy Policy outlines how we collect, use, and protect your personal information when you interact with our services, including our website, mobile applications, and any other platforms provided by DreamAsia.
           </p>

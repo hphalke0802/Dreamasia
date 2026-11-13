@@ -1,31 +1,131 @@
 @import "tailwindcss";
 
 /**
- * Design tokens for the Stays / Weddings / Corporates pages.
+ * Dream Asia design tokens — "Play" system.
  *
- * The palette is the site's existing one — the brand purple, the per-section
- * colours from the navbar — but held back: one accent per page, used on small
- * elements only, over warm neutrals rather than coloured gradients.
+ * Direction: vibrant, block-based, family entertainment. Saturated colour
+ * blocks per section, a rounded display face (Fredoka) for headings, and one
+ * signature device — the highlighted "tag" word on a sunshine-yellow block.
  *
- * A serif display face carries the headings. It costs nothing to load (system
- * stack) and it is already part of the site's vocabulary — the original
- * Weddings hero used font-serif.
+ * Contrast rule: text on sunshine yellow is always grape-deep, never white
+ * (white on #FFB703 is ~1.9:1; grape-deep on it is ~10:1).
+ *
+ * The ink / paper / hairline names are kept from the previous system so every
+ * page that already uses them picks up the new values without edits.
  */
 @theme {
-  --font-display: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino,
-    "Book Antiqua", Georgia, serif;
+  --font-display: var(--font-fredoka), "Baloo 2", ui-rounded, "Arial Rounded MT Bold",
+    system-ui, sans-serif;
 
-  /* Warm neutrals. Paper rather than flat grey. */
-  --color-ink: #17120f;
-  --color-ink-soft: #4a423d;
-  --color-ink-muted: #7d736c;
-  --color-paper: #faf8f6;
-  --color-paper-deep: #f2eeea;
-  --color-hairline: #e4ddd6;
+  /* Brand — from the logo, the testimonial frames and the ticket cards. */
+  --color-grape: #6b1e74;
+  --color-grape-deep: #2e0b36;
+  --color-grape-soft: #f4e9f6;
+  --color-sun: #ffb703;
+  --color-sun-deep: #e89c00;
+  --color-tangerine: #fb7900;
+  --color-berry: #ce0e62;
+  --color-aqua: #08afc0;
+  --color-jungle: #16b88d;
+  --color-cream: #fff3d6;
+
+  /* Neutrals. Warm, not flat grey. */
+  --color-ink: #1d1220;
+  --color-ink-soft: #4a3f4d;
+  --color-ink-muted: #786c7b;
+  --color-paper: #fffaf3;
+  --color-paper-deep: #fbf1e4;
+  --color-hairline: #eadfd3;
+
+  --radius-card: 1.75rem;
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* Route entrance, applied by app/template.js. */
+.u-page-in {
+  animation: page-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .u-page-in {
+    animation: none;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button {
+  touch-action: manipulation;
+}
+
+/**
+ * One type system, every page.
+ *
+ * Headings take the display face and body text takes Poppins — set here, in
+ * the base layer, so pages that never import a shared component (policies,
+ * contact, lost items, popups) still match. Utilities still override it.
+ *
+ * Form controls do not inherit fonts by default, which is why inputs and
+ * buttons used to render in the system face.
+ */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+/*
+ * Heading weight and spacing, outside any layer so it wins over utility
+ * classes (font-extrabold, font-semibold, tracking-*) left on older pages:
+ * every heading on the site renders as Fredoka 700, the one display weight.
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /* Respect the system preference rather than animating regardless. */
@@ -33,22 +133,69 @@ html {
   html {
     scroll-behavior: auto;
   }
+
+  .animate-marquee,
+  .animate-float {
+    animation: none !important;
+  }
 }
 
-/**
- * Editorial heading: serif, tight tracking, generous leading.
- * Applied via .u-display so the three pages share one voice.
- */
+/** Display heading: rounded, heavy, slightly tight. */
 .u-display {
   font-family: var(--font-display);
-  letter-spacing: -0.015em;
-  font-weight: 400;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /** Small letterspaced label used for eyebrows and spec captions. */
 .u-eyebrow {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/**
+ * The signature highlight: a slightly skewed sunshine block behind a word.
+ * The skew is on a pseudo-element so the text itself stays upright and crisp.
+ */
+.u-tag {
+  position: relative;
+  display: inline-block;
+  padding: 0 0.32em;
+  color: var(--color-grape-deep);
+  z-index: 0;
+  white-space: nowrap;
+}
+
+.u-tag::before {
+  content: "";
+  position: absolute;
+  inset: 0.06em 0 -0.02em;
+  background: var(--tag-bg, var(--color-sun));
+  transform: skewX(-8deg);
+  border-radius: 0.14em;
+  z-index: -1;
+}
+
+/** Hide scrollbars on horizontal carousels while keeping them scrollable. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/**
+ * Ticket edge: two semicircle notches cut from the sides of a card, so price
+ * cards read as tickets. Driven by --notch-y and the surface behind the card.
+ */
+.u-ticket {
+  -webkit-mask:
+    radial-gradient(circle 14px at 0 var(--notch-y, 58%), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 14px at 100% var(--notch-y, 58%), transparent 98%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 14px at 0 var(--notch-y, 58%), transparent 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 14px at 100% var(--notch-y, 58%), transparent 98%, #000) right / 51% 100% no-repeat;
 }

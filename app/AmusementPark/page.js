@@ -1,202 +1,273 @@
-"use client"
-import React, { useEffect } from 'react'
-import { publicAsset } from '@/lib/publicAsset';
-import { Link, Element } from 'react-scroll';
-import { CgEditHighlight, CgInfo } from "react-icons/cg";
+'use client';
+
+/**
+ * Amusement Park.
+ *
+ * Rebuilt on the shared PageKit so it matches the other attraction pages.
+ *
+ * The previous version carried placeholder copy and adventure-zone photos, so
+ * nothing ride-specific could be carried over. This page describes the park in
+ * categories rather than inventing ride names; swap in real ride names and
+ * photography as they arrive.
+ */
+
+import React, { useEffect } from 'react';
 import Navbar from '../Navbar/MainContent/page';
 import Footer from '../Footer/MainContent/page';
-import { motion } from 'framer-motion';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from "../horizontalInfoSlider";
+import HorizontalInfoSlider from '../horizontalInfoSlider';
+import {
+  PageHero,
+  Marquee,
+  QuickNav,
+  Section,
+  SectionHeading,
+  SplitRow,
+  RideCard,
+  ListEntry,
+  PhotoGrid,
+  CtaButton,
+  CtaBand,
+  Reveal,
+  Accordion,
+  ReviewsBand,
+} from '../_ui/PageKit';
+import JsonLd from '../_ui/JsonLd';
+import { faqSchema } from '../_data/seo';
 import { AttractionHours } from '../_ui/Hours';
-import { ATTRACTION_HOURS, PARK_HOURS } from '../_data/park';
+import { ATTRACTION_HOURS, BOOKING_URL } from '../_data/park';
+
+/** Amusement Park berry — matches the navbar and the homepage card. */
+const ACCENT = '#CE0E62';
+
+const HOURS = ATTRACTION_HOURS.amusementPark;
+
+const NAV_ITEMS = [
+  { to: 'rides', label: 'Rides & Shows' },
+  { to: 'gallery', label: 'Gallery' },
+  { to: 'safety', label: 'Safety' },
+  { to: 'visit', label: 'Plan Your Visit' },
+];
+
+const m = (slug) => `/Assets/media/${slug}.webp`;
+
+/**
+ * Ride types, each shown with a photograph from the park's own shoot. Ride
+ * names are not given here because none were supplied — add them as they are.
+ */
+const RIDES = [
+  { name: 'Thrill rides', type: 'Big drops', image: m('amuse-pendulum'), body: 'The big ones — for riders who want the swing, the spin and the scream.' },
+  { name: 'Family rides', type: 'All ages', image: m('amuse-swinger-2'), body: 'Rides the whole family can take together, like the giant wave swinger.' },
+  { name: 'Kids rides', type: 'Little ones', image: m('amuse-dragon'), body: 'Gentle, colourful rides sized for younger visitors, with parents close by.' },
+  { name: 'Space rides', type: 'Take off', image: m('amuse-rocket'), body: 'Climb aboard a rocket or a flying saucer and spin into orbit.' },
+  { name: 'Mini coaster', type: 'Loops & laughs', image: m('amuse-coaster'), body: 'A family coaster that twists through the themed gardens.' },
+  { name: 'Live shows', type: 'Evenings', image: '/Assets/fire_show.png', body: 'Performances through the evening session, including the fire show.' },
+];
+
+const GALLERY = [
+  m('amuse-hero'),
+  m('amuse-rocket'),
+  m('amuse-torii'),
+  m('amuse-ship'),
+  m('amuse-sumo'),
+  m('amuse-coaster'),
+  m('amuse-gate'),
+  m('aerial-amusement'),
+  m('amuse-pavilion'),
+  m('amuse-temple'),
+  m('amuse-pendulum'),
+  '/Assets/fire_show.png',
+];
+
+const SAFETY = [
+  { title: 'Height & age limits', body: 'Every ride posts its limits at the entrance; the operator applies them at boarding.' },
+  { title: 'Trained operators', body: 'Each ride is run by a trained operator — nothing runs unsupervised.' },
+  { title: 'Daily checks', body: 'Rides are inspected before the session and withdrawn if they fail a check.' },
+  { title: 'Ride restrictions', body: 'Operators may decline a rider where a health or safety restriction applies.' },
+];
+
+const FAQS = [
+  {
+    q: 'What are the Amusement Park timings?',
+    a: `The Amusement Park runs from ${HOURS.opens} to ${HOURS.closes}, after the Water Park and Adventure Park sessions — so it is the last stop of the day.`,
+  },
+  {
+    q: 'Are there rides for small children?',
+    a: 'Yes. Kids rides and family rides are designed for younger visitors. Every ride posts its height limit at the entrance.',
+  },
+  {
+    q: 'Are there height or health restrictions?',
+    a: 'Each ride carries its own limits, applied by the operator at boarding. Some thrill rides are not suitable for guests with certain medical conditions or during pregnancy — please check the signage or ask the operator.',
+  },
+  {
+    q: 'Is food available in the park?',
+    a: 'Yes, there are food outlets on the estate, so you can refuel between the water park and the evening rides.',
+  },
+  {
+    q: 'Can I book tickets online?',
+    a: 'Yes — book online before you arrive. Group bookings for schools and companies are arranged through the group desk.',
+  },
+];
 
 const AmusementPark = () => {
-
-  // Prevent right-click
   useEffect(() => {
     const handleContextMenu = (e) => e.preventDefault();
     document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
+    return () => document.removeEventListener('contextmenu', handleContextMenu);
   }, []);
 
-  const highlights =
-    [{ image: '/Assets/ticket1.jpg', title: 'Save Big on Your Adventure!', desc: 'Become a Member and Enjoy Unlimited Access' },
-    { image: '/Assets/ticket2.jpg', title: 'Plan your Family Reunion!', desc: 'Plan family reunion of 6 person at a budget friendly offer.' },
-    { image: '/Assets/ticket3.jpg', title: 'Enjoy thrilling adventure with our plus plan!', desc: 'Become a Member and Enjoy Unlimited Access' }
-    ]
-
   return (
-    <div className='bg-[#F7F7F7]'>
+    <div className="bg-paper">
+      <JsonLd data={faqSchema(FAQS)} />
+
       <HorizontalInfoSlider />
       <Navbar />
-      <Maintenance/>
+      <Maintenance />
 
-      {/* Attraction timings, shown against the overall park hours — the brief
-          asks these be clearly distinguished from one another. */}
-      <div className="mx-auto max-w-5xl px-5 pt-8">
-        <AttractionHours attraction={ATTRACTION_HOURS.amusementPark} accent="#E50046" />
-      </div>
+      <PageHero
+        image={m('amuse-hero')}
+        video="/Assets/media/hero/amusement.mp4"
+        imageAlt="The giant wave swinger at the Dream Asia amusement park"
+        eyebrow="Amusement Park"
+        title="End the day on a high"
+        highlight="a high"
+        subtitle={`Thrill rides, family rides and live shows to close out your dream day. Open ${HOURS.opens} to ${HOURS.closes}.`}
+        mascot="/Assets/media/site/taro-wave.webp"
+      >
+        <CtaButton href={BOOKING_URL} external>
+          Book Tickets
+        </CtaButton>
+        <CtaButton href="#rides" variant="ghost">
+          Rides &amp; Shows
+        </CtaButton>
+      </PageHero>
 
-      <img src={publicAsset('/Assets/tick-2.jpg')}
-        className='w-full md:h-80 object-cover' />
+      <QuickNav items={NAV_ITEMS} accent={ACCENT} />
 
+      <Section className="!pt-10">
+        <AttractionHours attraction={HOURS} accent={ACCENT} />
+      </Section>
 
-      {/* Navigation Section */}
-      <div className='relative px-4 mt-24 md:mt-48'>
-        {/* Background Image */}
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className='absolute top-[-280px] md:top-[-170px] inset-0 flex justify-center items-center z-0 pointer-events-none'
-        >
-          <img
-            src={publicAsset('/Assets/character2.png')}
-            className='w-40 md:w-64 lg:w-70'
-            alt='Character'
-          />
-        </motion.div>
+      {/* Rides */}
+      <Section id="rides" className="!pt-0">
+        <SectionHeading
+          eyebrow="Rides & shows"
+          title="Something for every thrill level"
+          highlight="every thrill level"
+          lead="The Amusement Park is the evening session — the last stop after the water and the adventure course."
+          accent={ACCENT}
+          align="center"
+        />
 
-        {/* Link to navigate */}
-        <div className="relative z-10 flex items-center justify-center md:justify-between flex-wrap gap-6 bg-grident py-8 px-4 md:px-20 rounded-2xl mx-auto max-w-4xl transition-all duration-300">
-          {/* Park Highlight Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-10 rounded-2xl shadow-xl group transition duration-300">
-            <CgEditHighlight className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="highlights" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300 focus:outline-none">
-                Park highlights
-              </button>
-            </Link>
-          </div>
-
-          {/* informantion Button with Icon */}
-          <div className="flex flex-col items-center gap-3 bg-gradient-to-t from-yellow-50 to-yellow-100 py-4 px-4 rounded-2xl shadow-xl group transition duration-300">
-            <CgInfo className="text-yellow-500 text-4xl group-hover:animate-bounce transition-transform duration-300" />
-            <Link to="information" smooth={true} duration={300}>
-              <button className="bg-gradient-to-tr from-white to-gray-200 border border-gray-300 text-black font-semibold px-4 py-2 rounded-full shadow-md hover:shadow-yellow-300 hover:scale-105 transition-all duration-300">
-                Practical information
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className='w-full p-5 mt-10 space-y-12'>
-        <div className='max-w-4xl mx-auto'>
-          <h1 className='text-3xl font-InspireTWDC font-extrabold text-center mb-4'>Welcome to our destination of dreams</h1>
-          <p className='text-gray-700 text-center text-lg font-semibold tracking-wider'>
-            Fantasy is reality in Dream Asia, where classic Dream Asia and Star Wars legends are brought to life like nowhere else.
-          </p>
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {RIDES.map((ride, i) => (
+            <Reveal key={ride.name} delay={(i % 3) * 0.05} className="h-full">
+              <RideCard {...ride} accent={ACCENT} />
+            </Reveal>
+          ))}
         </div>
 
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
+        <div className="mt-20">
+          <SplitRow
+            image={m('amuse-torii')}
+            imageAlt="A red torii gateway in the Dream Asia amusement park"
+            eyebrow="Themed zones"
+            title="A journey across Asia"
+            highlight="across Asia"
+            reverse
+            accent={ACCENT}
+          >
+            <p>
+              Walk under red torii gates, past sumo wrestlers, carved pavilions and a sunset temple — every corner of the
+              amusement park is themed on a different part of Asia.
+            </p>
+          </SplitRow>
         </div>
 
-        <div className='text-center space-y-10'>
-          <h1 className='text-2xl font-extrabold'>
-            Enter a world of magic that inspires the imagination
-          </h1>
-          <section className='space-y-6'>
-            <img
-              src={publicAsset('/Assets/adventaure.jpg')}
-              className='w-full h-full object-cover transform transition-transform duration-300 hover:-translate-y-1'
+        <div className="mt-20">
+          <SplitRow
+            image="/Assets/fire_show.png"
+            imageAlt="Fire breather performing at the Dream Asia live show"
+            eyebrow="Live shows"
+            title="Stay for the fire show"
+            highlight="fire show"
+            accent={ACCENT}
+          >
+            <p>
+              As the light drops, performers take over — with the fire show the one nobody forgets. Check the show times
+              at the gate on the day.
+            </p>
+          </SplitRow>
+        </div>
+      </Section>
+
+      <Marquee items={['Thrill rides', 'Family rides', 'Kids rides', 'Live shows', 'Fire show']} />
+
+      {/* Gallery */}
+      <Section id="gallery">
+        <SectionHeading eyebrow="Gallery" title="After the sun goes down" lead="Select any image to open it full size." accent={ACCENT} />
+        <PhotoGrid images={GALLERY} accent={ACCENT} captionPrefix="Amusement park photo" />
+      </Section>
+
+      {/* Safety */}
+      <Section id="safety" tone="grape">
+        <SectionHeading
+          eyebrow="Safety"
+          title="Thrills, safely"
+          highlight="safely"
+          lead="Safety comes first on every ride, every session."
+          accent={ACCENT}
+        />
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {SAFETY.map((item, i) => (
+            <Reveal key={item.title} delay={i * 0.05}>
+              <ListEntry index={i + 1} title={item.title} body={item.body} accent={ACCENT} />
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* Plan your visit */}
+      <Section id="visit">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <SectionHeading
+              eyebrow="Plan your visit"
+              title="Before you ride"
+              highlight="ride"
+              lead="The questions our operators get asked most."
+              accent={ACCENT}
             />
-            <p className='text-lg font-bold'>With Sleeping Beauty Castle at the heart of this fairy-tale setting, the attractions, parades and restaurants will immerse you in the Dream Asia magic you know and love.</p>
-          </section>
-        </div>
-
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <Element name='highlights'>
-          <div className='max-w-6xl mx-auto'>
-            <h1 className='text-2xl font-extrabold text-center mb-8'>Discover the top highlights of Dream Asia</h1>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-              {highlights.map((item, index) => (
-                <div key={index} className='bg-white rounded-lg shadow-md p-4 text-center hover:shadow-xl'>
-                  <img
-                    src={publicAsset(item.image)}
-                    alt={item.title}
-                    className='w-full h-48 object-cover rounded-md mb-4 transform transition-transform duration-300 hover:-translate-y-1'
-                  />
-                  <h3 className='text-xl font-bold'>{item.title}</h3>
-                  <p className='text-gray-700 mt-2'>{item.desc}</p>
-                </div>
-              ))}
-            </div>
           </div>
-        </Element>
-
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <div className='text-center'>
-          <h1 className='text-2xl font-extrabold mb-8'>Planning your Trip to Dream Asia</h1>
-          <p className='text-lg font-semibold mb-6'>Discover products and digital services to help you both decide on the best time to visit and how to get the most out of your holiday​.</p>
-          <section className="max-w-4xl mx-auto flex overflow-x-auto gap-4 p-4">
-            <img src={publicAsset("/Assets/commando.jpg")} alt="Commando Activity" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/zip-line.jpg")} alt="Zip Line" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/bunji-jump.jpg")} alt="Bungee Jumping" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/adv4.jpg")} alt="Giant Swing" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-            <img src={publicAsset("/Assets/Archery-field.jpg")} alt="Archery field" className="w-70 h-68 object-cover flex-shrink-0 rounded-lg transform transition-transform duration-300 hover:-translate-y-1" />
-          </section>
-          <section className='flex flex-col items-center mt-10'>
-            <h1 className='text-2xl font-extrabold mb-10'>Find your way around...</h1>
-            <img src={publicAsset('/Assets/dreamasia-image.jpg')}
-              className='w-full h-full rounded-xl transform transition-transform duration-300 hover:-translate-y-1' />
-          </section>
-        </div>
-
-        {/* Line Separator */}
-        <div className='my-6 flex justify-center mb-12'>
-          <img src={publicAsset('/Assets/hr_line.png')} alt='Divider' className='w-full' />
-        </div>
-
-        <Element name='information'>
-          <div className="max-w-6xl mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold text-center mb-8">
-              Everything you need to know for your visit
-            </h1>
-
-            <div className="flex flex-col md:flex-row gap-6 justify-between">
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/clock-1.png")} alt="Opening Hours" className="w-20 h-20 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold mb-2">Opening Hours</h2>
-                <p className="font-semibold">
-                  Amusement Park: {ATTRACTION_HOURS.amusementPark.opens} &ndash; {ATTRACTION_HOURS.amusementPark.closes}
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                  Park open {PARK_HOURS.opens} &ndash; {PARK_HOURS.closes}
-                </p>
-              </section>
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/Access.png")} alt="Accessibility Services" className="w-20 h-20 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold mb-2">Accessibility Services</h2>
-                <p>Learn about our Priority Card, accessibility on our attractions and dedicated transport options.</p>
-              </section>
-
-              <section className="flex-1 bg-white shadow-lg rounded-lg hover:shadow-2xl p-4 text-center">
-                <img src={publicAsset("/Assets/guest-service.jpeg")} alt="Guest Services" className="w-20 h-20 mx-auto mb-4 bg-blue-400" />
-                <h2 className="text-xl font-semibold mb-2">Guest Services</h2>
-                <p>Safety comes first at our park. From strict height requirements on rides to routine safety inspections of all equipment, every measure is taken to ensure a secure and thrilling experience for every guest.</p>
-              </section>
-            </div>
+          <div className="lg:col-span-7">
+            <Reveal>
+              <Accordion items={FAQS} accent={ACCENT} />
+            </Reveal>
           </div>
-        </Element>
-      </div>
-      <div className='bg-[#F7F7F7]'>
-        <Footer />
-      </div>
+        </div>
+      </Section>
+
+      {/* Reviews and socials */}
+      <ReviewsBand accent={ACCENT} />
+
+      <CtaBand
+        image={m('amuse-temple')}
+        title="Ready for the rides?"
+        highlight="rides"
+        body={`The Amusement Park runs ${HOURS.opens} to ${HOURS.closes}. Book park tickets online, or talk to the group desk about a school or corporate day.`}
+      >
+        <CtaButton href={BOOKING_URL} external>
+          Book Tickets
+        </CtaButton>
+        <CtaButton href="/Corporates" variant="ghost">
+          Group Bookings
+        </CtaButton>
+      </CtaBand>
+
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default AmusementPark
+export default AmusementPark;

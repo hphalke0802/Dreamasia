@@ -1,14 +1,24 @@
 import "./globals.css";
 import { publicAsset } from '@/lib/publicAsset';
-import { Poppins } from "next/font/google";
+import { Poppins, Fredoka } from "next/font/google";
 import Script from "next/script"; // ✅ import Script
 import { SITE_URL } from "./_data/park";
 import { organizationSchema } from "./_data/seo";
 import JsonLd from "./_ui/JsonLd";
 
 const poppins = Poppins({
-  weight: ["400", "600"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Rounded display face for headings — exposed as a variable so globals.css
+// can reference it from --font-display.
+const fredoka = Fredoka({
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fredoka",
 });
 
 export const viewport = {
@@ -47,8 +57,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={fredoka.variable}>
       <body className={poppins.className}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-sun focus:px-5 focus:py-3 focus:font-semibold focus:text-grape-deep"
+        >
+          Skip to content
+        </a>
         {/* Entity data for search and AI engines: brand, legal name, location,
             contact and opening hours, tying the attractions to one organisation. */}
         <JsonLd data={organizationSchema()} />
@@ -56,7 +72,7 @@ export default function RootLayout({ children }) {
         {children}
 
         {/* ✅ Meta Pixel Code */}
-        <Script id="facebook-pixel" strategy="afterInteractive">
+        <Script id="facebook-pixel" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?

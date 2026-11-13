@@ -200,7 +200,7 @@ const LostItemsReport = () => {
                     className="w-full md:w-2/2 bg-white p-6 rounded-xl shadow-md mb-10 md:mb-0"
                     noValidate
                 >
-                    <h2 className="text-2xl font-bold mb-6 text-center text-[#6B1E74] font-serif">Write to Us</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-center text-[#6B1E74]">Write to Us</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* First Name */}
                         <div>

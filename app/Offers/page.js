@@ -4,14 +4,67 @@ import React, { useEffect, useState } from 'react';
 import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '../Navbar/MainContent/page';
 import Footer from '../Footer/MainContent/page';
-import { useRouter } from 'next/navigation';
 import Maintenance from '../Miantenance/page';
-import BASE_URL from '../GlobalUrl';
 import HorizontalInfoSlider from "../horizontalInfoSlider";
+import { PageHero, Section, SectionHeading, CtaButton, Reveal, FeatureVideo } from '../_ui/PageKit';
+import { IoPricetagOutline } from 'react-icons/io5';
+import { BOOKING_URL as OFFER_BOOKING_URL } from '../_data/park';
+
+
+/** One offer card: badge, artwork, title, expandable details, two actions. */
+function OfferCard({ offer }) {
+    const [open, setOpen] = useState(false);
+    const long = offer.description.length > 120;
+
+    return (
+        <article className="flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white p-3 shadow-[0_24px_44px_-26px_rgba(46,11,54,.5)] ring-1 ring-hairline">
+            <div className="relative overflow-hidden rounded-[1.25rem] bg-paper-deep">
+                <img
+                    src={offer.image}
+                    alt={offer.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover"
+                />
+                <span className="absolute left-1/2 top-0 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-b-xl bg-white px-4 py-1.5 text-[13px] font-semibold text-ink">
+                    <IoPricetagOutline className="text-berry" aria-hidden="true" />
+                    Limited offer
+                </span>
+            </div>
+
+            <div className="flex flex-1 flex-col px-3 pb-3 pt-5 text-center">
+                <h2 className="u-display text-[22px] leading-snug text-ink">{offer.title}</h2>
+                <p className={`mt-2 text-[15px] leading-relaxed text-ink-soft ${open ? '' : 'line-clamp-3'}`}>
+                    {offer.description}
+                </p>
+
+                <div className="mt-auto grid grid-cols-2 gap-3 pt-6">
+                    {long ? (
+                        <button
+                            type="button"
+                            onClick={() => setOpen((value) => !value)}
+                            aria-expanded={open}
+                            className="min-h-[48px] cursor-pointer rounded-full border border-hairline bg-white text-[14px] font-semibold text-ink transition-colors duration-200 hover:border-grape/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-grape/30"
+                        >
+                            {open ? 'Show less' : 'View details'}
+                        </button>
+                    ) : null}
+                    <a
+                        href={OFFER_BOOKING_URL}
+                        target="_blank" rel="noopener noreferrer"
+                        className={`inline-flex min-h-[48px] items-center justify-center rounded-full bg-sun text-[14px] font-semibold text-grape-deep shadow-[0_4px_0_0_#C98500] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sun/50 ${long ? '' : 'col-span-2'}`}
+                    >
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </article>
+    );
+}
 
 const Offers = () => {
-    const router = useRouter();
     const [offersData, setOffersData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const OFFERS_BASE_URL = "https://membership.dreamasiaworld.com";
     const IMAGE_BASE_URL = `${OFFERS_BASE_URL}/UploadImages/`;
 
@@ -45,13 +98,15 @@ const Offers = () => {
                     return {
                         title: offer.SUBJECT || "No Title",
                         description: offer.DESCRIPTION || "No Description",
-                        image: imgName ? `${IMAGE_BASE_URL}${imgName}` : "/Assets/placeholder.jpg"
+                        image: imgName ? `${IMAGE_BASE_URL}${imgName}` : publicAsset("/Assets/Offer.jpeg")
                     };
                 });
 
-                setOffersData(formattedData); // Must be an array
+                setOffersData(formattedData);
             } catch (error) {
                 console.error("Error fetching offers:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -59,131 +114,91 @@ const Offers = () => {
     }, []);
 
     return (
-        <>
+        <div className="bg-paper">
             <HorizontalInfoSlider />
             <Navbar />
             <Maintenance />
 
-            {/* =====================================================
-    OFFERS HERO BANNER
-===================================================== */}
-            <section className="relative h-[430px] w-full overflow-hidden bg-black md:h-[520px] lg:h-[625px]">
+            <PageHero
+                image="/Assets/media/aerial-slide-tower.webp"
+                imageAlt="The Dream Asia slide tower and water park, from the air"
+                eyebrow="Offers & promotions"
+                title="Special offers for you"
+                highlight="for you"
+                subtitle="Festive deals, special packages and group offers that add extra joy — and extra savings — to your visit."
+                mascot="/Assets/media/site/taro-wave.webp"
+            />
 
-                {/* Background Image */}
-                <img
-                    src={publicAsset('/Assets/discover2.jpg')}
-                    alt="Dream Asia Offers"
-                    className="absolute inset-0 h-full w-full object-cover object-center"
+            <Section className="!pt-10">
+                <SectionHeading
+                    eyebrow="Latest offers"
+                    title="Exciting offers at Dream Asia Parks"
+                    highlight="Dream Asia Parks"
+                    lead="Limited-time festive deals and exclusive group offers. Pick one and book online."
+                    align="center"
                 />
 
-                {/* Dark Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
-
-                {/* Hero Content */}
-                <div className="relative z-10 flex h-full items-center justify-center px-4 pb-10 sm:pb-12 lg:pb-16">
-                    <div className="mx-auto max-w-[950px] text-center">
-
-                        {/* Heading */}
-                        <h1 className="text-[38px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-[48px] md:text-[58px] lg:text-[68px]">
-                            Discover{" "}
-                            <span className="text-[#FFA000]">
-                                Amazing Offers
-                            </span>
-                        </h1>
-
-                        {/* Subtitle */}
-                        <p className="mx-auto mt-6 max-w-[720px] text-[17px] font-medium leading-[1.45] text-white sm:text-[20px] md:text-[23px] lg:text-[25px]">
-                            Unlock exciting deals, special packages, and memorable
-                            <br className="hidden sm:block" />
-                            experiences at Dream Asia.
-                        </p>
-
-                    </div>
-                </div>
-
-                {/* =====================================================
-      BOTTOM WHITE WAVE
-  ====================================================== */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 z-20 h-[52px] w-full sm:h-[60px] md:h-[66px] lg:h-[72px]">
-                    <svg
-                        viewBox="0 0 1440 80"
-                        preserveAspectRatio="none"
-                        className="h-full w-full"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill="#F7F7F7"
-                            d="
-                             M0,32
-                             C20,6 60,6 82,32
-                             C104,58 140,58 164,32
-                             C188,6 225,6 248,32
-                             C271,58 308,58 332,32
-                             C356,6 394,6 417,32
-                             C440,58 478,58 501,32
-                             C524,6 562,6 585,32
-                             C608,58 646,58 669,32
-                             C692,6 730,6 753,32
-                             C776,58 814,58 837,32
-                             C860,6 898,6 921,32
-                             C944,58 982,58 1005,32
-                             C1028,6 1066,6 1089,32
-                             C1112,58 1150,58 1173,32
-                             C1196,6 1234,6 1257,32
-                             C1280,58 1318,58 1341,32
-                             C1364,6 1402,6 1440,32
-                             L1440,80
-                             L0,80
-                            Z
-                         "
-                        />
-                    </svg>
-                </div>
-
-            </section>
-
-            {/* Offers Section */}
-            <div className='py-10 md:py-16 px-4 bg-blue-50'>
-                <h1 className='text-2xl md:text-4xl font-bold text-center text-[#6a1e73] mb-6'>
-                    Exciting Offers at Dream Asia Parks!
-                </h1>
-                <p className="text-center text-gray-600 md:text-lg font-semibold md:px-24 mb-10">
-                    Explore our exciting, limited-time festive deals and exclusive group offers designed to add extra joy, savings, and unforgettable memories to your visit at Dream Asia Parks.
-                </p>
-
-                <div className='max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-                    {offersData.length > 0 ? (
-                        offersData.map((offer, index) => (
-                            <div
-                                key={index}
-                                className='bg-white shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col'
-                            >
-                                <img
-                                    src={offer.image}
-                                    alt={offer.title}
-                                    className='w-full h-80'
-                                />
-                                <div className='px-6 py-3 flex-1 flex flex-col items-center'>
-                                    <h2 className='text-xl font-semibold text-gray-800 mb-2 border-b-2 border-[#6a1e73] pb-1'>
-                                        {offer.title}
-                                    </h2>
-                                    <p className='text-gray-600 text-center'>{offer.description}</p>
-                                </div>
-                                <button
-                                    onClick={() => router.push('https://membership.dreamasiaworld.com/drmw/5555555555')}
-                                    className='w-full bg-[#6a1e73] hover:bg-[#53195c] text-white font-bold py-2 rounded-b-xl'
-                                >
-                                    Book Now
-                                </button>
+                {loading ? (
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading offers">
+                        {[0, 1, 2].map((i) => (
+                            <div key={i} className="animate-pulse rounded-[var(--radius-card)] bg-white p-3 ring-1 ring-hairline">
+                                <div className="aspect-[4/3] rounded-[1.25rem] bg-paper-deep" />
+                                <div className="mx-auto mt-5 h-6 w-2/3 rounded-full bg-paper-deep" />
+                                <div className="mx-auto mt-3 h-4 w-5/6 rounded-full bg-paper-deep" />
+                                <div className="mt-6 h-12 rounded-full bg-paper-deep" />
                             </div>
-                        ))
-                    ) : (
-                        <p className="text-center col-span-full text-gray-500">Currently, there are no active offers</p>
-                    )}
+                        ))}
+                    </div>
+                ) : offersData.length > 0 ? (
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {offersData.map((offer, index) => (
+                            <Reveal key={index} delay={Math.min(index, 5) * 0.05} className="h-full">
+                                <OfferCard offer={offer} />
+                            </Reveal>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="mx-auto flex max-w-xl flex-col items-center rounded-[var(--radius-card)] bg-white px-6 py-12 text-center ring-1 ring-hairline">
+                        <img src={publicAsset('/Assets/media/site/taro-wave.webp')} alt="" aria-hidden="true" className="w-[110px]" />
+                        <h2 className="u-display mt-4 text-[26px] text-ink">No active offers right now</h2>
+                        <p className="mt-2 text-[15px] text-ink-soft">
+                            New deals land often — check back soon, or book your day at the regular price.
+                        </p>
+                        <div className="mt-6">
+                            <CtaButton href={OFFER_BOOKING_URL}>Book Tickets</CtaButton>
+                        </div>
+                    </div>
+                )}
+            </Section>
+
+            {/* Festive feature — the client's Diwali promotion, played only on request. */}
+            <Section tone="grape">
+                <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+                    <div className="lg:col-span-6">
+                        <SectionHeading
+                            eyebrow="Festive season"
+                            title="Celebrate the festivals at Dream Asia"
+                            highlight="festivals"
+                            lead="Rides, splashes, stays and celebrations — see what a festive day out at the park looks like. Press play, sound on."
+                        />
+                        <div className="-mt-4 flex flex-col gap-3 sm:flex-row">
+                            <CtaButton href={OFFER_BOOKING_URL}>Book Tickets</CtaButton>
+                        </div>
+                    </div>
+                    <Reveal className="lg:col-span-6">
+                        <FeatureVideo
+                            src="/Assets/media/diwali.mp4"
+                            poster="/Assets/media/diwali.webp"
+                            title="Festive celebrations at Dream Asia"
+                            label="Play the festive celebrations video"
+                            portrait
+                        />
+                    </Reveal>
                 </div>
-            </div>
+            </Section>
+
             <Footer />
-        </>
+        </div>
     );
 };
 

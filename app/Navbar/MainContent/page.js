@@ -1,14 +1,114 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { publicAsset } from "@/lib/publicAsset";
 import { usePathname, useRouter } from "next/navigation";
-import { IoMenu } from "react-icons/io5";
-import { RxCross2 } from "react-icons/rx";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { BOOKING_URL } from "../../_data/park";
+import {
+  IoMenu,
+  IoClose,
+  IoWaterOutline,
+  IoTrailSignOutline,
+  IoRocketOutline,
+  IoBedOutline,
+  IoHeartOutline,
+  IoBriefcaseOutline,
+  IoPricetagOutline,
+  IoInformationCircleOutline,
+  IoCallOutline,
+  IoTicketOutline,
+  IoGridOutline,
+  IoChevronDown,
+} from "react-icons/io5";
 
-/** House purple, as used for the home page's "Your Squad" heading and the logo. */
+/** House purple, as used for the logo. */
 const BRAND = "#6B1E74";
+
+const navItems = [
+  { name: "About Us", path: "/Footer/Components/AboutUs", color: "#6B1E74", icon: IoInformationCircleOutline },
+  { name: "Water Park", path: "/WaterPark", color: "#08AFC0", icon: IoWaterOutline },
+  { name: "Adventure Park", path: "/AdventurePark", color: "#16B88D", icon: IoTrailSignOutline },
+  {
+    // Labelled "Amusement Park" to match the brief and the page itself;
+    // "Theme Park" was ambiguous against the other two attractions.
+    name: "Amusement Park",
+    path: "/AmusementPark",
+    color: "#CE0E62",
+    icon: IoRocketOutline,
+  },
+  // The brief names the accommodation section "Resort of Asia".
+  { name: "Resort of Asia", path: "/Hotels", color: "#FB7900", icon: IoBedOutline },
+  { name: "Weddings", path: "/Weddings", color: "#661C6F", icon: IoHeartOutline },
+  { name: "Corporates", path: "/Corporates", color: "#6B1E74", icon: IoBriefcaseOutline },
+  {
+    name: "Book Tickets",
+    path: BOOKING_URL,
+    color: "#FFB703",
+    icon: IoTicketOutline,
+    external: true,
+  },
+  { name: "Offers", path: "/Offers", color: "#FB7900", icon: IoPricetagOutline },
+  { name: "Contact Us", path: "/Footer/Components/ContactUs", color: "#16B88D", icon: IoCallOutline },
+];
+
+/**
+ * Desktop split: the five business categories plus Offers sit in the bar, the
+ * rest go under More. The mobile drawer still lists every destination.
+ */
+const PRIMARY_PATHS = ["/WaterPark", "/AdventurePark", "/AmusementPark", "/Hotels", "/Weddings", "/Offers"];
+
+const ctaItem = navItems.find((item) => item.external);
+const linkItems = navItems.filter((item) => !item.external);
+const primaryItems = PRIMARY_PATHS.map((path) => linkItems.find((item) => item.path === path)).filter(Boolean);
+const moreItems = linkItems.filter((item) => !PRIMARY_PATHS.includes(item.path));
+
+/** Trailing slashes come from the static export; compare without them. */
+const normalise = (path) => (path || "/").replace(/\/+$/, "") || "/";
+
+/** Icon-over-label destination, the reference site's nav pattern. */
+const NavButton = ({ item, active, children, ...rest }) => {
+  const Icon = item.icon;
+
+  return (
+    <button
+      type="button"
+      aria-current={active ? "page" : undefined}
+      className="group relative flex min-h-[64px] min-w-[64px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-0 bg-transparent px-2 py-1.5 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 xl:px-3"
+      style={{ ["--tw-ring-color"]: `${item.color}40` }}
+      {...rest}
+    >
+      <span
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[20px] transition-[transform,background-color,color] duration-200 group-hover:-translate-y-0.5"
+        style={{
+          backgroundColor: active ? item.color : `color-mix(in srgb, ${item.color} 12%, white)`,
+          color: active ? "#fff" : `color-mix(in srgb, ${item.color} 70%, #1d1220)`,
+        }}
+        aria-hidden="true"
+      >
+        <Icon />
+      </span>
+      <span
+        className={`flex items-center gap-1 whitespace-nowrap text-[13px] font-semibold xl:text-[14px] ${
+          active ? "text-ink" : "text-ink-soft group-hover:text-ink"
+        }`}
+      >
+        {item.name}
+        {children}
+      </span>
+      {active ? (
+        <motion.span
+          layoutId="navbar-active"
+          className="absolute inset-x-3 -bottom-[3px] h-[3px] rounded-full"
+          style={{ backgroundColor: item.color }}
+          transition={{ type: "spring", stiffness: 420, damping: 34 }}
+          aria-hidden="true"
+        />
+      ) : null}
+    </button>
+  );
+};
 
 const Navbar = () => {
   const router = useRouter();
@@ -16,150 +116,61 @@ const Navbar = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const headerRef = useRef(null);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const headerRef = useRef(null);
   const moreRef = useRef(null);
   const reduceMotion = useReducedMotion();
 
-  // Curve should appear ONLY on home page
-  const isHomePage = pathname === "/";
-
-  const navItems = [
-    {
-      name: "About Us",
-      path: "/Footer/Components/AboutUs",
-      color: "#6B1E74",
-    },
-    {
-      name: "Water Park",
-      path: "/WaterPark",
-      color: "#F97316",
-    },
-    {
-      name: "Adventure Park",
-      path: "/AdventurePark",
-      color: "#16B88D",
-    },
-    {
-      // Labelled "Amusement Park" to match the brief and the page itself;
-      // "Theme Park" was ambiguous against the other two attractions.
-      name: "Amusement Park",
-      path: "/AmusementPark",
-      color: "#E50046",
-    },
-    {
-      // The brief names the accommodation section "Resort of Asia".
-      name: "Resort of Asia",
-      path: "/Hotels",
-      color: "#06B6D4",
-    },
-    {
-      name: "Weddings",
-      path: "/Weddings",
-      color: "#661C6F",
-    },
-    {
-      name: "Corporates",
-      path: "/Corporates",
-      color: "#6B1E74",
-    },
-    {
-      name: "Book Ticket",
-      path: "https://membership.dreamasiaworld.com/drmw/5555555555",
-      color: "#3498DB",
-      external: true,
-    },
-    {
-      name: "Contact Us",
-      path: "/Footer/Components/ContactUs",
-      color: "#16B88D",
-    },
-    {
-      name: "Offers",
-      path: "/Offers",
-      color: "#3ad3d8",
-    },
-  ];
-
-  // "Book Ticket" is pulled out as the single primary action; everything else
-  // renders as a text destination.
-  const ctaItem = navItems.find((item) => item.external);
-  const linkItems = navItems.filter((item) => !item.external);
-
-  /**
-   * Desktop split.
-   *
-   * Ten destinations plus a CTA do not fit between the logo and the right edge
-   * of the island — they ran 246px past it, pushing Book Ticket off screen
-   * entirely. So the bar carries the five business categories the brief asks
-   * the site to lead with, and everything else moves into a More menu rather
-   * than being crammed or dropped.
-   *
-   * The mobile drawer is unaffected and still lists every destination.
-   */
-  const PRIMARY_PATHS = [
-    "/WaterPark",
-    "/AdventurePark",
-    "/AmusementPark",
-    "/Hotels",
-    "/Weddings",
-  ];
-
-  const primaryItems = PRIMARY_PATHS.map((path) =>
-    linkItems.find((item) => item.path === path)
-  ).filter(Boolean);
-
-  const moreItems = linkItems.filter((item) => !PRIMARY_PATHS.includes(item.path));
-
-  const isActive = (item) => !item.external && pathname === item.path;
+  const isActive = (item) => !item.external && normalise(pathname) === normalise(item.path);
   const moreIsActive = moreItems.some(isActive);
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+  useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
 
   /**
-   * Publish the header's real height as --nav-h.
-   *
-   * Anything that sticks below the floating nav (the in-page QuickNav, section
-   * scroll anchors) needs to clear it. Hardcoding the offset drifts the moment
-   * the logo or padding changes — and did: the measured header is ~117px tall
-   * at desktop, not the 96px the min-height implied, so the two bars overlapped.
-   * Measuring it keeps them in step.
+   * Publish the header's real height as --nav-h, so the sticky QuickNav and
+   * section scroll anchors always clear it.
    */
   useEffect(() => {
     const node = headerRef.current;
     if (!node) return;
 
     const publish = () => {
-      document.documentElement.style.setProperty(
-        "--nav-h",
-        `${Math.round(node.getBoundingClientRect().height)}px`
-      );
+      document.documentElement.style.setProperty("--nav-h", `${Math.round(node.getBoundingClientRect().height)}px`);
     };
 
     publish();
-
     const observer = new ResizeObserver(publish);
     observer.observe(node);
-
     return () => observer.disconnect();
   }, []);
 
-  // Track whether the page has left the top, so the island can tighten its
-  // border and shadow. Passive listener, and it only writes on a change.
+  /**
+   * Skip-link target. Pages built on PageHero carry id="main" already; for the
+   * rest, the first element after the header becomes the target.
+   */
+  useEffect(() => {
+    if (document.getElementById("main")) return;
+    let next = headerRef.current?.nextElementSibling;
+    while (next && (next.tagName === "SCRIPT" || next.offsetHeight === 0)) next = next.nextElementSibling;
+    if (next) {
+      next.id = "main";
+      next.setAttribute("tabindex", "-1");
+    }
+  }, []);
+
+  // Shadow appears once the page leaves the top. Only writes on a change.
   useEffect(() => {
     const onScroll = () => {
       setScrolled((previous) => {
-        const next = window.scrollY > 12;
+        const next = window.scrollY > 8;
         return next === previous ? previous : next;
       });
     };
@@ -174,9 +185,7 @@ const Navbar = () => {
     if (!moreOpen) return;
 
     const onPointerDown = (event) => {
-      if (moreRef.current && !moreRef.current.contains(event.target)) {
-        setMoreOpen(false);
-      }
+      if (moreRef.current && !moreRef.current.contains(event.target)) setMoreOpen(false);
     };
     const onKey = (event) => {
       if (event.key === "Escape") setMoreOpen(false);
@@ -193,17 +202,16 @@ const Navbar = () => {
   // Close the drawer on Escape — an escape route from a full-screen overlay.
   useEffect(() => {
     if (!menuOpen) return;
-
     const onKey = (event) => {
       if (event.key === "Escape") setMenuOpen(false);
     };
-
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
   const handleNavigation = (item) => {
     setMenuOpen(false);
+    setMoreOpen(false);
 
     if (item.external) {
       window.location.href = item.path;
@@ -214,381 +222,225 @@ const Navbar = () => {
   };
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-[90] w-full px-2.5 pt-2.5 sm:px-4 sm:pt-4">
+    <header
+      ref={headerRef}
+      className={`sticky top-0 z-[90] w-full bg-white/95 backdrop-blur-md transition-shadow duration-300 ${
+        scrolled ? "shadow-[0_10px_30px_-18px_rgba(46,11,54,.45)]" : "shadow-[0_1px_0_0_#eadfd3]"
+      }`}
+    >
+      <div className="mx-auto flex min-h-[68px] max-w-[1320px] items-center justify-between gap-3 px-4 sm:px-6 lg:min-h-[84px] lg:gap-4">
+        {/* Logo */}
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="flex shrink-0 cursor-pointer items-center rounded-lg border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2"
+          style={{ ["--tw-ring-color"]: `${BRAND}55` }}
+          aria-label="Dream Asia home"
+        >
+          <img
+            src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
+            alt="Dream Asia"
+            width={660}
+            height={297}
+            className="h-auto w-[112px] object-contain sm:w-[130px] lg:w-[150px]"
+          />
+        </button>
 
-      {/* Floating island.
-          Detached from the viewport edge, so it reads as floating above the
-          page. The border and shadow tighten once scrolled, which is what
-          signals the lift. */}
-      <motion.div
-        className="relative z-30 mx-auto max-w-[1250px] rounded-2xl border bg-white/92 backdrop-blur-md sm:rounded-[20px]"
-        style={{
-          borderColor: scrolled ? `${BRAND}3D` : `${BRAND}24`,
-          borderWidth: 1.5,
-          boxShadow: scrolled
-            ? `0 18px 40px -16px ${BRAND}4D, 0 2px 8px -2px rgba(0,0,0,.12)`
-            : `0 10px 28px -14px ${BRAND}33`,
-        }}
-        animate={reduceMotion ? undefined : { scale: scrolled ? 0.995 : 1 }}
-        transition={{ type: "spring", stiffness: 320, damping: 30 }}
-      >
-        {/* A single brand hairline. A multi-colour sweep across the top read as
-            decoration for its own sake; one restrained line does the same job
-            of tying the island to the brand. */}
-        {/* Inset and rounded to match the island's corners. The island can no
-            longer clip (the More dropdown has to escape it), so the hairline
-            has to respect the radius itself. */}
-        <span
-          className="absolute inset-x-4 top-0 h-[2px] rounded-full"
-          style={{ backgroundColor: BRAND }}
-          aria-hidden="true"
-        />
+        {/* Desktop */}
+        <nav className="hidden flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1" aria-label="Main">
+          {primaryItems.map((item) => (
+            <NavButton key={item.name} item={item} active={isActive(item)} onClick={() => handleNavigation(item)} />
+          ))}
 
-        <div className="mx-auto flex min-h-[62px] items-center justify-between gap-4 px-3.5 py-2 sm:px-5 lg:min-h-[76px] lg:gap-6 lg:px-6">
+          {moreItems.length ? (
+            <div className="relative" ref={moreRef}>
+              <NavButton
+                item={{ name: "More", icon: IoGridOutline, color: BRAND }}
+                active={moreIsActive}
+                onClick={() => setMoreOpen((open) => !open)}
+                aria-expanded={moreOpen}
+                aria-haspopup="true"
+              >
+                <IoChevronDown
+                  className="text-[11px] transition-transform duration-200"
+                  style={{ transform: moreOpen ? "rotate(180deg)" : "none" }}
+                  aria-hidden="true"
+                />
+              </NavButton>
 
-          {/* Logo */}
+              <AnimatePresence>
+                {moreOpen ? (
+                  <motion.ul
+                    initial={reduceMotion ? false : { opacity: 0, y: -6 }}
+                    animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+                    exit={reduceMotion ? false : { opacity: 0, y: -6 }}
+                    transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute left-1/2 top-[calc(100%+10px)] z-50 min-w-[230px] -translate-x-1/2 overflow-hidden rounded-2xl bg-white p-2 shadow-[0_24px_50px_-20px_rgba(46,11,54,.45)] ring-1 ring-hairline"
+                  >
+                    {moreItems.map((item) => {
+                      const active = isActive(item);
+                      const Icon = item.icon;
+
+                      return (
+                        <li key={item.name}>
+                          <button
+                            type="button"
+                            onClick={() => handleNavigation(item)}
+                            aria-current={active ? "page" : undefined}
+                            className="flex min-h-[48px] w-full cursor-pointer items-center gap-3 rounded-xl border-0 bg-transparent px-3 text-left text-[15px] font-semibold text-ink transition-colors duration-150 hover:bg-paper-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-grape/40"
+                          >
+                            <span
+                              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[17px]"
+                              style={{
+                                backgroundColor: `color-mix(in srgb, ${item.color} 14%, white)`,
+                                color: `color-mix(in srgb, ${item.color} 70%, #1d1220)`,
+                              }}
+                              aria-hidden="true"
+                            >
+                              <Icon />
+                            </span>
+                            {item.name}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </motion.ul>
+                ) : null}
+              </AnimatePresence>
+            </div>
+          ) : null}
+        </nav>
+
+        <div className="flex items-center gap-2">
+          {/* Ticket tab — hangs from the top edge like a torn-off stub. */}
+          {ctaItem ? (
+            <a
+              href={ctaItem.path}
+              target="_blank" rel="noopener noreferrer"
+              className="group relative -mt-[2px] flex cursor-pointer flex-col items-center self-start rounded-b-2xl border-0 bg-sun px-4 pb-3 pt-3 text-grape-deep shadow-[0_6px_0_0_#C98500] transition-transform duration-200 hover:translate-y-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sun/50 sm:px-5 lg:pb-4 lg:pt-4"
+            >
+              <span
+                className="pointer-events-none absolute inset-x-2 bottom-1.5 border-t-2 border-dashed border-grape-deep/25"
+                aria-hidden="true"
+              />
+              <IoTicketOutline className="hidden text-[22px] transition-transform duration-200 group-hover:-rotate-12 lg:block" aria-hidden="true" />
+              <span className="u-display whitespace-nowrap text-[14px] leading-tight sm:text-[15px] lg:mt-0.5 lg:text-[16px]">
+                Book Tickets
+              </span>
+            </a>
+          ) : null}
+
+          {/* Mobile menu button */}
           <button
             type="button"
-            onClick={() => router.push("/")}
-            className="flex shrink-0 cursor-pointer items-center rounded-lg border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2"
-            style={{ ["--tw-ring-color"]: `${BRAND}55` }}
-            aria-label="Dream Asia home"
-          >
-            <img
-              src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
-              alt="Dream Asia"
-              className="h-auto w-[118px] object-contain transition-[width] duration-300 sm:w-[140px] lg:w-[165px]"
-            />
-          </button>
-
-          {/* Desktop Navbar
-              Nine coloured pills no longer fit between the logo and the right
-              edge, so destinations render as text with the section colour used
-              for the active/hover indicator. "Book Ticket" stays a solid pill —
-              one clear primary action rather than nine competing ones. */}
-          <nav className="hidden items-center justify-end gap-1 lg:flex xl:gap-2" aria-label="Main">
-            {primaryItems.map((item) => {
-              const active = isActive(item);
-
-              return (
-                <button
-                  key={item.name}
-                  type="button"
-                  onClick={() => handleNavigation(item)}
-                  aria-current={active ? "page" : undefined}
-                  className="group relative cursor-pointer whitespace-nowrap rounded-md border-0 bg-transparent px-2.5 py-2.5 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:px-3 xl:text-[16px]"
-                  style={{
-                    color: active ? item.color : "#374151",
-                    ["--tw-ring-color"]: `${item.color}55`,
-                  }}
-                  onMouseEnter={(event) => {
-                    event.currentTarget.style.color = item.color;
-                  }}
-                  onMouseLeave={(event) => {
-                    event.currentTarget.style.color = active ? item.color : "#374151";
-                  }}
-                >
-                  {item.name}
-
-                  {/* Active underline, shared across items so it slides. */}
-                  {active ? (
-                    <motion.span
-                      layoutId="navbar-active-underline"
-                      className="absolute inset-x-2 -bottom-0.5 h-[3px] rounded-full"
-                      style={{ backgroundColor: item.color }}
-                      transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <span
-                      className="absolute inset-x-2 -bottom-0.5 h-[3px] origin-left scale-x-0 rounded-full transition-transform duration-200 group-hover:scale-x-100"
-                      style={{ backgroundColor: `${item.color}66` }}
-                      aria-hidden="true"
-                    />
-                  )}
-                </button>
-              );
-            })}
-
-            {/* Overflow menu for the remaining destinations. */}
-            {moreItems.length ? (
-              <div className="relative" ref={moreRef}>
-                <button
-                  type="button"
-                  onClick={() => setMoreOpen((open) => !open)}
-                  aria-expanded={moreOpen}
-                  aria-haspopup="true"
-                  className="group relative inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-md border-0 bg-transparent px-2.5 py-2.5 text-[15px] font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:px-3 xl:text-[16px]"
-                  style={{
-                    color: moreIsActive || moreOpen ? BRAND : "#374151",
-                    ["--tw-ring-color"]: `${BRAND}55`,
-                  }}
-                >
-                  More
-                  <span
-                    className="text-[10px] transition-transform duration-200"
-                    style={{ transform: moreOpen ? "rotate(180deg)" : "none" }}
-                    aria-hidden="true"
-                  >
-                    &#9660;
-                  </span>
-
-                  {moreIsActive ? (
-                    <span
-                      className="absolute inset-x-2 -bottom-0.5 h-[3px] rounded-full"
-                      style={{ backgroundColor: BRAND }}
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </button>
-
-                <AnimatePresence>
-                  {moreOpen ? (
-                    <motion.ul
-                      initial={reduceMotion ? false : { opacity: 0, y: -6 }}
-                      animate={reduceMotion ? false : { opacity: 1, y: 0 }}
-                      exit={reduceMotion ? false : { opacity: 0, y: -6 }}
-                      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute right-0 top-[calc(100%+10px)] z-50 min-w-[210px] overflow-hidden rounded-xl border bg-white py-1.5 shadow-xl"
-                      style={{ borderColor: `${BRAND}24` }}
-                    >
-                      {moreItems.map((item) => {
-                        const active = isActive(item);
-
-                        return (
-                          <li key={item.name}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setMoreOpen(false);
-                                handleNavigation(item);
-                              }}
-                              aria-current={active ? "page" : undefined}
-                              className="flex w-full cursor-pointer items-center gap-3 border-0 bg-transparent px-4 py-3 text-left text-[15px] font-semibold transition-colors duration-200 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset"
-                              style={{
-                                color: active ? item.color : "#374151",
-                                ["--tw-ring-color"]: `${item.color}66`,
-                              }}
-                            >
-                              <span
-                                className="h-2 w-2 shrink-0 rounded-full"
-                                style={{ backgroundColor: item.color }}
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </motion.ul>
-                  ) : null}
-                </AnimatePresence>
-              </div>
-            ) : null}
-
-            {ctaItem ? (
-              <motion.button
-                type="button"
-                onClick={() => handleNavigation(ctaItem)}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 380, damping: 24 }}
-                className="ml-2 cursor-pointer whitespace-nowrap rounded-full border-0 px-5 py-2.5 text-[15px] font-bold text-white shadow-md transition-shadow duration-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 xl:text-[16px]"
-                style={{
-                  backgroundColor: ctaItem.color,
-                  ["--tw-ring-color"]: `${ctaItem.color}66`,
-                }}
-              >
-                {ctaItem.name}
-              </motion.button>
-            ) : null}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <motion.button
-            type="button"
-            onClick={() => setMenuOpen((previousValue) => !previousValue)}
-            whileTap={reduceMotion ? undefined : { scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 420, damping: 22 }}
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 text-white shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 lg:hidden"
-            style={{ backgroundColor: BRAND, ["--tw-ring-color"]: `${BRAND}55` }}
+            onClick={() => setMenuOpen((value) => !value)}
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-grape text-white focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-grape/40 lg:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
           >
-            {menuOpen ? (
-              <RxCross2 className="text-2xl" />
-            ) : (
-              <IoMenu className="text-2xl" />
-            )}
-          </motion.button>
-
+            {menuOpen ? <IoClose className="text-2xl" /> : <IoMenu className="text-2xl" />}
+          </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* =====================================================
-          BOTTOM CURVE - HOME PAGE ONLY
-
-          The scallop was anchored to a full-width white bar. Now that the nav
-          is a detached island it only reads correctly at rest, so it fades out
-          once the page scrolls and the island is genuinely floating.
-      ====================================================== */}
-      {isHomePage && !scrolled && (
-        <div
-          className="pointer-events-none absolute left-0 top-[calc(100%-6px)] z-10 hidden h-[45px] w-full overflow-hidden lg:block"
-          aria-hidden="true"
-        >
-          <svg
-            viewBox="0 0 1440 70"
-            preserveAspectRatio="none"
-            className="block h-full w-full"
-          >
-            <path
-              fill="#ffffff"
-              d="
-                M0,0
-                L1440,0
-                L1440,22
-
-                C1410,22 1395,58 1350,58
-                C1305,58 1290,22 1260,22
-
-                C1230,22 1215,58 1170,58
-                C1125,58 1110,22 1080,22
-
-                C1050,22 1035,58 990,58
-                C945,58 930,22 900,22
-
-                C870,22 855,58 810,58
-                C765,58 750,22 720,22
-
-                C690,22 675,58 630,58
-                C585,58 570,22 540,22
-
-                C510,22 495,58 450,58
-                C405,58 390,22 360,22
-
-                C330,22 315,58 270,58
-                C225,58 210,22 180,22
-
-                C150,22 135,58 90,58
-                C45,58 30,22 0,22
-
-                Z
-              "
-            />
-          </svg>
-        </div>
-      )}
-
-      {/* =====================================================
-          MOBILE MENU
-      ====================================================== */}
+      {/* Mobile drawer.
+          Portalled to <body>: the header's backdrop-filter makes it the
+          containing block for fixed children, which squashed the drawer into
+          the header's own box. */}
+      {mounted && createPortal(
       <AnimatePresence>
-      {menuOpen && (
-        <motion.div
-          className="fixed inset-0 z-[100] bg-white lg:hidden"
-          initial={reduceMotion ? false : { opacity: 0, y: -12 }}
-          animate={reduceMotion ? false : { opacity: 1, y: 0 }}
-          exit={reduceMotion ? false : { opacity: 0, y: -12 }}
-          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-        >
+        {menuOpen && (
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            className="fixed inset-0 z-[100] flex flex-col bg-paper lg:hidden"
+            initial={reduceMotion ? false : { opacity: 0, y: -12 }}
+            animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+            exit={reduceMotion ? false : { opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="flex min-h-[68px] items-center justify-between bg-white px-4 shadow-[0_1px_0_0_#eadfd3]">
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  router.push("/");
+                }}
+                className="border-0 bg-transparent p-0"
+                aria-label="Dream Asia home"
+              >
+                <img
+                  src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
+                  alt="Dream Asia"
+                  className="h-auto w-[120px] object-contain"
+                />
+              </button>
 
-          {/* Mobile Menu Header */}
-          <div className="flex min-h-[82px] items-center justify-between border-b border-gray-200 px-4 py-3 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-grape text-white"
+                aria-label="Close menu"
+              >
+                <IoClose className="text-2xl" />
+              </button>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                setMenuOpen(false);
-                router.push("/");
-              }}
-              className="border-0 bg-transparent p-0"
-              aria-label="Dream Asia home"
-            >
-              <img
-                src={publicAsset("/Assets/webp/dreamasia-logo.webp")}
-                alt="Dream Asia"
-                className="h-auto w-[155px] object-contain"
-              />
-            </button>
+            {/* dvh rather than vh: 100vh includes the collapsing mobile toolbar. */}
+            <div className="flex-1 overflow-y-auto px-4 pb-8 pt-5">
+              <nav className="mx-auto grid max-w-md grid-cols-2 gap-3" aria-label="Main">
+                {linkItems.map((item, index) => {
+                  const active = isActive(item);
+                  const Icon = item.icon;
 
-            <button
-              type="button"
-              onClick={() => setMenuOpen(false)}
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#6B1E74] text-white shadow-md"
-              aria-label="Close menu"
-            >
-              <RxCross2 className="text-2xl" />
-            </button>
-
-          </div>
-
-          {/* Mobile Navigation
-              dvh rather than vh: on mobile browsers 100vh includes the
-              collapsing toolbar, which cut the last item off. */}
-          <div className="h-[calc(100dvh-82px)] overflow-y-auto px-5 pb-10 pt-6">
-
-            <nav className="mx-auto flex max-w-md flex-col gap-3" aria-label="Main">
-              {linkItems.map((item, index) => {
-                const active = isActive(item);
-
-                return (
-                  <motion.button
-                    key={item.name}
-                    type="button"
-                    onClick={() => handleNavigation(item)}
-                    aria-current={active ? "page" : undefined}
-                    initial={reduceMotion ? false : { opacity: 0, x: -18 }}
-                    animate={reduceMotion ? false : { opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.045, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                    className="flex min-h-[56px] w-full cursor-pointer items-center justify-between gap-3 rounded-xl border-2 bg-white px-4 py-3 text-left text-base font-semibold transition-colors duration-200"
-                    style={{
-                      color: item.color,
-                      borderColor: active ? item.color : "#E5E7EB",
-                      backgroundColor: active ? `${item.color}12` : "#fff",
-                    }}
-                  >
-                    <span className="flex items-center gap-3">
+                  return (
+                    <motion.button
+                      key={item.name}
+                      type="button"
+                      onClick={() => handleNavigation(item)}
+                      aria-current={active ? "page" : undefined}
+                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                      animate={reduceMotion ? false : { opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03, duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                      className={`flex min-h-[96px] cursor-pointer flex-col items-start justify-between gap-3 rounded-2xl border-0 p-4 text-left ${
+                        active ? "ring-2" : "ring-1 ring-hairline"
+                      }`}
+                      style={{
+                        backgroundColor: `color-mix(in srgb, ${item.color} ${active ? 18 : 8}%, white)`,
+                        ["--tw-ring-color"]: active ? item.color : undefined,
+                      }}
+                    >
                       <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full"
-                        style={{ backgroundColor: item.color }}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[20px] text-white"
+                        style={{ backgroundColor: `color-mix(in srgb, ${item.color} 75%, #1d1220)` }}
                         aria-hidden="true"
-                      />
-                      {item.name}
-                    </span>
-
-                    {active ? (
-                      <span className="text-xs font-bold uppercase tracking-wider opacity-70">
-                        Current
+                      >
+                        <Icon />
                       </span>
-                    ) : null}
-                  </motion.button>
-                );
-              })}
+                      <span className="u-display text-[16px] leading-tight text-ink">{item.name}</span>
+                    </motion.button>
+                  );
+                })}
+              </nav>
 
-              {/* Primary action, visually separated from the destinations. */}
               {ctaItem ? (
-                <motion.button
-                  type="button"
-                  onClick={() => handleNavigation(ctaItem)}
-                  initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-                  animate={reduceMotion ? false : { opacity: 1, y: 0 }}
-                  transition={{ delay: linkItems.length * 0.045, duration: 0.3 }}
-                  whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                  className="mt-3 flex min-h-[56px] w-full cursor-pointer items-center justify-center rounded-full border-0 px-4 py-3 text-base font-bold text-white shadow-lg"
-                  style={{ backgroundColor: ctaItem.color }}
+                <a
+                  href={ctaItem.path}
+                  target="_blank" rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="u-display mx-auto mt-5 flex min-h-[56px] w-full max-w-md cursor-pointer items-center justify-center gap-2 rounded-full border-0 bg-sun text-[18px] text-grape-deep shadow-[0_5px_0_0_#C98500]"
                 >
+                  <IoTicketOutline className="text-[22px]" aria-hidden="true" />
                   {ctaItem.name}
-                </motion.button>
+                </a>
               ) : null}
-            </nav>
-
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body
       )}
-      </AnimatePresence>
-
     </header>
   );
 };

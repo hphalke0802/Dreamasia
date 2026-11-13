@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import Maintenance from '@/app/Miantenance/page';
 import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
 import { NAP, PARK_HOURS } from '../../../_data/park';
+import { HeroImage, SocialLinks } from '@/app/_ui/PageKit';
 
 const ContactUs = () => {
   const router = useRouter();
@@ -36,9 +37,11 @@ const ContactUs = () => {
       <section className="relative h-[360px] w-full overflow-hidden bg-black md:h-[430px] lg:h-[515px]">
 
         {/* Background Image */}
-        <img
-          src={publicAsset('/Assets/big-banner-2.png')}
-          alt="Dream Asia Contact"
+        <HeroImage
+          src="/Assets/media/entrance-aerial.webp"
+          alt="The Dream Asia castle gate and entrance, from the air"
+          width={1920}
+          height={1280}
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
@@ -120,7 +123,7 @@ const ContactUs = () => {
             </div>
 
             {/* Heading */}
-            <h2 className="mt-4 text-[32px] font-extrabold leading-tight tracking-wide text-[#07152C] sm:text-[40px] lg:text-[46px]">
+            <h2 className="mt-4 text-[32px] font-extrabold leading-tight tracking-wide text-ink sm:text-[40px] lg:text-[46px]">
               Contact{" "}
               <span className="text-[#6B1E74]">
                 Dream Asia
@@ -149,7 +152,7 @@ const ContactUs = () => {
           {/* Heading */}
           <div className="mx-auto mb-10 max-w-4xl text-center">
 
-            <h2 className="text-[30px] font-extrabold leading-tight text-[#07152C] sm:text-[36px] lg:text-[40px]">
+            <h2 className="text-[30px] font-extrabold leading-tight text-ink sm:text-[36px] lg:text-[40px]">
               Before Your{" "}
               <span className="text-[#D41462]">
                 Visit
@@ -175,8 +178,10 @@ const ContactUs = () => {
               <div className="relative h-[280px] overflow-hidden sm:h-[330px] lg:h-[370px]">
 
                 <img
-                  src={publicAsset('/Assets/Caller-person.jpg')}
-                  alt="Dream Asia Booking Assistance"
+                  src={publicAsset('/Assets/media/entrance-day.webp')}
+                  alt="The Dream Asia castle gate"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover object-center"
                 />
 
@@ -191,7 +196,7 @@ const ContactUs = () => {
               {/* Content */}
               <div className="px-6 py-8 sm:px-8 lg:px-12 lg:py-11">
 
-                <h3 className="text-[25px] font-extrabold leading-[1.25] text-[#07152C] sm:text-[29px] lg:text-[31px]">
+                <h3 className="text-[25px] font-extrabold leading-[1.25] text-ink sm:text-[29px] lg:text-[31px]">
                   Dream Asia Booking
                   <br />
                   Assistance
@@ -245,8 +250,10 @@ const ContactUs = () => {
               <div className="relative h-[280px] overflow-hidden sm:h-[330px] lg:h-[370px]">
 
                 <img
-                  src={publicAsset('/Assets/Caller-assistant.webp')}
-                  alt="Booking Modification Support"
+                  src={publicAsset('/Assets/media/plaza-2.webp')}
+                  alt="Central Plaza at Dream Asia"
+                  loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover object-center"
                 />
 
@@ -261,7 +268,7 @@ const ContactUs = () => {
               {/* Content */}
               <div className="px-6 py-8 sm:px-8 lg:px-12 lg:py-11">
 
-                <h3 className="text-[25px] font-extrabold leading-[1.25] text-[#07152C] sm:text-[29px] lg:text-[31px]">
+                <h3 className="text-[25px] font-extrabold leading-[1.25] text-ink sm:text-[29px] lg:text-[31px]">
                   Booking Modification Support
                 </h3>
 
@@ -318,7 +325,7 @@ const ContactUs = () => {
           {/* Heading */}
           <div className="mx-auto mb-10 max-w-4xl text-center">
 
-            <h2 className="text-[30px] font-extrabold leading-tight text-[#07152C] sm:text-[36px] lg:text-[40px]">
+            <h2 className="text-[30px] font-extrabold leading-tight text-ink sm:text-[36px] lg:text-[40px]">
               Quick{" "}
               <span className="text-[#F97300]">
                 Assistance
@@ -341,7 +348,7 @@ const ContactUs = () => {
                 <MdPhone className="text-[30px]" />
               </div>
 
-              <h3 className="mt-4 text-[18px] font-extrabold text-[#07152C]">
+              <h3 className="mt-4 text-[18px] font-extrabold text-ink">
                 Call Dream Asia
               </h3>
 
@@ -362,7 +369,7 @@ const ContactUs = () => {
                 <MdEmail className="text-[30px]" />
               </div>
 
-              <h3 className="mt-4 text-[18px] font-extrabold text-[#07152C]">
+              <h3 className="mt-4 text-[18px] font-extrabold text-ink">
                 Email Support
               </h3>
 
@@ -384,7 +391,7 @@ const ContactUs = () => {
                 <MdOutlineSearch className="text-[31px]" />
               </div>
 
-              <h3 className="mt-4 text-[18px] font-extrabold text-[#07152C]">
+              <h3 className="mt-4 text-[18px] font-extrabold text-ink">
                 Lost &amp; Found Report
               </h3>
 
@@ -396,9 +403,8 @@ const ContactUs = () => {
 
 
             {/* Guest Services */}
-            <button
-              type="button"
-              onClick={() => router.push("/Footer/Components/ContactUs")}
+            <a
+              href={`mailto:${NAP.email}?subject=Guest%20services%20enquiry`}
               className="group flex min-h-[220px] w-full cursor-pointer flex-col items-center justify-center rounded-[17px] border-0 bg-white px-5 py-7 text-center shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
 
@@ -406,7 +412,7 @@ const ContactUs = () => {
                 <MdChatBubbleOutline className="text-[29px]" />
               </div>
 
-              <h3 className="mt-4 text-[18px] font-extrabold leading-6 text-[#07152C]">
+              <h3 className="mt-4 text-[18px] font-extrabold leading-6 text-ink">
                 Guest Services
                 <br />
                 Enquiry
@@ -416,7 +422,7 @@ const ContactUs = () => {
                 Questions about accessibility, dietary needs, or special services
               </p>
 
-            </button>
+            </a>
 
           </div>
 
@@ -460,18 +466,16 @@ const ContactUs = () => {
               </p>
               <button
                 onClick={() => router.push("/LostItemsReport")}
-                className='bg-gradient-to-r from-blue-400 to-blue-800 text-white py-2 px-4 rounded transition lg:mt-6'>Report Lost Item</button>
+                className='inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-full border-0 bg-sun px-6 font-semibold text-grape-deep shadow-[0_4px_0_0_#C98500] transition-transform duration-200 hover:-translate-y-0.5 lg:mt-6'>Report Lost Item</button>
             </div>
 
             <div className='w-auto mx-auto bg-white shadow-md rounded-md p-4 hover:shadow-xl'>
-              <img src={publicAsset('/Assets/contact-us.jpg')} alt='Contact Us' className='w-full h-50 object-contain rounded-md mb-3' />
+              <img src={publicAsset('/Assets/media/site/taro-miko.webp')} alt='Taro and Miko, the Dream Asia mascots' loading='lazy' className='mx-auto mb-3 h-50 w-auto object-contain' />
               <h3 className='text-xl font-bold mb-2'>Need further assistance?</h3>
               <p className='text-gray-700 mb-4'>
-                Got questions or need help with your Dream Asia adventure? Use our contact form for assistance with bookings, tickets, shop purchases, guest accessibility, food allergies, and more.
+                Got questions or need help with your Dream Asia adventure? Email us for help with bookings, tickets, shop purchases, guest accessibility, food allergies, and more.
               </p>
-              <button
-                onClick={() => router.push("/Footer/Components/ContactUs")}
-                className='bg-gradient-to-r from-blue-400 to-blue-800 text-white py-2 px-4 rounded transition'>Contact Us</button>
+              <a href={`mailto:${NAP.email}`} className='inline-flex min-h-[44px] cursor-pointer items-center justify-center rounded-full border-0 bg-sun px-6 font-semibold text-grape-deep shadow-[0_4px_0_0_#C98500] transition-transform duration-200 hover:-translate-y-0.5'>Email Us</a>
             </div>
           </section>
         </div>
@@ -482,12 +486,16 @@ const ContactUs = () => {
         </div>
 
         <div className="flex flex-col items-center justify-center mt-10">
-          <h1 className="text-3xl font-InspireTWDC font-extrabold text-center mb-2">How to Reach</h1>
+          <h1 className="text-3xl font-extrabold text-center mb-2">How to Reach</h1>
           <img src={publicAsset('/Assets/webp/dreamasia-logo.webp')}
             className='w-40 h-26 mb-4' />
-          <p className="text-gray-700 text-lg text-center font-semibold tracking-wider">
+          <p className="text-center text-lg text-ink-soft">
             Visit Maharashtra's biggest water and amusement park!
           </p>
+          <div className="mt-5 flex flex-col items-center gap-3">
+            <p className="u-eyebrow text-ink-muted">Follow &amp; tag @dreamasia</p>
+            <SocialLinks />
+          </div>
           <div className="w-full md:px-0 flex flex-col items-center justify-center gap-4 mt-4">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3731.567316086862!2d78.7094154!3d21.2436178!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd4f7620de2f297%3A0x3baef880e5c893e1!2sDreamasia!5e0!3m2!1sen!2sin!4v1719133798586!5m2!1sen!2sin"
