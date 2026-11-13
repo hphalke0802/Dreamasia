@@ -76,18 +76,8 @@ const INLINE = [
   { from: 'largeGroup.png', to: 'Assets/webp/largeGroup.webp', width: 900 },
   { from: 'Assets/destinationwedding.jpg', to: 'Assets/webp/destinationwedding.webp', width: 1600 },
   { from: 'Assets/stay/stay-01.jpeg', to: 'Assets/webp/stay-hero.webp', width: 1600 },
-
-  // Homepage and park heroes / cards
-  { from: 'Assets/facilities.jpg', to: 'Assets/webp/home-hero.webp', width: 1920 },
-  { from: 'Assets/waterpark_img.jpg', to: 'Assets/webp/water-hero.webp', width: 1920 },
-  { from: 'water-park.png', to: 'Assets/webp/park-water.webp', width: 1000 },
-  { from: 'adventure-park.png', to: 'Assets/webp/park-adventure.webp', width: 1000 },
-  { from: 'Assets/tick-2.jpg', to: 'Assets/webp/park-amusement.webp', width: 1000 },
-  { from: 'Resort and stay dark-1.jpeg', to: 'Assets/webp/park-resort.webp', width: 1000 },
-  { from: 'Assets/destinationwedding.jpg', to: 'Assets/webp/park-wedding.webp', width: 1000 },
-  { from: 'Assets/themed-hotels1.jpg', to: 'Assets/webp/room-lodge.webp', width: 700 },
-  { from: 'Assets/tick-1.jpg', to: 'Assets/webp/room-family.webp', width: 700 },
-  { from: 'Assets/discover2.jpg', to: 'Assets/webp/room-suite.webp', width: 700 },
+  // Homepage and park heroes now come from the real park photos built by
+  // scripts/build-media.js (public/Assets/media), not from this list.
 ];
 
 /** Thumbnail long edge. Grid cells never exceed ~320 CSS px, so 640 covers 2x. */
