@@ -12,7 +12,6 @@ import React, { useEffect } from 'react';
 import Navbar from '../Navbar/MainContent/page';
 import Footer from '../Footer/MainContent/page';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from '../horizontalInfoSlider';
 import {
   PageHero,
   Marquee,
@@ -157,7 +156,6 @@ const WaterPark = () => {
     <div className="bg-paper">
       <JsonLd data={faqSchema(FAQS)} />
 
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 

@@ -4,7 +4,6 @@ import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '@/app/Navbar/MainContent/page';
 import Footer from '@/app/Footer/MainContent/page';
 import Maintenance from '@/app/Miantenance/page';
-import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
 import { Section, SectionHeading, FeatureVideo, Reveal, CtaButton, HeroImage } from '@/app/_ui/PageKit';
 import { BOOKING_URL } from '@/app/_data/park';
 import {
@@ -43,7 +42,6 @@ const AboutUs = () => {
 
   return (
     <>
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 

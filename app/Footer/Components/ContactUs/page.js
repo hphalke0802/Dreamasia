@@ -9,7 +9,6 @@ import Navbar from '@/app/Navbar/MainContent/page';
 import Footer from '@/app/Footer/MainContent/page';
 import { useRouter } from 'next/navigation';
 import Maintenance from '@/app/Miantenance/page';
-import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
 import { NAP, PARK_HOURS } from '../../../_data/park';
 import { HeroImage, SocialLinks } from '@/app/_ui/PageKit';
 
@@ -27,7 +26,6 @@ const ContactUs = () => {
 
   return (
     <>
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 

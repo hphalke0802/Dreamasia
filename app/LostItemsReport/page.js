@@ -6,7 +6,6 @@ import Footer from "../Footer/MainContent/page";
 import { IoLocation } from "react-icons/io5";
 import { MdLocalPhone, MdEmail } from "react-icons/md";
 import Maintenance from "../Miantenance/page";
-import HorizontalInfoSlider from "../horizontalInfoSlider";
 import BASE_URL from "../GlobalUrl";
 
 
@@ -174,7 +173,6 @@ const LostItemsReport = () => {
 
     return (
         <div className="bg-gray-50">
-            <HorizontalInfoSlider />
             <Navbar />
             <Maintenance />
 

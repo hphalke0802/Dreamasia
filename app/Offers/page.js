@@ -5,7 +5,6 @@ import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '../Navbar/MainContent/page';
 import Footer from '../Footer/MainContent/page';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from "../horizontalInfoSlider";
 import { PageHero, Section, SectionHeading, CtaButton, Reveal, FeatureVideo } from '../_ui/PageKit';
 import { IoPricetagOutline } from 'react-icons/io5';
 import { BOOKING_URL as OFFER_BOOKING_URL } from '../_data/park';
@@ -115,7 +114,6 @@ const Offers = () => {
 
     return (
         <div className="bg-paper">
-            <HorizontalInfoSlider />
             <Navbar />
             <Maintenance />
 

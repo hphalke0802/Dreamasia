@@ -6,7 +6,6 @@ import Navbar from './Navbar/MainContent/page';
 import Footer from './Footer/MainContent/page';
 import Maintenance from './Miantenance/page';
 import BookingCircle from './BookingCircle/page';
-import HorizontalInfoSlider from './horizontalInfoSlider';
 import { VisitorHours } from './_ui/Hours';
 import { NAP, BOOKING_URL, SOCIALS } from './_data/park';
 import {
@@ -369,7 +368,6 @@ const page = () => {
 
   return (
     <div className="bg-paper">
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
       <BookingCircle />

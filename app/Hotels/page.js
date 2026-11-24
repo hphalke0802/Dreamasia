@@ -19,7 +19,6 @@ import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '../Navbar/MainContent/page';
 import Footer from '../Footer/MainContent/page';
 import Maintenance from '../Miantenance/page';
-import HorizontalInfoSlider from '../horizontalInfoSlider';
 import {
   PageHero,
   QuickNav,
@@ -169,7 +168,6 @@ const Stays = () => {
           the single biggest AEO gap, since AI engines extract from Q&A. */}
       <JsonLd data={faqSchema(FAQS)} />
 
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 

@@ -4,7 +4,6 @@ import { publicAsset } from '@/lib/publicAsset';
 import Navbar from '@/app/Navbar/MainContent/page';
 import Footer from '@/app/Footer/MainContent/page';
 import Maintenance from '@/app/Miantenance/page';
-import HorizontalInfoSlider from "@/app/horizontalInfoSlider";
 
 const PrivacyPolicy = () => {
 
@@ -19,7 +18,6 @@ const PrivacyPolicy = () => {
 
   return (
     <>
-      <HorizontalInfoSlider />
       <Navbar />
       <Maintenance />
 
